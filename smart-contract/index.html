@@ -695,6 +695,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#supported-payment-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Payment Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported Payment Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#subscriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subscriptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#milestones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Milestones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pay-as-you-go" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pay-as-you-go
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-payment-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Payment Types
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1141,6 +1202,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../milestone-payments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone Payments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pay-as-you-go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pay-as-you-go Payments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../contributions/" class="md-nav__link">
         
   
@@ -1217,6 +1334,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#supported-payment-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Payment Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported Payment Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#subscriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subscriptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#milestones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Milestones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pay-as-you-go" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pay-as-you-go
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-payment-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Payment Types
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1266,17 +1444,66 @@
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="n">next_payment_due</span><span class="p">:</span><span class="w"> </span><span class="kt">i64</span><span class="p">,</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="n">padding</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="w"> </span><span class="mi">97</span><span class="p">],</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="c1">// Future variants like:</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="c1">// OneTime { amount: u64, due_date: i64, ... },</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="c1">// Milestone { milestones: [u64; 8], intervals: [u64; 8], ... },</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">}</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="n">Milestone</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="n">milestone_amounts</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">u64</span><span class="p">;</span><span class="w"> </span><span class="mi">4</span><span class="p">],</span><span class="w">         </span><span class="c1">// Amount for each milestone</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="n">milestone_timestamps</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">i64</span><span class="p">;</span><span class="w"> </span><span class="mi">4</span><span class="p">],</span><span class="w">      </span><span class="c1">// Absolute timestamps for each milestone</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="n">current_milestone</span><span class="p">:</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w">               </span><span class="c1">// Which milestone is next (0-3)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="n">release_condition</span><span class="p">:</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w">               </span><span class="c1">// 0=time-based, 1=manual approval, 2=automatic</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="n">total_milestones</span><span class="p">:</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w">                </span><span class="c1">// How many milestones are configured (1-4)</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">        </span><span class="n">escrow_amount</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span><span class="w">                  </span><span class="c1">// Total amount held in escrow</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">        </span><span class="n">padding</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="w"> </span><span class="mi">53</span><span class="p">],</span><span class="w">                   </span><span class="c1">// Padding for 128-byte alignment</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="n">PayAsYouGo</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">        </span><span class="n">max_amount_per_period</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span><span class="w">          </span><span class="c1">// Total amount allowed per period</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">        </span><span class="n">max_chunk_amount</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span><span class="w">               </span><span class="c1">// Max amount provider can claim in one go</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">        </span><span class="n">period_length_seconds</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span><span class="w">          </span><span class="c1">// Length of each period in seconds</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">        </span><span class="n">current_period_start</span><span class="p">:</span><span class="w"> </span><span class="kt">i64</span><span class="p">,</span><span class="w">           </span><span class="c1">// When current period started (unix timestamp)</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">        </span><span class="n">current_period_total</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span><span class="w">           </span><span class="c1">// Amount claimed in current period so far</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">        </span><span class="n">padding</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="w"> </span><span class="mi">88</span><span class="p">],</span><span class="w">                   </span><span class="c1">// Padding for 128-byte alignment</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Each variant is exactly 128 bytes for consistent account sizing, enabling seamless upgrades without breaking existing policies. This allows implementing:</p>
+<p>Each variant is exactly 128 bytes for consistent account sizing, enabling seamless upgrades without breaking existing policies.</p>
+<h2 id="supported-payment-types">Supported Payment Types<a class="headerlink" href="#supported-payment-types" title="Permanent link">&para;</a></h2>
+<h3 id="subscriptions">Subscriptions<a class="headerlink" href="#subscriptions" title="Permanent link">&para;</a></h3>
+<p>Recurring payments at fixed intervals (daily, weekly, monthly, etc.) with optional auto-renewal and maximum renewal limits.</p>
+<h3 id="milestones">Milestones<a class="headerlink" href="#milestones" title="Permanent link">&para;</a></h3>
+<p>Project-based payments with up to 4 configurable milestones. Each milestone has:</p>
 <ul>
-<li><strong>Installments:</strong> Scheduled partial payments (e.g., buy-now-pay-later)</li>
-<li><strong>Milestones:</strong> Variable amounts based on project completion</li>
+<li><strong>Amount:</strong> Specific payment amount for that milestone</li>
+<li><strong>Timestamp:</strong> When the milestone becomes payable</li>
+<li><strong>Release Conditions:</strong> Time-based, manual approval, or automatic</li>
+<li><strong>Progress Tracking:</strong> Current milestone and completion status</li>
+</ul>
+<p>Perfect for:</p>
+<ul>
+<li><strong>Freelance work:</strong> Pay as project phases complete</li>
+<li><strong>Development contracts:</strong> Milestone-based software delivery</li>
+<li><strong>Consulting engagements:</strong> Deliverable-based compensation</li>
+<li><strong>Content creation:</strong> Episode/release-based payments</li>
+</ul>
+<h3 id="pay-as-you-go">Pay-as-you-go<a class="headerlink" href="#pay-as-you-go" title="Permanent link">&para;</a></h3>
+<p>Flexible usage-based payments where service providers can claim funds up to a maximum chunk amount within each billing period. Period totals automatically reset, enabling just-in-time funding for variable usage patterns.</p>
+<ul>
+<li><strong>Period Limits:</strong> Maximum amount allowed per billing period</li>
+<li><strong>Chunk Claims:</strong> Configurable maximum per individual payment</li>
+<li><strong>Automatic Resets:</strong> Period counters reset when time expires</li>
+<li><strong>Usage Tracking:</strong> Current period total and remaining allowance</li>
+</ul>
+<p>Perfect for:</p>
+<ul>
+<li><strong>AI Agents:</strong> LLM providers claiming based on token usage</li>
+<li><strong>API Services:</strong> Pay-per-call with periodic limits</li>
+<li><strong>Cloud Resources:</strong> Usage-based infrastructure costs</li>
+<li><strong>SaaS Platforms:</strong> Flexible billing for variable consumption</li>
+</ul>
+<h2 id="future-payment-types">Future Payment Types<a class="headerlink" href="#future-payment-types" title="Permanent link">&para;</a></h2>
+<p>The extensible design allows for additional payment schemes:</p>
+<ul>
+<li><strong>Installments:</strong> Scheduled partial payments (buy-now-pay-later)</li>
 <li><strong>Usage-based:</strong> Payments tied to consumption metrics</li>
-<li><strong>Donations:</strong> Ongoing creator support with flexible terms</li>
+<li><strong>Revenue sharing:</strong> Percentage-based payments from revenue</li>
+<li><strong>Escrow services:</strong> Conditional fund releases</li>
 </ul>
 
 
