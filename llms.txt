@@ -1,0 +1,33 @@
+# Tributary Protocol Documentation
+
+> Open-source, permissionless automated payment infrastructure for Solana
+
+## Usage documentation
+
+- [Home](https://docs.tributary.so/index.md)
+- [Overview](https://docs.tributary.so/architecture/index.md)
+- [Payment Provider Layer](https://docs.tributary.so/business/index.md)
+- [Contributions](https://docs.tributary.so/contributions/index.md)
+- [FAQ](https://docs.tributary.so/faq/index.md)
+- [Fees](https://docs.tributary.so/fees/index.md)
+- [Basics](https://docs.tributary.so/how/index.md)
+- [Integration](https://docs.tributary.so/integration/index.md)
+- [Milestone Payments](https://docs.tributary.so/milestone-payments/index.md)
+- [Network Effect](https://docs.tributary.so/networkeffect/index.md)
+- [Pay-as-you-go Payments](https://docs.tributary.so/pay-as-you-go/index.md)
+- [Payment Providers](https://docs.tributary.so/providers/index.md)
+- [Referral Program](https://docs.tributary.so/referral-program/index.md)
+- [SDKs](https://docs.tributary.so/sdks/index.md)
+- [Security](https://docs.tributary.so/security/index.md)
+- [Protocol](https://docs.tributary.so/smart-contract/index.md)
+- [Subscription Payments](https://docs.tributary.so/subscription-payments/index.md)
+- [Tools](https://docs.tributary.so/tools/index.md)
+- [Use Cases](https://docs.tributary.so/use-cases/index.md)
+- [What is Tributary?](https://docs.tributary.so/what/index.md)
+- [Why Tributary?](https://docs.tributary.so/why/index.md)
+- [API Reference](https://docs.tributary.so/x402-api-reference/index.md)
+- [Getting Started](https://docs.tributary.so/x402-getting-started/index.md)
+- [Overview](https://docs.tributary.so/x402/index.md)
+- [Button Integration](https://docs.tributary.so/quickstart/button/index.md)
+- [SDK Integration](https://docs.tributary.so/quickstart/integration/index.md)
+
