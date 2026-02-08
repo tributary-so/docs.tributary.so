@@ -351,63 +351,78 @@ Tributary enables automated recurring payments on Solana through token delegatio
 
 Ready to get started? Choose your path above or [explore use cases →](https://docs.tributary.so/use-cases/index.md)
 
-# 🔌 Integration
+# 🔌 Integration Options
 
-## Simple Integration
+Tributary offers multiple ways to integrate automated payments into your application. Choose the integration method that best fits your use case and technical requirements.
 
-🏗️ Work in Progress. Tributary is under active development and interfaces may change at any time."
+## Integration Methods
 
-```typescript
-// Basic payment button
-<SubscriptionButton
-  amount={new BN(10_000_000)}
-  token={USDC_MINT}
-  recipient={merchantWallet}
-  interval={PaymentInterval.Monthly}
-  label="Subscribe for $10/month"
-/>
-```
+### 1. **Direct SDK Integration** 💻
 
-## Advanced Provider Integration
+*Best for: Full programmatic control and custom payment flows*
 
-🏗️ Work in Progress. Tributary is under active development and interfaces may change at any time."
+- Use `@tributary-so/sdk` for complete protocol interaction
+- Build custom payment UI and logic
+- Full control over transaction construction
+- Best for advanced developers and complex use cases
 
-```typescript
-// Full provider service
-class PaymentProvider {
-  constructor(config) {
-    this.tributary = new Tributary(config);
-    this.database = new Database(config.db);
-    this.webhooks = new WebhookService(config.webhooks);
-  }
+👉 **Get Started:** [SDK Quickstart](https://docs.tributary.so/quickstart/integration/index.md) | [SDK Reference](https://docs.tributary.so/sdks/index.md)
 
-  async setupSubscription(user, plan) {
-    // Create payment policy using Tributary
-    const policy = await this.tributary.createPaymentPolicy({
-      amount: plan.amount,
-      interval: plan.interval,
-      recipient: plan.recipient,
-    });
+______________________________________________________________________
 
-    // Provider-specific features
-    await this.database.saveSubscription({
-      userId: user.id,
-      policyId: policy.id,
-      plan: plan,
-      status: "active",
-    });
+### 2. **React Button** 🚀
 
-    // Setup monitoring
-    await this.webhooks.register({
-      policyId: policy.id,
-      events: ["payment.success", "payment.failed"],
-      url: `${this.config.baseUrl}/webhooks/payments`,
-    });
+*Best for: Fast integration in React applications*
 
-    return policy;
-  }
-}
-```
+- Use `@tributary-so/sdk-react` for pre-built payment components
+- Drop-in subscription buttons with minimal code
+- Built-in wallet integration and error handling
+- Ideal for web apps and dashboards
+
+👉 **Get Started:** [Button Quickstart](https://docs.tributary.so/quickstart/button/index.md)
+
+______________________________________________________________________
+
+### 3. **Checkout Page Links** 🛒
+
+*Best for: Service agents monetizing via customer agents*
+
+- Generate payment URLs without any frontend code
+- Simple link sharing for subscriptions
+- Perfect for AI-to-AI payments (e.g., Lando)
+- Zero UI dependencies
+
+👉 **Get Started:** [Checkout Page Quickstart](https://docs.tributary.so/quickstart/checkout/index.md)
+
+______________________________________________________________________
+
+## Choosing the Right Integration
+
+| Use Case                       | Recommended Method             |
+| ------------------------------ | ------------------------------ |
+| Building a custom payment UI   | Direct SDK                     |
+| Quick integration in React app | React Button                   |
+| AI agent monetization          | Checkout Page Links            |
+| Maximum flexibility            | Direct SDK                     |
+| Minimal code changes           | React Button or Checkout Links |
+| No frontend available          | Checkout Page Links            |
+
+## Next Steps
+
+1. **Learn the Protocol:** Start with [What is Tributary?](https://docs.tributary.so/what/index.md) to understand the fundamentals
+1. **Choose Your Integration:** Review the quickstart guides above
+1. **Explore Payment Types:** Learn about [subscriptions](https://docs.tributary.so/subscription-payments/index.md), [milestones](https://docs.tributary.so/milestone-payments/index.md), and [pay-as-you-go](https://docs.tributary.so/pay-as-you-go/index.md)
+1. **Build Something:** Check out our [use cases](https://docs.tributary.so/use-cases/index.md) for inspiration
+
+## Need Help?
+
+- 📖 Read the full [SDK Reference](https://docs.tributary.so/sdks/index.md)
+- ❓ Check our [FAQ](https://docs.tributary.so/faq/index.md)
+- 💬 Join our community on [Discord](https://discord.gg/tributary)
+
+🏗️ Work in Progress
+
+Tributary is under active development and interfaces may change at any time.
 
 # Milestone Payments
 
@@ -4037,6 +4052,312 @@ The `SubscriptionButton` accepts the following props:
 - **Testing**: Use Solana devnet for testing before deploying to mainnet.
 
 For more examples and the latest code, visit [app.tributary.so](https://app.tributary.so).
+
+# Checkout Page Quickstart
+
+This guide shows you how to generate payment URLs for Tributary subscriptions without any frontend code. This approach is perfect for:
+
+- **AI agent monetization** (e.g., service agents accepting payments from customer agents)
+- **Payment links** that can be shared via messaging, email, or chat
+- **Zero UI integration** - let Tributary handle the entire checkout experience
+- **Lando** - The "Stripe for AI Agents" platform built on this method
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- pnpm package manager
+- Basic knowledge of Solana addresses and tokens
+- A recipient wallet address (to receive payments)
+
+## Step 1: Installation
+
+Install the Tributary payments package:
+
+```bash
+pnpm install @tributary-so/payments
+```
+
+## Step 2: Generate a Payment URL
+
+The payments package provides a simple API to encode payment details into a URL that can be shared with customers.
+
+```typescript
+import { PaymentUrlBuilder } from "@tributary-so/payments";
+import { PublicKey } from "@solana/web3.js";
+
+// Configuration
+const recipient = new PublicKey("YOUR_RECIPIENT_WALLET_ADDRESS");
+const gateway = new PublicKey("CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr"); // Tributary gateway
+const amount = 10; // 10 USDC
+const frequency = "monthly"; // weekly, monthly, or custom
+
+// Create the payment URL
+const paymentUrl = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: recipient.toString(),
+  gateway: gateway.toString(),
+  amount: amount,
+  frequency: frequency,
+  lineItems: [
+    {
+      description: "Premium subscription",
+      unitPrice: amount,
+      quantity: 1,
+    },
+  ],
+  autoRenew: false,
+});
+
+console.log("Payment URL:", paymentUrl);
+```
+
+The output will be a URL like:
+
+```text
+https://checkout.tributary.so/#/subscribe/eyJ0bSI6IkVQakZXZGQ1QXVmcVNTcWVNMnFOMXh6eWJhcEM4RzR3RUdHa1p3eVREdDF2IiwiciI6IlZPWExhTnZwNE9BZVh2RzR3eURvV2p2QVVqVnZ4aENvR3RZM2l0Y3NHRyIsImciOiJDd055YkxWUTNzVm1jWjNRMXZlUzZ4OTlnVVphQUYyZHVORGUzcWJjRU1HCIiwiYSI6IjEwIiwicGYiOiJtb250aGx5IiwibGkiOiJbeyJkZXNjcmlwdGlvbiI6IlByZW1pdW0gc3Vic2NyaXB0aW9uIiwidW5pdFByaWNlIjoxMCwicXVhbnRpdHkiOjF9XQ==...
+```
+
+## Step 3: Share the Payment URL
+
+Once you have the payment URL, you can share it with customers through any channel:
+
+```typescript
+// Example: Send via messaging service
+function sendPaymentUrlToCustomer(customerPhone: string, paymentUrl: string) {
+  const message = `Subscribe to our premium service: ${paymentUrl}`;
+  // Send via SMS, WhatsApp, Telegram, etc.
+}
+
+// Example: Send via email
+function sendPaymentUrlViaEmail(customerEmail: string, paymentUrl: string) {
+  const email = {
+    to: customerEmail,
+    subject: "Complete your subscription",
+    body: `Click here to subscribe: ${paymentUrl}`,
+  };
+  // Send via your email service
+}
+
+// Example: AI agent scenario (Lando)
+// Service agent sends payment URL to customer agent via chat
+const skillContent = `
+To subscribe to this service, visit:
+${paymentUrl}
+
+This will create a ${amount} USDC ${frequency} subscription.
+`;
+```
+
+## Step 4: Customer Subscribes
+
+When the customer visits the payment URL:
+
+1. **Lando Checkout Page** displays subscription details
+1. **Wallet Connection** prompts customer to connect their wallet
+1. **Payment Confirmation** customer approves the subscription
+1. **On-chain Subscription** created automatically on Solana
+1. **Confirmation** customer receives confirmation and transaction signature
+
+## Step 5: Monitor Payments
+
+After customers subscribe, you can monitor payments using the Tributary SDK:
+
+```typescript
+import { Tributary } from "@tributary-so/sdk";
+import { Connection } from "@solana/web3.js";
+
+const connection = new Connection("https://api.mainnet-beta.solana.com");
+const tributary = new Tributary(connection);
+
+// Get all subscriptions where you're the recipient
+const subscriptions = await tributary.getPaymentPoliciesByRecipient(recipient);
+console.log("Active subscriptions:", subscriptions);
+```
+
+## Advanced Usage
+
+### Custom Line Items
+
+```typescript
+const paymentUrl = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: recipient.toString(),
+  gateway: gateway.toString(),
+  amount: 25,
+  frequency: "monthly",
+  lineItems: [
+    {
+      description: "Basic plan",
+      unitPrice: 20,
+      quantity: 1,
+    },
+    {
+      description: "Add-on feature",
+      unitPrice: 5,
+      quantity: 1,
+    },
+  ],
+});
+```
+
+### Custom Start Time
+
+```typescript
+const paymentUrl = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: recipient.toString(),
+  gateway: gateway.toString(),
+  amount: 10,
+  frequency: "monthly",
+  startTime: new Date("2026-03-01T00:00:00Z").getTime() / 1000, // Unix timestamp
+});
+```
+
+### One-Time Payments
+
+For one-time payments (no auto-renewal):
+
+```typescript
+const paymentUrl = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: recipient.toString(),
+  gateway: gateway.toString(),
+  amount: 50,
+  frequency: "once",
+  autoRenew: false,
+});
+```
+
+### Custom Intervals
+
+```typescript
+const paymentUrl = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: recipient.toString(),
+  gateway: gateway.toString(),
+  amount: 10,
+  frequency: "custom",
+  customIntervalSeconds: 604800, // Weekly (7 * 24 * 60 * 60)
+});
+```
+
+## API Reference
+
+### PaymentUrlBuilder.buildSubscriptionUrl()
+
+Creates a payment URL for subscriptions.
+
+**Parameters:**
+
+| Parameter               | Type    | Required | Description                                                                             |
+| ----------------------- | ------- | -------- | --------------------------------------------------------------------------------------- |
+| `token`                 | string  | Yes      | Token mint address (e.g., USDC: `"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"`)       |
+| `recipient`             | string  | Yes      | Recipient wallet address (to receive payments)                                          |
+| `gateway`               | string  | Yes      | Payment gateway address (use default: `"CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr"`) |
+| `amount`                | number  | Yes      | Payment amount in token units                                                           |
+| `frequency`             | string  | Yes      | Payment frequency: `"once"`, `"weekly"`, `"monthly"`, or `"custom"`                     |
+| `lineItems`             | array   | No       | Array of line item objects for invoice breakdown                                        |
+| `autoRenew`             | boolean | No       | Enable automatic renewal (default: `false`)                                             |
+| `startTime`             | number  | No       | Unix timestamp for subscription start (optional)                                        |
+| `customIntervalSeconds` | number  | No       | Custom interval in seconds (required when `frequency="custom"`)                         |
+
+**Returns:** `string` - The full checkout URL
+
+## Use Cases
+
+### AI Agent Monetization (Lando)
+
+```typescript
+// Service agent generates subscription URL
+const serviceAgentPaymentUrl = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: "SERVICE_AGENT_WALLET",
+  gateway: "CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr",
+  amount: 29,
+  frequency: "monthly",
+});
+
+// Customer agent receives URL, visits checkout, subscribes
+// Service agent receives recurring USDC payments automatically
+```
+
+### Payment Links for Services
+
+```typescript
+// Generate and share payment links via email, SMS, or chat
+const paymentLink = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: "YOUR_WALLET",
+  gateway: "CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr",
+  amount: 99,
+  frequency: "monthly",
+});
+
+// Share with customers
+console.log(`Subscribe here: ${paymentLink}`);
+```
+
+### Flexible Payment Scheduling
+
+```typescript
+// Create payment URLs with custom schedules
+const weeklyPayment = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: "YOUR_WALLET",
+  gateway: "CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr",
+  amount: 10,
+  frequency: "custom",
+  customIntervalSeconds: 604800, // Weekly
+});
+
+const quarterlyPayment = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: "YOUR_WALLET",
+  gateway: "CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr",
+  amount: 50,
+  frequency: "custom",
+  customIntervalSeconds: 7776000, // Quarterly (90 days)
+});
+```
+
+## Important Notes
+
+- **Gateway Address:** Use the default gateway `CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr` unless you have a custom gateway
+- **Token Decimals:** Amounts are in token units, not smallest units (USDC uses 6 decimals)
+- **URL Encoding:** The payment details are Base64URL-encoded for safe sharing
+- **Checkout Page:** Customers will see the Lando checkout page at `checkout.tributary.so`
+- **Wallet Required:** Customers need a Solana wallet to complete subscriptions
+
+## Testing
+
+For testing, use Solana devnet:
+
+```typescript
+// Devnet gateway address (if different from mainnet)
+const devnetGateway = new PublicKey("DEVNET_GATEWAY_ADDRESS");
+
+// Test with devnet
+const testPaymentUrl = PaymentUrlBuilder.buildSubscriptionUrl({
+  token: "USDC",
+  recipient: recipient.toString(),
+  gateway: devnetGateway.toString(),
+  amount: 1, // Small test amount
+  frequency: "monthly",
+});
+```
+
+## Next Steps
+
+- **Explore Payment Types:** Learn about [subscriptions](https://docs.tributary.so/subscription-payments/index.md), [milestones](https://docs.tributary.so/milestone-payments/index.md), and [pay-as-you-go](https://docs.tributary.so/pay-as-you-go/index.md)
+- **Monitor Payments:** Use the [SDK](https://docs.tributary.so/sdks/index.md) to track subscriptions and payments
+- **Build with Lando:** Check out [Lando](https://lando.tributary.so) for AI-to-AI payments
+- **Full SDK Reference:** See [SDKs](https://docs.tributary.so/sdks/index.md) for advanced usage
+
+## Need Help?
+
+- 📖 Read the full [SDK Reference](https://docs.tributary.so/sdks/index.md)
+- ❓ Check our [FAQ](https://docs.tributary.so/faq/index.md)
+- 💬 Join our community on [Discord](https://discord.gg/tributary)
 
 # SDK Integration Quickstart
 

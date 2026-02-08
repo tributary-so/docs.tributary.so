@@ -28,6 +28,7 @@
 - [API Reference](https://docs.tributary.so/x402-api-reference/index.md)
 - [Getting Started](https://docs.tributary.so/x402-getting-started/index.md)
 - [Overview](https://docs.tributary.so/x402/index.md)
-- [Button Integration](https://docs.tributary.so/quickstart/button/index.md)
+- [React Button](https://docs.tributary.so/quickstart/button/index.md)
+- [Checkout Page Links](https://docs.tributary.so/quickstart/checkout/index.md)
 - [SDK Integration](https://docs.tributary.so/quickstart/integration/index.md)
 

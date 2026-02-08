@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://docs.tributary.so/integration/">
       
       
-        <link rel="prev" href="../security/">
+        <link rel="prev" href="../how/">
       
       
-        <link rel="next" href="../networkeffect/">
+        <link rel="next" href="../quickstart/integration/">
       
       
         
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#integration" class="md-skip">
+        <a href="#integration-options" class="md-skip">
           Skip to content
         </a>
       
@@ -242,12 +242,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../what/" class="md-tabs__link">
           
   
@@ -321,10 +319,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../how/" class="md-tabs__link">
           
   
@@ -413,31 +413,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -455,7 +452,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -526,31 +523,28 @@
                 
   
   
-    
   
   
-  
     
     
     
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
         
           
-          
         
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
         
           
-          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
             
   
   
@@ -568,7 +562,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -842,10 +836,60 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#simple-integration" class="md-nav__link">
+  <a href="#integration-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Simple Integration
+        Integration Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-direct-sdk-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Direct SDK Integration 💻
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-react-button" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. React Button 🚀
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-checkout-page-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Checkout Page Links 🛒
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-the-right-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing the Right Integration
       
     </span>
   </a>
@@ -853,10 +897,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#advanced-provider-integration" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Advanced Provider Integration
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#need-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Need Help?
       
     </span>
   </a>
@@ -1028,28 +1083,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -1067,7 +1125,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1110,17 +1168,44 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../quickstart/button/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
     
   
-    Button Integration
+    Integration
   
 
     
@@ -1129,6 +1214,109 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integration-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-direct-sdk-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Direct SDK Integration 💻
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-react-button" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. React Button 🚀
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-checkout-page-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Checkout Page Links 🛒
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-the-right-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing the Right Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#need-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Need Help?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1168,6 +1356,62 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../quickstart/button/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    React Button
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/checkout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checkout Page Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
     
@@ -1175,19 +1419,22 @@
       
       
         
+          
+          
+        
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_6" >
         
           
-          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="">
             
   
   
@@ -1205,8 +1452,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1321,19 +1568,22 @@
       
       
         
+          
+          
+        
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_7" >
         
           
-          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6_7" id="__nav_6_7_label" tabindex="">
             
   
   
@@ -1351,8 +1601,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6_5">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1516,10 +1766,60 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#simple-integration" class="md-nav__link">
+  <a href="#integration-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Simple Integration
+        Integration Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-direct-sdk-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Direct SDK Integration 💻
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-react-button" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. React Button 🚀
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-checkout-page-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Checkout Page Links 🛒
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-the-right-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing the Right Integration
       
     </span>
   </a>
@@ -1527,10 +1827,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#advanced-provider-integration" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Advanced Provider Integration
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#need-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Need Help?
       
     </span>
   </a>
@@ -1557,59 +1868,91 @@
   
 
 
-<h1 id="integration">🔌 Integration<a class="headerlink" href="#integration" title="Permanent link">&para;</a></h1>
-<h2 id="simple-integration">Simple Integration<a class="headerlink" href="#simple-integration" title="Permanent link">&para;</a></h2>
+<h1 id="integration-options">🔌 Integration Options<a class="headerlink" href="#integration-options" title="Permanent link">&para;</a></h1>
+<p>Tributary offers multiple ways to integrate automated payments into your application. Choose the integration method that best fits your use case and technical requirements.</p>
+<h2 id="integration-methods">Integration Methods<a class="headerlink" href="#integration-methods" title="Permanent link">&para;</a></h2>
+<h3 id="1-direct-sdk-integration">1. <strong>Direct SDK Integration</strong> 💻<a class="headerlink" href="#1-direct-sdk-integration" title="Permanent link">&para;</a></h3>
+<p><em>Best for: Full programmatic control and custom payment flows</em></p>
+<ul>
+<li>Use <code>@tributary-so/sdk</code> for complete protocol interaction</li>
+<li>Build custom payment UI and logic</li>
+<li>Full control over transaction construction</li>
+<li>Best for advanced developers and complex use cases</li>
+</ul>
+<p>👉 <strong>Get Started:</strong> <a href="../quickstart/integration/">SDK Quickstart</a> | <a href="../sdks/">SDK Reference</a></p>
+<hr />
+<h3 id="2-react-button">2. <strong>React Button</strong> 🚀<a class="headerlink" href="#2-react-button" title="Permanent link">&para;</a></h3>
+<p><em>Best for: Fast integration in React applications</em></p>
+<ul>
+<li>Use <code>@tributary-so/sdk-react</code> for pre-built payment components</li>
+<li>Drop-in subscription buttons with minimal code</li>
+<li>Built-in wallet integration and error handling</li>
+<li>Ideal for web apps and dashboards</li>
+</ul>
+<p>👉 <strong>Get Started:</strong> <a href="../quickstart/button/">Button Quickstart</a></p>
+<hr />
+<h3 id="3-checkout-page-links">3. <strong>Checkout Page Links</strong> 🛒<a class="headerlink" href="#3-checkout-page-links" title="Permanent link">&para;</a></h3>
+<p><em>Best for: Service agents monetizing via customer agents</em></p>
+<ul>
+<li>Generate payment URLs without any frontend code</li>
+<li>Simple link sharing for subscriptions</li>
+<li>Perfect for AI-to-AI payments (e.g., Lando)</li>
+<li>Zero UI dependencies</li>
+</ul>
+<p>👉 <strong>Get Started:</strong> <a href="../quickstart/checkout/">Checkout Page Quickstart</a></p>
+<hr />
+<h2 id="choosing-the-right-integration">Choosing the Right Integration<a class="headerlink" href="#choosing-the-right-integration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Recommended Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Building a custom payment UI</td>
+<td>Direct SDK</td>
+</tr>
+<tr>
+<td>Quick integration in React app</td>
+<td>React Button</td>
+</tr>
+<tr>
+<td>AI agent monetization</td>
+<td>Checkout Page Links</td>
+</tr>
+<tr>
+<td>Maximum flexibility</td>
+<td>Direct SDK</td>
+</tr>
+<tr>
+<td>Minimal code changes</td>
+<td>React Button or Checkout Links</td>
+</tr>
+<tr>
+<td>No frontend available</td>
+<td>Checkout Page Links</td>
+</tr>
+</tbody>
+</table>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Learn the Protocol:</strong> Start with <a href="../what/">What is Tributary?</a> to understand the fundamentals</li>
+<li><strong>Choose Your Integration:</strong> Review the quickstart guides above</li>
+<li><strong>Explore Payment Types:</strong> Learn about <a href="../subscription-payments/">subscriptions</a>, <a href="../milestone-payments/">milestones</a>, and <a href="../pay-as-you-go/">pay-as-you-go</a></li>
+<li><strong>Build Something:</strong> Check out our <a href="../use-cases/">use cases</a> for inspiration</li>
+</ol>
+<h2 id="need-help">Need Help?<a class="headerlink" href="#need-help" title="Permanent link">&para;</a></h2>
+<ul>
+<li>📖 Read the full <a href="../sdks/">SDK Reference</a></li>
+<li>❓ Check our <a href="../faq/">FAQ</a></li>
+<li>💬 Join our community on <a href="https://discord.gg/tributary">Discord</a></li>
+</ul>
 <div class="admonition warning">
-<p class="admonition-title">🏗️ Work in Progress. Tributary is under active development and interfaces may change at any time."</p>
+<p class="admonition-title">🏗️ Work in Progress</p>
+<p>Tributary is under active development and interfaces may change at any time.</p>
 </div>
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Basic payment button</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="o">&lt;</span><span class="nx">SubscriptionButton</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">amount</span><span class="o">=</span><span class="p">{</span><span class="ow">new</span><span class="w"> </span><span class="nx">BN</span><span class="p">(</span><span class="mf">10</span><span class="nx">_000_000</span><span class="p">)}</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nx">token</span><span class="o">=</span><span class="p">{</span><span class="nx">USDC_MINT</span><span class="p">}</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nx">recipient</span><span class="o">=</span><span class="p">{</span><span class="nx">merchantWallet</span><span class="p">}</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nx">interval</span><span class="o">=</span><span class="p">{</span><span class="nx">PaymentInterval</span><span class="p">.</span><span class="nx">Monthly</span><span class="p">}</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nx">label</span><span class="o">=</span><span class="s2">&quot;Subscribe for $10/month&quot;</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="err">/&gt;</span>
-</span></code></pre></div>
-<h2 id="advanced-provider-integration">Advanced Provider Integration<a class="headerlink" href="#advanced-provider-integration" title="Permanent link">&para;</a></h2>
-<div class="admonition warning">
-<p class="admonition-title">🏗️ Work in Progress. Tributary is under active development and interfaces may change at any time."</p>
-</div>
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Full provider service</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">class</span><span class="w"> </span><span class="nx">PaymentProvider</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">tributary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Tributary</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Database</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">db</span><span class="p">);</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">webhooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">WebhookService</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">webhooks</span><span class="p">);</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">setupSubscription</span><span class="p">(</span><span class="nx">user</span><span class="p">,</span><span class="w"> </span><span class="nx">plan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="c1">// Create payment policy using Tributary</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">tributary</span><span class="p">.</span><span class="nx">createPaymentPolicy</span><span class="p">({</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nx">amount</span><span class="o">:</span><span class="w"> </span><span class="kt">plan.amount</span><span class="p">,</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nx">interval</span><span class="o">:</span><span class="w"> </span><span class="kt">plan.interval</span><span class="p">,</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nx">recipient</span><span class="o">:</span><span class="w"> </span><span class="kt">plan.recipient</span><span class="p">,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="p">});</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="c1">// Provider-specific features</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">database</span><span class="p">.</span><span class="nx">saveSubscription</span><span class="p">({</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">      </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">user.id</span><span class="p">,</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="nx">policyId</span><span class="o">:</span><span class="w"> </span><span class="kt">policy.id</span><span class="p">,</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">      </span><span class="nx">plan</span><span class="o">:</span><span class="w"> </span><span class="kt">plan</span><span class="p">,</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">,</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">    </span><span class="p">});</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="c1">// Setup monitoring</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">webhooks</span><span class="p">.</span><span class="nx">register</span><span class="p">({</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="nx">policyId</span><span class="o">:</span><span class="w"> </span><span class="kt">policy.id</span><span class="p">,</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="nx">events</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;payment.success&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;payment.failed&quot;</span><span class="p">],</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">baseUrl</span><span class="si">}</span><span class="sb">/webhooks/payments`</span><span class="p">,</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="p">});</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">policy</span><span class="p">;</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="p">}</span>
-</span></code></pre></div>
 
 
 
