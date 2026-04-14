@@ -12,6 +12,7 @@
 - [Fees](https://docs.tributary.so/fees/index.md)
 - [Basics](https://docs.tributary.so/how/index.md)
 - [Integration](https://docs.tributary.so/integration/index.md)
+- [JWT Authentication](https://docs.tributary.so/jwt-auth/index.md)
 - [Milestone Payments](https://docs.tributary.so/milestone-payments/index.md)
 - [Network Effect](https://docs.tributary.so/networkeffect/index.md)
 - [Pay-as-you-go Payments](https://docs.tributary.so/pay-as-you-go/index.md)

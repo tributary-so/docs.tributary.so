@@ -147,6 +147,7 @@ ______________________________________________________________________
 
 1. **Learn the Protocol:** [What is Tributary?](https://docs.tributary.so/what/index.md)
 1. **Choose Your Integration:** Review quickstart guides above
+1. **JWT Authentication:** [Verify subscriptions after checkout](https://docs.tributary.so/jwt-auth/index.md)
 1. **Explore Payment Types:** [Subscriptions](https://docs.tributary.so/subscription-payments/index.md), [Milestones](https://docs.tributary.so/milestone-payments/index.md), [Pay-as-you-go](https://docs.tributary.so/pay-as-you-go/index.md)
 1. **Build:** Check [use cases](https://docs.tributary.so/use-cases/index.md) for inspiration
 

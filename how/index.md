@@ -111,6 +111,7 @@ if (status.status === "active") {
 ## Next Steps
 
 - [Integration Options](https://docs.tributary.so/integration/index.md) - Choose your integration method
+- [JWT Authentication](https://docs.tributary.so/jwt-auth/index.md) - Verify subscriptions after checkout
 - [Checkout Quickstart](https://docs.tributary.so/quickstart/checkout/index.md) - Generate payment links
 - [SDK Reference](https://docs.tributary.so/sdks/index.md) - Complete SDK documentation
 - [API Reference](https://docs.tributary.so/api/overview/index.md) - REST & WebSocket APIs
