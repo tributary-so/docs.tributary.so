@@ -115,7 +115,7 @@ ______________________________________________________________________
 
 ## Payments SDK (`@tributary-so/payments`)
 
-Stripe-compatible payments SDK for Tributary. Supports subscriptions and one-time payments with zero API keys required.
+Payments SDK for Tributary. Supports subscriptions and one-time payments with zero API keys required. It enables the use of a hosted checkout page that facilitates the payments via embedded solana wallet integrations. The merchant does not need to take care of anything blockchain related and can still verify payments through a JWT token handed out after payment succeeded.
 
 ### Installation
 
@@ -132,13 +132,13 @@ import { Tributary } from "@tributary-so/sdk";
 
 const connection = new Connection("https://api.mainnet-beta.solana.com");
 const tributary = new Tributary(connection, wallet);
-const stripe = new PaymentsClient(connection, tributary);
+const payments = new PaymentsClient(connection, tributary);
 ```
 
 ### Create Checkout Session
 
 ```typescript
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   payment_method_types: ["tributary"],
   line_items: [
     {
@@ -167,7 +167,7 @@ window.location.href = session.url;
 
 ```typescript
 // User-based lookup
-const status = await stripe.subscriptions.checkStatus({
+const status = await payments.subscriptions.checkStatus({
   trackingId: "user_123_monthly_premium",
   userPublicKey: "USER_PUBLIC_KEY",
   tokenMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
@@ -184,7 +184,7 @@ if (status.status === "active") {
 ### One-Time Payments
 
 ```typescript
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   payment_method_types: ["tributary"],
   line_items: [
     {
@@ -206,7 +206,7 @@ const session = await stripe.checkout.sessions.create({
 ### Check One-Time Payment Status
 
 ```typescript
-const status = await stripe.payments.oneTime.checkStatus(
+const status = await payments.payments.oneTime.checkStatus(
   "user_123_premium_upgrade"
 );
 

@@ -16,7 +16,7 @@
         <link rel="prev" href="../integration/">
       
       
-        <link rel="next" href="../quickstart/integration/">
+        <link rel="next" href="../sdk/">
       
       
         
@@ -290,25 +290,6 @@
     
   
   FAQ
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../providers/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Payment Providers
 
       </a>
     </li>
@@ -636,34 +617,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../sdks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SDKs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../tools/" class="md-nav__link">
         
   
@@ -692,14 +645,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../business/" class="md-nav__link">
+      <a href="../providers/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Payment Provider Layer
+    Providers
   
 
     
@@ -926,33 +879,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../providers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Payment Providers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -974,10 +900,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -995,8 +921,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1168,22 +1094,227 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-jwt" class="md-nav__link">
+  <a href="#two-token-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The JWT
+        Two Token Types
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The JWT">
+    <nav class="md-nav" aria-label="Two Token Types">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#token-structure" class="md-nav__link">
+  <a href="#subscription-token" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Token Structure
+        Subscription Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-time-payment-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One-Time Payment Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-payments-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Payments (Recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying Payments (Recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initialize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-a-subscription" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify a Subscription
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-a-one-time-payment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify a One-Time Payment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-either-unified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Either (Unified)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Refresh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-hosted-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Hosted Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-payments-low-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Payments (Low-Level)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying Payments (Low-Level)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-verification-with-jose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Verification with jose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-subscription-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Subscription Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-one-time-payment-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual One-Time Payment Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-javascript-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-JavaScript Environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#claim-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claim Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Claim Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Header
       
     </span>
   </a>
@@ -1202,10 +1333,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#token-expiration" class="md-nav__link">
+  <a href="#payment-record-fields-lastpayments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Token Expiration
+        Payment Record Fields (lastPayments)
       
     </span>
   </a>
@@ -1213,10 +1344,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#status-derivation" class="md-nav__link">
+  <a href="#status-derivation-subscriptions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status Derivation
+        Status Derivation (Subscriptions)
       
     </span>
   </a>
@@ -1229,52 +1360,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#merchant-integration" class="md-nav__link">
+  <a href="#token-expiration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Merchant Integration
+        Token Expiration
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Merchant Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#server-side-validation-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Server-Side Validation (Recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#client-side-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Client-Side Validation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#token-refresh" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Token Refresh
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1329,6 +1421,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#self-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Hosting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-rotation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1367,6 +1470,17 @@
     <span class="md-ellipsis">
       
         What the Merchant Cannot Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-memo-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the Memo Matters
       
     </span>
   </a>
@@ -1429,6 +1543,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1455,14 +1580,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/integration/" class="md-nav__link">
+      <a href="../sdk/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SDK Integration
+    SDK
   
 
     
@@ -1483,7 +1608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/button/" class="md-nav__link">
+      <a href="../react-button/" class="md-nav__link">
         
   
   
@@ -1511,7 +1636,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/checkout/" class="md-nav__link">
+      <a href="../checkout/" class="md-nav__link">
         
   
   
@@ -1557,17 +1682,17 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
         
           
-          <label class="md-nav__link" for="__nav_6_7" id="__nav_6_7_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="">
             
   
   
   <span class="md-ellipsis">
     
   
-    Payment Policies
+    Policy Types
   
 
     
@@ -1578,12 +1703,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6_7">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Payment Policies
+    Policy Types
   
 
           </label>
@@ -1596,7 +1721,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../subscription-payments/" class="md-nav__link">
+      <a href="../policies/subscription/" class="md-nav__link">
         
   
   
@@ -1624,7 +1749,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../milestone-payments/" class="md-nav__link">
+      <a href="../policies/milestone/" class="md-nav__link">
         
   
   
@@ -1652,7 +1777,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../pay-as-you-go/" class="md-nav__link">
+      <a href="../policies/payasyougo/" class="md-nav__link">
         
   
   
@@ -1706,10 +1831,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_8" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_8" >
         
           
-          <label class="md-nav__link" for="__nav_6_8" id="__nav_6_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="">
             
   
   
@@ -1727,8 +1852,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6_8">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1855,10 +1980,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_9" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_9" >
         
           
-          <label class="md-nav__link" for="__nav_6_9" id="__nav_6_9_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="">
             
   
   
@@ -1876,8 +2001,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6_9">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2108,22 +2233,227 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-jwt" class="md-nav__link">
+  <a href="#two-token-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The JWT
+        Two Token Types
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The JWT">
+    <nav class="md-nav" aria-label="Two Token Types">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#token-structure" class="md-nav__link">
+  <a href="#subscription-token" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Token Structure
+        Subscription Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-time-payment-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One-Time Payment Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-payments-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Payments (Recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying Payments (Recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initialize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-a-subscription" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify a Subscription
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-a-one-time-payment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify a One-Time Payment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-either-unified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Either (Unified)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Refresh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-hosted-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Hosted Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-payments-low-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Payments (Low-Level)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying Payments (Low-Level)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-verification-with-jose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Verification with jose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-subscription-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Subscription Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-one-time-payment-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual One-Time Payment Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-javascript-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-JavaScript Environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#claim-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claim Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Claim Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Header
       
     </span>
   </a>
@@ -2142,10 +2472,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#token-expiration" class="md-nav__link">
+  <a href="#payment-record-fields-lastpayments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Token Expiration
+        Payment Record Fields (lastPayments)
       
     </span>
   </a>
@@ -2153,10 +2483,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#status-derivation" class="md-nav__link">
+  <a href="#status-derivation-subscriptions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status Derivation
+        Status Derivation (Subscriptions)
       
     </span>
   </a>
@@ -2169,52 +2499,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#merchant-integration" class="md-nav__link">
+  <a href="#token-expiration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Merchant Integration
+        Token Expiration
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Merchant Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#server-side-validation-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Server-Side Validation (Recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#client-side-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Client-Side Validation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#token-refresh" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Token Refresh
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2269,6 +2560,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#self-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Hosting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-rotation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2307,6 +2609,17 @@
     <span class="md-ellipsis">
       
         What the Merchant Cannot Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-memo-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the Memo Matters
       
     </span>
   </a>
@@ -2369,6 +2682,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2400,10 +2724,10 @@
 
 
 <h1 id="jwt-authentication-jwks">JWT Authentication &amp; JWKS<a class="headerlink" href="#jwt-authentication-jwks" title="Permanent link">&para;</a></h1>
-<p>After a user completes checkout, the merchant needs to know: <em>Did the subscription actually get created? Is the user paid up?</em> Tributary answers this with <strong>cryptographically signed JWTs</strong> that carry verifiable on-chain subscription claims — no backend integration required.</p>
+<p>After a user completes checkout, the merchant needs to know: <em>Did the payment actually happen? Is a subscription active?</em> Tributary answers with <strong>cryptographically signed JWTs</strong> that carry verifiable on-chain payment claims — no backend, no Solana SDK, no blockchain integration required.</p>
 <h2 id="why-jwts">Why JWTs?<a class="headerlink" href="#why-jwts" title="Permanent link">&para;</a></h2>
-<p>The core problem: a checkout page redirects back to the merchant's site, but the merchant has no way to trust that redirect. They could query the blockchain directly, but that requires Solana RPC knowledge, PDA derivation, and account deserialization — a heavy lift for a simple "is this user subscribed?" check.</p>
-<p>JWTs solve this by packaging on-chain subscription state into a <strong>signed, verifiable token</strong> that any web developer can validate with standard libraries. The merchant doesn't need to understand Solana — they just verify a JWT.</p>
+<p>The core problem: a checkout page redirects back to the merchant's site, but the merchant has no way to trust that redirect. They could query the blockchain directly, but that requires Solana RPC knowledge, PDA derivation, and account deserialization — a heavy lift for a simple "did this user pay?" check.</p>
+<p>JWTs solve this by packaging on-chain payment state into a <strong>signed, verifiable token</strong> that any web developer can validate with standard libraries. The merchant never talks to Solana — they just verify a JWT.</p>
 <h3 id="benefits-of-this-approach">Benefits of This Approach<a class="headerlink" href="#benefits-of-this-approach" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2418,8 +2742,8 @@
 <td>Merchants can validate tokens client-side using the <code>jose</code> library. A static success page with JavaScript is enough.</td>
 </tr>
 <tr>
-<td><strong>Standard tooling</strong></td>
-<td>JWT verification is supported in every language. No Solana-specific knowledge needed.</td>
+<td><strong>No Solana code</strong></td>
+<td>JWT verification is supported in every language. No Solana SDK, no RPC calls, no PDA derivation, no account deserialization.</td>
 </tr>
 <tr>
 <td><strong>Stateless</strong></td>
@@ -2427,7 +2751,7 @@
 </tr>
 <tr>
 <td><strong>Self-contained</strong></td>
-<td>All subscription claims (amount, status, next payment due) are inside the token. No extra API calls to populate a dashboard.</td>
+<td>All payment claims (amount, status, transaction signatures, next payment due) are inside the token. No extra API calls needed.</td>
 </tr>
 <tr>
 <td><strong>Automatic expiry</strong></td>
@@ -2438,8 +2762,16 @@
 <td>JWKS with automatic 30-day rotation. Merchants fetch public keys from a well-known endpoint. Old keys stay valid for 24 hours during rotation — zero downtime.</td>
 </tr>
 <tr>
-<td><strong>Privoxy-free</strong></td>
-<td>The JWT contains only public on-chain data. No secrets, no balances, no private keys. Even if the token leaks, it reveals nothing sensitive.</td>
+<td><strong>Self-hostable</strong></td>
+<td>Every component — checkout page, API server, indexer, signing keys — can run on your own infrastructure. Start hosted, migrate when ready.</td>
+</tr>
+<tr>
+<td><strong>Two payment models</strong></td>
+<td>Same JWT flow handles both recurring subscriptions and one-time payments. The verification code is identical.</td>
+</tr>
+<tr>
+<td><strong>SDK provided</strong></td>
+<td><code>TributaryVerifier</code> from <code>@tributary-so/payments</code> handles JWKS fetching, signature verification, and payment matching in one call.</td>
 </tr>
 </tbody>
 </table>
@@ -2454,54 +2786,417 @@
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>     │  ◄──── redirect with JWT ──┘                                     │
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>     │                            │                                     │
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>     ▼                            ▼                                     │
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>┌──────────┐   validate via JWKS   ┌──────────────────────────┐         │
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ Merchant │──────────────────────►│ GET /.well-known/jwks.json│◄────────┘
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│ Success  │                       └──────────────────────────┘
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│ Page     │  ◄── subscription claims (signed, trusted)
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>┌──────────┐   verify via JWKS    ┌──────────────────────────┐         │
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ Merchant │─────────────────────►│ GET /.well-known/jwks.json│◄────────┘
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│ Success  │                      └──────────────────────────┘
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│ Page     │  ◄── payment confirmed (recipient, wallet, memo matched)
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>└──────────┘
 </span></code></pre></div>
 <ol>
-<li>User completes checkout → on-chain subscription created</li>
+<li>User completes checkout → on-chain subscription created <strong>or</strong> one-time payment executed</li>
 <li>Checkout app requests a JWT from the Tributary API</li>
-<li>API reads on-chain state, builds subscription claims, signs with ES256 key</li>
+<li>API reads on-chain state, builds payment claims, signs with ES256 key</li>
 <li>User is redirected to the merchant's <code>successUrl</code> with <code>?token=&lt;jwt&gt;</code></li>
-<li>Merchant validates the JWT signature against the public JWKS endpoint</li>
-<li>Merchant reads subscription claims and grants access</li>
+<li>Merchant calls <code>TributaryVerifier.verifyPayment()</code> or <code>verifySubscription()</code></li>
+<li>Verifier fetches JWKS, validates signature, matches payment claims — one call</li>
 </ol>
-<h2 id="the-jwt">The JWT<a class="headerlink" href="#the-jwt" title="Permanent link">&para;</a></h2>
-<h3 id="token-structure">Token Structure<a class="headerlink" href="#token-structure" title="Permanent link">&para;</a></h3>
-<p><strong>Header:</strong></p>
+<h2 id="two-token-types">Two Token Types<a class="headerlink" href="#two-token-types" title="Permanent link">&para;</a></h2>
+<p>Tributary issues JWTs for two payment models. Both share the same JWKS infrastructure, signing keys, and verification flow. The difference is what's inside:</p>
+<table>
+<thead>
+<tr>
+<th>Token Type</th>
+<th>When Issued</th>
+<th>Claims</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Subscription</strong></td>
+<td>After on-chain policy creation</td>
+<td><code>subscriptions[]</code> (on-chain policy state) + <code>lastPayments[]</code></td>
+</tr>
+<tr>
+<td><strong>One-Time Payment</strong></td>
+<td>After a single USDC transfer</td>
+<td><code>lastPayments[]</code> only (no recurring policy)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="subscription-token">Subscription Token<a class="headerlink" href="#subscription-token" title="Permanent link">&para;</a></h3>
+<p>Issued after a user creates a recurring subscription on-chain. Contains the policy state and recent payment history:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;alg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ES256&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;kid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;trib-2026-03-31-a&quot;</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;typ&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JWT&quot;</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7xKpV2BZQ3HfeRZFMfWVBpDCmCN8eYwGmCjL7m3mVqR&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;iss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://api.tributary.so&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;aud&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tributary-checkout&quot;</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&quot;iat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1743465600</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1743469200</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">&quot;kid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;trib-2026-03-31-a&quot;</span><span class="p">,</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">&quot;subscriptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nt">&quot;policyAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DxL...3kP&quot;</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nt">&quot;policyId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">&quot;recipient&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BxKp...9mVq&quot;</span><span class="p">,</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">&quot;gateway&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6ntm5rWqDFefET8RFyZV73FcdqxPMbc7Tso3pCMWk4w4&quot;</span><span class="p">,</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100000&quot;</span><span class="p">,</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">      </span><span class="nt">&quot;paymentFrequency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;monthly&quot;</span><span class="p">,</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">      </span><span class="nt">&quot;totalPayments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">      </span><span class="nt">&quot;nextPaymentDue&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1746057600</span><span class="p">,</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paid&quot;</span><span class="p">,</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">      </span><span class="nt">&quot;autoRenew&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="nt">&quot;maxRenewals&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">      </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1740787200</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span><span class="nt">&quot;lastPayments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">      </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5UfK2hZ8rN3mQ9pL7wX1vB4cY6dA0eT2gR8nJ5sF3oH9kM7uP&quot;</span><span class="p">,</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="nt">&quot;slot&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">245123456</span><span class="p">,</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1743465590</span><span class="p">,</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="nt">&quot;policyAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DxL...3kP&quot;</span><span class="p">,</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100000&quot;</span><span class="p">,</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">      </span><span class="nt">&quot;tokenMint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&quot;</span><span class="p">,</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">      </span><span class="nt">&quot;payer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7xKpV2BZQ3HfeRZFMfWVBpDCmCN8eYwGmCjL7m3mVqR&quot;</span><span class="p">,</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">      </span><span class="nt">&quot;recipient&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BxKp...9mVq&quot;</span><span class="p">,</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">      </span><span class="nt">&quot;gateway&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6ntm5rWqDFefET8RFyZV73FcdqxPMdc7Tso3pCMWk4w4&quot;</span><span class="p">,</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">      </span><span class="nt">&quot;memo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user_123_monthly_premium&quot;</span><span class="p">,</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">      </span><span class="nt">&quot;recordId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Payload (example):</strong></p>
+<h3 id="one-time-payment-token">One-Time Payment Token<a class="headerlink" href="#one-time-payment-token" title="Permanent link">&para;</a></h3>
+<p>Issued after a single USDC transfer. Contains only the verified payment event — no recurring policy data:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7xKpV2BZQ3HfeRZFMfWVBpDCmCN8eYwGmCjL7m3mVqR&quot;</span><span class="p">,</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;iss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://api.tributary.so&quot;</span><span class="p">,</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&quot;aud&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tributary-checkout&quot;</span><span class="p">,</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">&quot;iat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1743465600</span><span class="p">,</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1743469200</span><span class="p">,</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">&quot;subscriptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="nt">&quot;policyAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DxL...3kP&quot;</span><span class="p">,</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="nt">&quot;recipient&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BxKp...9mVq&quot;</span><span class="p">,</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">&quot;gateway&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6ntm5rWqDFefET8RFyZV73FcdqxPMbc7Tso3pCMWk4w4&quot;</span><span class="p">,</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.00&quot;</span><span class="p">,</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">&quot;tokenMint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&quot;</span><span class="p">,</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="nt">&quot;paymentFrequency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;monthly&quot;</span><span class="p">,</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="nt">&quot;lastExecuted&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1743465600</span><span class="p">,</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="nt">&quot;totalPayments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">      </span><span class="nt">&quot;nextPaymentDue&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1746057600</span><span class="p">,</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paid&quot;</span><span class="p">,</span>
-</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">      </span><span class="nt">&quot;autoRenew&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">      </span><span class="nt">&quot;maxRenewals&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">      </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1740787200</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">&quot;kid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;trib-2026-03-31-a&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">&quot;subscriptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">&quot;lastPayments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5UfK2hZ8rN3mQ9pL7wX1vB4cY6dA0eT2gR8nJ5sF3oH9kM7uP&quot;</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">&quot;slot&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">245123456</span><span class="p">,</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1743465590</span><span class="p">,</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="nt">&quot;policyAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;11111111111111111111111111111111&quot;</span><span class="p">,</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;499900&quot;</span><span class="p">,</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="nt">&quot;tokenMint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&quot;</span><span class="p">,</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">      </span><span class="nt">&quot;payer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7xKpV2BZQ3HfeRZFMfWVBpDCmCN8eYwGmCjL7m3mVqR&quot;</span><span class="p">,</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">      </span><span class="nt">&quot;recipient&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BxKpT3mZQ5HgeRZFMfWVBpDCmCN8eYwGmCjL7m9mVq&quot;</span><span class="p">,</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">      </span><span class="nt">&quot;gateway&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6ntm5rWqDFefET8RFyZV73FcdqxPMbc7Tso3pCMWk4w4&quot;</span><span class="p">,</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">      </span><span class="nt">&quot;memo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;order_12345&quot;</span><span class="p">,</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">      </span><span class="nt">&quot;recordId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
 </span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="p">]</span>
 </span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>A one-time payment token has an empty <code>subscriptions</code> array and a single entry in <code>lastPayments</code>. The <code>policyAddress</code> is the system program address (all ones) since there's no recurring policy.</p>
+<h2 id="verifying-payments-recommended">Verifying Payments (Recommended)<a class="headerlink" href="#verifying-payments-recommended" title="Permanent link">&para;</a></h2>
+<p>Use <code>TributaryVerifier</code> from <code>@tributary-so/payments</code> to verify JWTs. It handles JWKS fetching, signature verification, and payment matching in one call. No need to understand JWT claims, JWKS endpoints, or on-chain data structures.</p>
+<h3 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@tributary-so/payments
+</span></code></pre></div>
+<p>No Solana libraries required. <code>jose</code> is included as a dependency.</p>
+<h3 id="initialize">Initialize<a class="headerlink" href="#initialize" title="Permanent link">&para;</a></h3>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">TributaryVerifier</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/payments&quot;</span><span class="p">;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">// Uses TRIBUTARY_BASE_URL env var, defaults to https://api.tributary.so</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">verifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">TributaryVerifier</span><span class="p">();</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">// Or configure explicitly (for self-hosted instances)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">verifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">TributaryVerifier</span><span class="p">({</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://your-api.example.com&quot;</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nx">issuer</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://your-api.example.com&quot;</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nx">audience</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tributary-checkout&quot;</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">});</span>
+</span></code></pre></div>
+<h3 id="verify-a-subscription">Verify a Subscription<a class="headerlink" href="#verify-a-subscription" title="Permanent link">&para;</a></h3>
+<p>After a user completes a subscription checkout and lands on your success page:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// On your success page — extract token from URL</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">urlParams</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URLSearchParams</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">);</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">urlParams</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">);</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">subscription</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">verifier</span><span class="p">.</span><span class="nx">verifySubscription</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nx">recipient</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BxKp...9mVq&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// your wallet (the payment recipient)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nx">wallet</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;7xKp...3mVq&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// user&#39;s wallet pubkey</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nx">memo</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;user_123_monthly&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// the trackingId from your checkout session</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="c1">// If we get here, the subscription is confirmed:</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="c1">// - JWT signature is valid (signed by Tributary&#39;s JWKS key)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="c1">// - Wallet matches the token&#39;s subject</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="c1">// - A subscription with status &quot;paid&quot; exists for your recipient</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="c1">// - A payment with matching memo exists in lastPayments</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Subscription confirmed!&quot;</span><span class="p">);</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Amount: </span><span class="si">${</span><span class="nx">subscription</span><span class="p">.</span><span class="nx">amount</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Frequency: </span><span class="si">${</span><span class="nx">subscription</span><span class="p">.</span><span class="nx">paymentFrequency</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="sb">`Next payment due: </span><span class="si">${</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">subscription</span><span class="p">.</span><span class="nx">nextPaymentDue</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="p">);</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span><span class="c1">// Grant access</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span><span class="nx">grantUserAccess</span><span class="p">(</span><span class="nx">subscription</span><span class="p">);</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">  </span><span class="c1">// Store token for refreshes</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s2">&quot;tributary_token&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">token</span><span class="p">);</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="nx">SubscriptionVerificationError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">    </span><span class="c1">// Specific errors with details:</span>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">    </span><span class="c1">// &quot;Wallet mismatch: token issued for X, expected Y&quot;</span>
+</span><span id="__span-5-34"><a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">    </span><span class="c1">// &quot;Subscription found but not paid (status: overdue)&quot;</span>
+</span><span id="__span-5-35"><a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">    </span><span class="c1">// &quot;No active subscription found for recipient=..., wallet=...&quot;</span>
+</span><span id="__span-5-36"><a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">    </span><span class="c1">// &quot;Subscription is paid but no payment found with memo=...&quot;</span>
+</span><span id="__span-5-37"><a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Subscription verification failed:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+</span><span id="__span-5-38"><a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">    </span><span class="nx">showAccessDenied</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+</span><span id="__span-5-39"><a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-5-40"><a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="p">}</span>
+</span><span id="__span-5-41"><a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>
+</span><span id="__span-5-42"><a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="c1">// Clean URL</span>
+</span><span id="__span-5-43"><a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="nb">window</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">replaceState</span><span class="p">({},</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">pathname</span><span class="p">);</span>
+</span></code></pre></div>
+<h3 id="verify-a-one-time-payment">Verify a One-Time Payment<a class="headerlink" href="#verify-a-one-time-payment" title="Permanent link">&para;</a></h3>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">payment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">verifier</span><span class="p">.</span><span class="nx">verifyPayment</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nx">recipient</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BxKp...9mVq&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// your wallet</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nx">wallet</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;7xKp...3mVq&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// user&#39;s wallet</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nx">memo</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;order_12345&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// tracking ID for this purchase</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="c1">// Payment confirmed — deliver the product</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Payment confirmed: </span><span class="si">${</span><span class="nx">payment</span><span class="p">.</span><span class="nx">amount</span><span class="si">}</span><span class="sb"> lamports`</span><span class="p">);</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Transaction: </span><span class="si">${</span><span class="nx">payment</span><span class="p">.</span><span class="nx">signature</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Paid at: </span><span class="si">${</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">payment</span><span class="p">.</span><span class="nx">timestamp</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="nx">deliverProduct</span><span class="p">(</span><span class="nx">payment</span><span class="p">);</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="nx">PaymentVerificationError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="c1">// &quot;Wallet mismatch: ...&quot;</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="c1">// &quot;No payment found matching recipient=..., wallet=..., memo=...&quot;</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Payment verification failed:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span><span class="nx">showPaymentFailed</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="verify-either-unified">Verify Either (Unified)<a class="headerlink" href="#verify-either-unified" title="Permanent link">&para;</a></h3>
+<p>If your product supports both models and you want one code path:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nx">TributaryVerifier</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nx">PaymentVerificationError</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nx">SubscriptionVerificationError</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/payments&quot;</span><span class="p">;</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">verifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">TributaryVerifier</span><span class="p">();</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">confirmAnyPayment</span><span class="p">(</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="nx">opts</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="nx">recipient</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="nx">wallet</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="nx">memo</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span><span class="c1">// Try subscription first</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">sub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">verifier</span><span class="p">.</span><span class="nx">verifySubscription</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="nx">opts</span><span class="p">);</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;subscription&quot;</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kd">const</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">sub</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">{}</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">  </span><span class="c1">// Fall back to one-time payment</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">payment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">verifier</span><span class="p">.</span><span class="nx">verifyPayment</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="nx">opts</span><span class="p">);</span>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;one_time&quot;</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kd">const</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">payment</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">{}</span>
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="p">}</span>
+</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>
+</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">confirmAnyPayment</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a><span class="w">  </span><span class="nx">recipient</span><span class="o">:</span><span class="w"> </span><span class="kt">YOUR_WALLET</span><span class="p">,</span>
+</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a><span class="w">  </span><span class="nx">wallet</span><span class="o">:</span><span class="w"> </span><span class="kt">userWallet</span><span class="p">,</span>
+</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a><span class="w">  </span><span class="nx">memo</span><span class="o">:</span><span class="w"> </span><span class="kt">trackingId</span><span class="p">,</span>
+</span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a><span class="p">});</span>
+</span><span id="__span-7-37"><a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>
+</span><span id="__span-7-38"><a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">result</span><span class="o">?</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;subscription&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-39"><a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a><span class="w">  </span><span class="nx">grantSubscriptionAccess</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span><span id="__span-7-40"><a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">result</span><span class="o">?</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;one_time&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-41"><a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a><span class="w">  </span><span class="nx">deliverProduct</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span><span id="__span-7-42"><a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-43"><a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a><span class="w">  </span><span class="nx">showAccessDenied</span><span class="p">();</span>
+</span><span id="__span-7-44"><a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="token-refresh">Token Refresh<a class="headerlink" href="#token-refresh" title="Permanent link">&para;</a></h3>
+<p>When a token expires, refresh it to get updated on-chain state:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">stored</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s2">&quot;tributary_token&quot;</span><span class="p">);</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">stored</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="c1">// Try verifying the existing token first</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">verifier</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">stored</span><span class="p">);</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">code</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;ERR_JWT_EXPIRED&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">verifier</span><span class="p">.</span><span class="nx">baseUrl</span><span class="si">}</span><span class="sb">/v1/tokens/refresh`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">        </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">        </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Authorization</span><span class="o">:</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">stored</span><span class="si">}</span><span class="sb">`</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">      </span><span class="p">});</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="kt">newToken</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">      </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s2">&quot;tributary_token&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">newToken</span><span class="p">);</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Refresh is <strong>stateless</strong> — the API re-queries the blockchain every time. The expired JWT serves as proof of identity (valid signature required), and the API builds a fresh token with current on-chain state. Expired tokens can be refreshed for up to 7 days; after that, a new token must be issued via <code>/v1/tokens/issue</code>.</p>
+<h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h3>
+<p>All verification errors inherit from <code>VerificationError</code> and include descriptive messages:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">VerificationError</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">PaymentVerificationError</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">SubscriptionVerificationError</span><span class="p">,</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/payments&quot;</span><span class="p">;</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">verifier</span><span class="p">.</span><span class="nx">verifySubscription</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="nx">opts</span><span class="p">);</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="nx">SubscriptionVerificationError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="c1">// Subscription-specific failures:</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="c1">// - Wallet mismatch</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="c1">// - No subscription for recipient</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="c1">// - Subscription exists but not paid (includes actual status)</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="c1">// - Paid but memo doesn&#39;t match any payment</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="nx">PaymentVerificationError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">    </span><span class="c1">// Payment-specific failures:</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">    </span><span class="c1">// - Wallet mismatch</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">    </span><span class="c1">// - No payment matching recipient + wallet + memo</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="nx">VerificationError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span><span class="c1">// JWT signature failures, expired tokens, wrong issuer/audience</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>VerificationError (base)
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>├── PaymentVerificationError      — verifyPayment failures
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>└── SubscriptionVerificationError — verifySubscription failures
+</span></code></pre></div>
+<h3 id="self-hosted-verification">Self-Hosted Verification<a class="headerlink" href="#self-hosted-verification" title="Permanent link">&para;</a></h3>
+<p>When running your own Tributary API instance, configure the verifier to point to your server:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">verifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">TributaryVerifier</span><span class="p">({</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://payments.yourcompany.com&quot;</span><span class="p">,</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nx">issuer</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://payments.yourcompany.com&quot;</span><span class="p">,</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Or via environment variables:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">TRIBUTARY_BASE_URL</span><span class="o">=</span>https://payments.yourcompany.com
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">TRIBUTARY_ISSUER</span><span class="o">=</span>https://payments.yourcompany.com
+</span></code></pre></div>
+<p>The verification code is identical regardless of whether you use the hosted or self-hosted API — only the base URL changes.</p>
+<h2 id="verifying-payments-low-level">Verifying Payments (Low-Level)<a class="headerlink" href="#verifying-payments-low-level" title="Permanent link">&para;</a></h2>
+<p>If you're not using TypeScript/JavaScript, or need direct access to JWT claims, you can verify tokens manually using any JWT library that supports JWKS.</p>
+<h3 id="manual-verification-with-jose">Manual Verification with <code>jose</code><a class="headerlink" href="#manual-verification-with-jose" title="Permanent link">&para;</a></h3>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">jwtVerify</span><span class="p">,</span><span class="w"> </span><span class="nx">createRemoteJWKSet</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;jose&quot;</span><span class="p">;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">JWKS_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="s2">&quot;https://api.tributary.so/.well-known/jwks.json&quot;</span><span class="p">);</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">jwks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createRemoteJWKSet</span><span class="p">(</span><span class="nx">JWKS_URL</span><span class="p">);</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">validateToken</span><span class="p">(</span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">payload</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">jwtVerify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="nx">jwks</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="nx">issuer</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://api.tributary.so&quot;</span><span class="p">,</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span><span class="nx">audience</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tributary-checkout&quot;</span><span class="p">,</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">payload</span><span class="p">;</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="manual-subscription-check">Manual Subscription Check<a class="headerlink" href="#manual-subscription-check" title="Permanent link">&para;</a></h3>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">validateToken</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">subs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span><span class="p">.</span><span class="nx">subscriptions</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">subs</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w"> </span><span class="nx">reason</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;no_subscriptions&quot;</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">}</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">subs</span><span class="p">.</span><span class="nx">find</span><span class="p">((</span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">recipient</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">YOUR_WALLET</span><span class="p">);</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">sub</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w"> </span><span class="nx">reason</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;not_your_subscription&quot;</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="p">}</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sub</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">&quot;paid&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w"> </span><span class="nx">reason</span><span class="o">:</span><span class="w"> </span><span class="sb">`subscription_</span><span class="si">${</span><span class="nx">sub</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">`</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="p">}</span>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1">// Verify payment exists with your tracking ID</span>
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="kd">const</span><span class="w"> </span><span class="nx">payments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span><span class="p">.</span><span class="nx">lastPayments</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="kd">const</span><span class="w"> </span><span class="nx">matchingPayment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payments</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">  </span><span class="p">(</span><span class="nx">p</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span>
+</span><span id="__span-14-21"><a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">    </span><span class="nx">p</span><span class="p">.</span><span class="nx">recipient</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">YOUR_WALLET</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+</span><span id="__span-14-22"><a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">    </span><span class="nx">p</span><span class="p">.</span><span class="nx">payer</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">userWallet</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+</span><span id="__span-14-23"><a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">    </span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">memo</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">trackingId</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">memo</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">trackingId</span><span class="p">))</span>
+</span><span id="__span-14-24"><a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="p">);</span>
+</span><span id="__span-14-25"><a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>
+</span><span id="__span-14-26"><a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">matchingPayment</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-27"><a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w"> </span><span class="nx">reason</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;no_matching_payment&quot;</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-14-28"><a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="p">}</span>
+</span><span id="__span-14-29"><a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>
+</span><span id="__span-14-30"><a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">subscription</span><span class="o">:</span><span class="w"> </span><span class="kt">sub</span><span class="p">,</span><span class="w"> </span><span class="nx">payment</span><span class="o">:</span><span class="w"> </span><span class="kt">matchingPayment</span><span class="w"> </span><span class="p">};</span>
+</span></code></pre></div>
+<h3 id="manual-one-time-payment-check">Manual One-Time Payment Check<a class="headerlink" href="#manual-one-time-payment-check" title="Permanent link">&para;</a></h3>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">validateToken</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">subs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span><span class="p">.</span><span class="nx">subscriptions</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">subs</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">valid</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w"> </span><span class="nx">reason</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;expected_one_time_got_subscription&quot;</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">}</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">payments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span><span class="p">.</span><span class="nx">lastPayments</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="kd">const</span><span class="w"> </span><span class="nx">payment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payments</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span><span class="p">(</span><span class="nx">p</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span><span class="nx">p</span><span class="p">.</span><span class="nx">recipient</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">YOUR_WALLET</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="nx">p</span><span class="p">.</span><span class="nx">payer</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">userWallet</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">memo</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">trackingId</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">memo</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">trackingId</span><span class="p">))</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="p">);</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">payment</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">valid</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w"> </span><span class="nx">reason</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;no_matching_payment&quot;</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="p">}</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">valid</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">payment</span><span class="w"> </span><span class="p">};</span>
+</span></code></pre></div>
+<h3 id="non-javascript-environments">Non-JavaScript Environments<a class="headerlink" href="#non-javascript-environments" title="Permanent link">&para;</a></h3>
+<p>Any JWT library with JWKS support works. The verification parameters are:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Algorithm</td>
+<td>ES256</td>
+</tr>
+<tr>
+<td>Issuer</td>
+<td><code>https://api.tributary.so</code></td>
+</tr>
+<tr>
+<td>Audience</td>
+<td><code>tributary-checkout</code></td>
+</tr>
+<tr>
+<td>JWKS URL</td>
+<td><code>https://api.tributary.so/.well-known/jwks.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>After verifying the signature, inspect <code>payload.subscriptions</code> and <code>payload.lastPayments</code> to match against your expected recipient, wallet, and memo.</p>
+<h2 id="claim-reference">Claim Reference<a class="headerlink" href="#claim-reference" title="Permanent link">&para;</a></h2>
+<h3 id="header">Header<a class="headerlink" href="#header" title="Permanent link">&para;</a></h3>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">&quot;alg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ES256&quot;</span><span class="p">,</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">&quot;kid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;trib-2026-03-31-a&quot;</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nt">&quot;typ&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JWT&quot;</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="subscription-claim-fields">Subscription Claim Fields<a class="headerlink" href="#subscription-claim-fields" title="Permanent link">&para;</a></h3>
 <table>
@@ -2519,6 +3214,11 @@
 <td>On-chain PaymentPolicy PDA address</td>
 </tr>
 <tr>
+<td><code>policyId</code></td>
+<td>number</td>
+<td>Policy ID within the UserPayment account</td>
+</tr>
+<tr>
 <td><code>recipient</code></td>
 <td>string</td>
 <td>Payment recipient's Solana pubkey</td>
@@ -2531,12 +3231,7 @@
 <tr>
 <td><code>amount</code></td>
 <td>string</td>
-<td>Human-readable amount (e.g. <code>"10.00"</code>)</td>
-</tr>
-<tr>
-<td><code>tokenMint</code></td>
-<td>string</td>
-<td>SPL token mint address</td>
+<td>Payment amount in smallest token units (lamports)</td>
 </tr>
 <tr>
 <td><code>paymentFrequency</code></td>
@@ -2544,14 +3239,9 @@
 <td><code>"daily"</code>, <code>"weekly"</code>, <code>"monthly"</code>, etc.</td>
 </tr>
 <tr>
-<td><code>lastExecuted</code></td>
-<td>number/null</td>
-<td>Timestamp of last payment, null if never executed</td>
-</tr>
-<tr>
 <td><code>totalPayments</code></td>
 <td>number</td>
-<td>Total payments executed</td>
+<td>Total payments executed so far</td>
 </tr>
 <tr>
 <td><code>nextPaymentDue</code></td>
@@ -2580,20 +3270,74 @@
 </tr>
 </tbody>
 </table>
-<h3 id="token-expiration">Token Expiration<a class="headerlink" href="#token-expiration" title="Permanent link">&para;</a></h3>
-<p>Token TTL is tied to the payment schedule:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>expiration = min(
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  earliest nextPaymentDue + 10 minutes,
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  now + 30 days
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>)
-</span></code></pre></div>
-<p>This means:</p>
-<ul>
-<li>A monthly subscription token expires just before the next payment is due</li>
-<li>Refreshing the token after payment fetches fresh state (paid → confirmed)</li>
-<li>Even yearly subscriptions are capped at 30-day TTL to limit stale data</li>
-</ul>
-<h3 id="status-derivation">Status Derivation<a class="headerlink" href="#status-derivation" title="Permanent link">&para;</a></h3>
+<h3 id="payment-record-fields-lastpayments">Payment Record Fields (lastPayments)<a class="headerlink" href="#payment-record-fields-lastpayments" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>signature</code></td>
+<td>string</td>
+<td>Solana transaction signature</td>
+</tr>
+<tr>
+<td><code>slot</code></td>
+<td>number</td>
+<td>Solana slot number</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td>number</td>
+<td>Unix timestamp of the payment</td>
+</tr>
+<tr>
+<td><code>policyAddress</code></td>
+<td>string</td>
+<td>PaymentPolicy PDA, or system program for one-time</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>string</td>
+<td>Payment amount in smallest token units</td>
+</tr>
+<tr>
+<td><code>tokenMint</code></td>
+<td>string</td>
+<td>SPL token mint address (e.g. USDC)</td>
+</tr>
+<tr>
+<td><code>payer</code></td>
+<td>string</td>
+<td>Payer's Solana pubkey</td>
+</tr>
+<tr>
+<td><code>recipient</code></td>
+<td>string</td>
+<td>Recipient's Solana pubkey</td>
+</tr>
+<tr>
+<td><code>gateway</code></td>
+<td>string</td>
+<td>PaymentGateway PDA address</td>
+</tr>
+<tr>
+<td><code>memo</code></td>
+<td>string</td>
+<td>Memo/tracking ID attached to the payment</td>
+</tr>
+<tr>
+<td><code>recordId</code></td>
+<td>number</td>
+<td>Payment record ID (0 for one-time payments)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="status-derivation-subscriptions">Status Derivation (Subscriptions)<a class="headerlink" href="#status-derivation-subscriptions" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2620,116 +3364,133 @@
 </tr>
 </tbody>
 </table>
-<h2 id="merchant-integration">Merchant Integration<a class="headerlink" href="#merchant-integration" title="Permanent link">&para;</a></h2>
-<h3 id="server-side-validation-recommended">Server-Side Validation (Recommended)<a class="headerlink" href="#server-side-validation-recommended" title="Permanent link">&para;</a></h3>
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">jwtVerify</span><span class="p">,</span><span class="w"> </span><span class="nx">createRemoteJWKSet</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;jose&quot;</span><span class="p">;</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">JWKS_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="s2">&quot;https://api.tributary.so/.well-known/jwks.json&quot;</span><span class="p">);</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">jwks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createRemoteJWKSet</span><span class="p">(</span><span class="nx">JWKS_URL</span><span class="p">);</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">validateTributaryToken</span><span class="p">(</span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">payload</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">jwtVerify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="nx">jwks</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nx">issuer</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://api.tributary.so&quot;</span><span class="p">,</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nx">audience</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tributary-checkout&quot;</span><span class="p">,</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="p">});</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">payload</span><span class="p">;</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">}</span>
+<h2 id="token-expiration">Token Expiration<a class="headerlink" href="#token-expiration" title="Permanent link">&para;</a></h2>
+<p>Token TTL is tied to the payment schedule:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>expiration = min(
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  earliest nextPaymentDue + 10 minutes,
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  now + 30 days
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>)
 </span></code></pre></div>
-<h3 id="client-side-validation">Client-Side Validation<a class="headerlink" href="#client-side-validation" title="Permanent link">&para;</a></h3>
-<p>For merchants without a backend, the JWT can be validated entirely client-side:</p>
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">jwtVerify</span><span class="p">,</span><span class="w"> </span><span class="nx">createRemoteJWKSet</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;jose&quot;</span><span class="p">;</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">jwks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createRemoteJWKSet</span><span class="p">(</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="s2">&quot;https://api.tributary.so/.well-known/jwks.json&quot;</span><span class="p">)</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">);</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1">// On success page — extract token from URL</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">urlParams</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URLSearchParams</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">);</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="kd">const</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">urlParams</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">);</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">payload</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">jwtVerify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="nx">jwks</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nx">issuer</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://api.tributary.so&quot;</span><span class="p">,</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nx">audience</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tributary-checkout&quot;</span><span class="p">,</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="p">});</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="c1">// Store for later refreshes</span>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s2">&quot;tributary_token&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">token</span><span class="p">);</span>
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span><span class="c1">// Read subscription data</span>
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">subscriptions</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">sub</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Subscription: </span><span class="si">${</span><span class="nx">sub</span><span class="p">.</span><span class="nx">amount</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">sub</span><span class="p">.</span><span class="nx">tokenMint</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
-</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Status: </span><span class="si">${</span><span class="nx">sub</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
-</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="p">});</span>
-</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
-</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span><span class="c1">// Clean URL (remove token from browser history)</span>
-</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">  </span><span class="nb">window</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">replaceState</span><span class="p">({},</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">pathname</span><span class="p">);</span>
-</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="p">}</span>
-</span></code></pre></div>
-<h3 id="token-refresh">Token Refresh<a class="headerlink" href="#token-refresh" title="Permanent link">&para;</a></h3>
-<p>When a token expires, refresh it to get updated on-chain state:</p>
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">stored</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s2">&quot;tributary_token&quot;</span><span class="p">);</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">stored</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">jwtVerify</span><span class="p">(</span><span class="nx">stored</span><span class="p">,</span><span class="w"> </span><span class="nx">jwks</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">      </span><span class="nx">issuer</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://api.tributary.so&quot;</span><span class="p">,</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">      </span><span class="nx">audience</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tributary-checkout&quot;</span><span class="p">,</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="p">});</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="c1">// Token still valid — use it</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">code</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;ERR_JWT_EXPIRED&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">        </span><span class="s2">&quot;https://api.tributary.so/v1/tokens/refresh&quot;</span><span class="p">,</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">        </span><span class="p">{</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">          </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">          </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Authorization</span><span class="o">:</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">stored</span><span class="si">}</span><span class="sb">`</span><span class="w"> </span><span class="p">},</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">      </span><span class="p">);</span>
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="kt">newToken</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">      </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s2">&quot;tributary_token&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">newToken</span><span class="p">);</span>
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="p">}</span>
-</span></code></pre></div>
-<p>Refresh is <strong>stateless</strong> — the API re-queries the blockchain every time. The expired JWT serves as proof of identity (valid signature required), and the API builds a fresh token with current on-chain state. Expired tokens can be refreshed for up to 7 days; after that, a new token must be issued via <code>/v1/tokens/issue</code>.</p>
+<ul>
+<li><strong>Monthly subscription</strong> → JWT lives ~30 days (expires just before next payment)</li>
+<li><strong>Weekly subscription</strong> → JWT lives ~7 days</li>
+<li><strong>Yearly subscription</strong> → JWT capped at 30 days</li>
+<li><strong>One-time payment</strong> → Fixed TTL (1 hour default)</li>
+</ul>
+<p>Refreshing the token after payment fetches fresh state. Even yearly subscriptions are capped at 30-day TTL to limit stale data.</p>
 <h2 id="api-endpoints">API Endpoints<a class="headerlink" href="#api-endpoints" title="Permanent link">&para;</a></h2>
 <h3 id="issue-token">Issue Token<a class="headerlink" href="#issue-token" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>POST /v1/tokens/issue
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Content-Type: application/json
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>{
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;walletPublicKey&quot;: &quot;7xKp...3mVq&quot;,
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;tokenMint&quot;: &quot;EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&quot;
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>POST /v1/tokens/issue
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Content-Type: application/json
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>{
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>  &quot;walletPublicKey&quot;: &quot;7xKp...3mVq&quot;,
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>  &quot;tokenMint&quot;: &quot;EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&quot;,
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>  &quot;recipient&quot;: &quot;BxKp...9mVq&quot;,
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>  &quot;transactionSignature&quot;: &quot;5Uf...9kT2&quot;
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>}
 </span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>walletPublicKey</code></td>
+<td>Yes</td>
+<td>Payer's Solana wallet address</td>
+</tr>
+<tr>
+<td><code>tokenMint</code></td>
+<td>No</td>
+<td>SPL token mint (defaults to USDC)</td>
+</tr>
+<tr>
+<td><code>recipient</code></td>
+<td>No</td>
+<td>Filter claims to a specific recipient</td>
+</tr>
+<tr>
+<td><code>transactionSignature</code></td>
+<td>No</td>
+<td>Verify a specific one-time payment transaction</td>
+</tr>
+</tbody>
+</table>
 <p>Unauthenticated — the JWT contains only public on-chain data. Any party can request a JWT for any wallet. The value comes from the cryptographic guarantee that claims match on-chain state, signed by Tributary's key.</p>
 <p><strong>Rate limit:</strong> 10 requests/minute per wallet.</p>
 <h3 id="refresh-token">Refresh Token<a class="headerlink" href="#refresh-token" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>POST /v1/tokens/refresh
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Authorization: Bearer &lt;expired-jwt&gt;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>POST /v1/tokens/refresh
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Authorization: Bearer &lt;expired-jwt&gt;
 </span></code></pre></div>
 <p>Accepts expired JWTs (valid signature required, within 7-day grace window). Re-queries blockchain and returns a fresh token.</p>
 <p><strong>Rate limit:</strong> 30 requests/minute per wallet.</p>
 <h3 id="jwks-public-keys">JWKS (Public Keys)<a class="headerlink" href="#jwks-public-keys" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>GET /.well-known/jwks.json
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>GET /.well-known/jwks.json
 </span></code></pre></div>
 <p>Returns all active public keys in standard JWKS format. Cached for 1 hour (<code>Cache-Control: public, max-age=3600</code>).</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">      </span><span class="nt">&quot;kty&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EC&quot;</span><span class="p">,</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">      </span><span class="nt">&quot;crv&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P-256&quot;</span><span class="p">,</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">      </span><span class="nt">&quot;kid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;trib-2026-03-31-a&quot;</span><span class="p">,</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">      </span><span class="nt">&quot;alg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ES256&quot;</span><span class="p">,</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">      </span><span class="nt">&quot;use&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sig&quot;</span><span class="p">,</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">      </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">      </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">&quot;keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">      </span><span class="nt">&quot;kty&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EC&quot;</span><span class="p">,</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">      </span><span class="nt">&quot;crv&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P-256&quot;</span><span class="p">,</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">      </span><span class="nt">&quot;kid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;trib-2026-03-31-a&quot;</span><span class="p">,</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">      </span><span class="nt">&quot;alg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ES256&quot;</span><span class="p">,</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">      </span><span class="nt">&quot;use&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sig&quot;</span><span class="p">,</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">      </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">      </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="p">}</span>
 </span></code></pre></div>
+<h2 id="self-hosting">Self-Hosting<a class="headerlink" href="#self-hosting" title="Permanent link">&para;</a></h2>
+<p>Every component of Tributary's JWT infrastructure can be self-hosted:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>What it does</th>
+<th>Self-host?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Checkout page</td>
+<td>UI for wallet connection + payment</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>API server</td>
+<td>JWT issuance, JWKS, token refresh</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Indexer</td>
+<td>Monitors on-chain payment events</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>JWKS keys</td>
+<td>Signing key management + rotation</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Facilitator</td>
+<td>Triggers recurring payment execution</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>When self-hosting, configure <code>TributaryVerifier</code> with your base URL:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">verifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">TributaryVerifier</span><span class="p">({</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://payments.yourcompany.com&quot;</span><span class="p">,</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Or set the <code>TRIBUTARY_BASE_URL</code> environment variable.</p>
 <h2 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h2>
 <p>Signing keys rotate automatically every 30 days:</p>
 <ol>
@@ -2738,21 +3499,31 @@
 <li>JWKS endpoint serves both old and new keys during grace period</li>
 <li>After grace period, old key is removed from JWKS</li>
 </ol>
-<p>Merchants don't need to do anything — the <code>jose</code> library's <code>createRemoteJWKSet</code> handles key lookup automatically by matching the <code>kid</code> header.</p>
+<p>Merchants don't need to do anything — <code>TributaryVerifier</code> and <code>jose</code>'s <code>createRemoteJWKSet</code> handle key lookup automatically by matching the <code>kid</code> header.</p>
 <p>Admin override is available via <code>POST /v1/admin/keys/rotate</code> (requires admin API key).</p>
 <h2 id="security-model">Security Model<a class="headerlink" href="#security-model" title="Permanent link">&para;</a></h2>
 <h3 id="what-the-merchant-can-trust">What the Merchant Can Trust<a class="headerlink" href="#what-the-merchant-can-trust" title="Permanent link">&para;</a></h3>
 <ul>
-<li>The subscription exists on Solana — claims reflect on-chain state at issuance time</li>
+<li>The payment exists on Solana — claims reflect on-chain state at issuance time</li>
 <li>The user owns the wallet — <code>sub</code> claim identifies the wallet; checkout required wallet signature</li>
 <li>Payment status is current — as of the token's <code>iat</code> timestamp</li>
 <li>The token was issued by Tributary — cryptographic ES256 signature verification</li>
+<li>Transaction signatures in <code>lastPayments</code> are real — they can be looked up on Solana Explorer</li>
+<li>The <code>verifyPayment</code>/<code>verifySubscription</code> methods confirm recipient, wallet, <strong>and</strong> memo match — not just that a payment exists, but that it's <strong>your</strong> payment from <strong>this</strong> user for <strong>this</strong> tracking ID</li>
 </ul>
 <h3 id="what-the-merchant-cannot-trust">What the Merchant Cannot Trust<a class="headerlink" href="#what-the-merchant-cannot-trust" title="Permanent link">&para;</a></h3>
 <ul>
 <li>That the holder of the JWT is the wallet owner (JWTs are bearer tokens — they can be copied). For high-value operations, verify wallet ownership directly.</li>
 <li>That the subscription is still active right now — the token reflects state at issuance. Call <code>/v1/tokens/refresh</code> for live data.</li>
 </ul>
+<h3 id="why-the-memo-matters">Why the Memo Matters<a class="headerlink" href="#why-the-memo-matters" title="Permanent link">&para;</a></h3>
+<p>The <code>memo</code> parameter in <code>verifyPayment</code> and <code>verifySubscription</code> isn't optional — it's your strongest protection against replay attacks. Without memo matching, a malicious user could:</p>
+<ol>
+<li>Create a subscription for Product A ($5/month)</li>
+<li>Get a valid JWT</li>
+<li>Present it as proof of payment for Product B ($50/month)</li>
+</ol>
+<p>By requiring the memo (your <code>trackingId</code> from checkout creation) to match, you ensure the JWT proves payment for <strong>this specific product/order</strong>, not just "some payment exists."</p>
 <h3 id="why-this-is-safe">Why This Is Safe<a class="headerlink" href="#why-this-is-safe" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>No secrets in tokens</strong> — JWTs contain only public on-chain data (amounts, recipients, payment status). No private keys, no balances.</li>
@@ -2760,9 +3531,10 @@
 <li><strong>ES256</strong> — smaller tokens, faster verification than RSA alternatives.</li>
 <li><strong>JWKS rotation</strong> — compromised keys are rotated out automatically.</li>
 <li><strong>No server sessions</strong> — stateless issuance means nothing to leak from a database.</li>
+<li><strong>Memo binding</strong> — verification is scoped to your specific checkout session, not global.</li>
 </ul>
 <h2 id="when-backend-integration-is-required">When Backend Integration Is Required<a class="headerlink" href="#when-backend-integration-is-required" title="Permanent link">&para;</a></h2>
-<p><strong>It usually isn't.</strong> Most merchants can validate the JWT client-side and be done. The JWT gives you everything you need: subscription status, amounts, payment history, next due date.</p>
+<p><strong>It usually isn't.</strong> Most merchants can validate the JWT client-side and be done. The JWT gives you everything you need: subscription status, payment history, amounts, transaction signatures, next due date.</p>
 <p>Backend integration is only needed when you have <strong>background processes that need to check payment status without user interaction</strong> — for example:</p>
 <ul>
 <li>A cron job that revokes access for overdue subscriptions</li>
@@ -2770,46 +3542,52 @@
 <li>A service that provisions resources based on subscription tier</li>
 </ul>
 <p>In those cases, the business runs their own <strong>gateway/facilitator</strong>. This is by design — the facilitator is the entity that triggers payment execution on-chain. It has direct visibility into whether a payment succeeded or failed because it's the one submitting the transactions.</p>
-<p>The facilitator knows:</p>
+<h3 id="decision-guide">Decision Guide<a class="headerlink" href="#decision-guide" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Do you need to check payment status without a user present?
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>├── No → Client-side TributaryVerifier is sufficient
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>└── Yes → Are you running your own gateway/facilitator?
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>    ├── Yes → Use facilitator&#39;s own transaction records
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>    └── No → Use /v1/tokens/issue or /v1/tokens/refresh from your backend
+</span></code></pre></div>
+<h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Recommended: use the SDK</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@tributary-so/payments
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Or, for manual verification (any language — here&#39;s the JS example)</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>pnpm<span class="w"> </span>add<span class="w"> </span>jose
+</span></code></pre></div>
+<p>No Solana libraries required for JWT validation. That's the point.</p>
+<h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Event</th>
-<th>Meaning</th>
+<th>Variable</th>
+<th>Required</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Transaction confirmed</td>
-<td>Payment executed successfully</td>
+<td><code>TRIBUTARY_BASE_URL</code></td>
+<td>No</td>
+<td>API base URL, defaults to <code>https://api.tributary.so</code></td>
 </tr>
 <tr>
-<td>Transaction failed</td>
-<td>Payment not made (insufficient balance, revoked delegation, etc.)</td>
+<td><code>TRIBUTARY_ISSUER</code></td>
+<td>No</td>
+<td>Expected JWT issuer, defaults to <code>https://api.tributary.so</code></td>
 </tr>
 <tr>
-<td>No transaction submitted</td>
-<td>Payment not yet due</td>
+<td><code>TRIBUTARY_AUDIENCE</code></td>
+<td>No</td>
+<td>Expected JWT audience, defaults to <code>tributary-checkout</code></td>
 </tr>
 </tbody>
 </table>
-<p>So if you're running your own facilitator, you already have the data you need — you don't need to validate JWTs in your backend. The facilitator's own records are the source of truth for payment status. JWTs are for the <strong>merchant's frontend</strong> to verify subscription status without needing Solana expertise.</p>
-<h3 id="decision-guide">Decision Guide<a class="headerlink" href="#decision-guide" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Do you need to check payment status without a user present?
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>├── No → Client-side JWT validation is sufficient
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>└── Yes → Are you running your own gateway/facilitator?
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    ├── Yes → Use facilitator&#39;s own transaction records
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    └── No → Use /v1/tokens/issue or /v1/tokens/refresh from your backend
-</span></code></pre></div>
-<h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># For JWT verification (any language — here&#39;s the JS example)</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>pnpm<span class="w"> </span>add<span class="w"> </span>jose
-</span></code></pre></div>
-<p>No Solana libraries required for JWT validation. That's the point.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../integration/">Integration Options</a> — choose your integration method</li>
-<li><a href="../quickstart/checkout/">Checkout Quickstart</a> — generate payment links with success URL</li>
+<li><a href="../checkout/">Checkout</a> — generate payment links with success URL</li>
 <li><a href="../api/overview/">API Overview</a> — REST and WebSocket APIs</li>
 <li><a href="../security/">Security Model</a> — protocol-level security details</li>
 </ul>

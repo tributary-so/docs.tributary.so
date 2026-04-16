@@ -334,7 +334,7 @@ await sdk.updateGatewayReferralSettings(gatewayPDA, {
 ## Related Documentation
 
 - [Architecture Overview](https://docs.tributary.so/architecture/index.md)
-- [Payment Policies](https://docs.tributary.so/subscription-payments/index.md)
-- [SDK Documentation](https://docs.tributary.so/architecture/#sdks)
+- [Payment Policies](https://docs.tributary.so/policies/subscription/index.md)
+- [SDK Documentation](https://docs.tributary.so/sdk/index.md)
 - [Fees](https://docs.tributary.so/fees/index.md)
 - [Smart Contract](https://docs.tributary.so/smart-contract/index.md)

@@ -52,7 +52,7 @@ Tributary is the first and only non-custodial recurring payment protocol on Sola
 
 ### How do I integrate Tributary?
 
-Check our [Developer Guide](https://docs.tributary.so/quickstart/integration/index.md) for SDK integration. The React components make it easy to add subscription buttons in minutes.
+Check our [Developer Guide](https://docs.tributary.so/integration/index.md) for SDK integration. The React components make it easy to add subscription buttons in minutes.
 
 ### Where can I learn more?
 

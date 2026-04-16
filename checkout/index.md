@@ -30,9 +30,9 @@ import { Tributary } from "@tributary-so/sdk";
 
 const connection = new Connection("https://api.mainnet-beta.solana.com");
 const tributary = new Tributary(connection, wallet);
-const stripe = new PaymentsClient(connection, tributary);
+const payments = new PaymentsClient(connection, tributary);
 
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   payment_method_types: ["tributary"],
   line_items: [
     {
@@ -91,7 +91,7 @@ Track subscription status using the SDK:
 
 ```typescript
 // Check subscription status
-const status = await stripe.subscriptions.checkStatus({
+const status = await payments.subscriptions.checkStatus({
   trackingId: "unique-tracking-id",
   userPublicKey: "USER_PUBLIC_KEY",
   tokenMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
@@ -107,7 +107,7 @@ console.log("Next due:", status.nextPaymentDue);
 For single, non-recurring payments:
 
 ```typescript
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   payment_method_types: ["tributary"],
   line_items: [
     {
@@ -129,7 +129,7 @@ const session = await stripe.checkout.sessions.create({
 Check one-time payment status:
 
 ```typescript
-const status = await stripe.payments.oneTime.checkStatus("order-12345");
+const status = await payments.payments.oneTime.checkStatus("order-12345");
 
 if (status.status === "paid") {
   console.log("Paid!", {
@@ -145,7 +145,7 @@ if (status.status === "paid") {
 Add detailed breakdowns:
 
 ```typescript
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   // ...
   line_items: [
     { description: "Basic plan", unitPrice: 20, quantity: 1 },
@@ -216,7 +216,7 @@ tributaryConfig: {
 
 ```typescript
 // Service agent generates subscription URL
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   payment_method_types: ["tributary"],
   line_items: [{ description: "AI Service Pro", unitPrice: 29, quantity: 1 }],
   paymentFrequency: "monthly",
@@ -236,7 +236,7 @@ const session = await stripe.checkout.sessions.create({
 
 ```typescript
 // Generate and share via email/SMS/chat
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   payment_method_types: ["tributary"],
   line_items: [
     { description: "Consulting Session", unitPrice: 99, quantity: 1 },
@@ -271,7 +271,7 @@ const connection = new Connection("https://api.devnet.solana.com");
 
 ## Next Steps
 
-- [SDK Reference](https://docs.tributary.so/sdks/index.md) - Full SDK documentation
-- [Payment Types](https://docs.tributary.so/subscription-payments/index.md) - Subscriptions, milestones, pay-as-you-go
+- [SDK Reference](https://docs.tributary.so/sdk/index.md) - Full SDK documentation
+- [Payment Types](https://docs.tributary.so/policies/subscription/index.md) - Subscriptions, milestones, pay-as-you-go
 - [API Reference](https://docs.tributary.so/api/overview/index.md) - REST and WebSocket APIs
 - [Lando](https://lando.tributary.so) - AI-to-AI payments platform

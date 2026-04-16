@@ -137,7 +137,7 @@ Service agents generate subscription URLs for customer agents:
 
 ```typescript
 // Service agent generates payment URL
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   mode: "subscription",
   line_items: [{ description: "AI Service Pro", unitPrice: 29, quantity: 1 }],
   paymentFrequency: "monthly",
@@ -176,7 +176,7 @@ Zero-code payment collection:
 
 ```typescript
 // Generate link
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   mode: "subscription",
   line_items: [{ description: "Newsletter Pro", unitPrice: 10, quantity: 1 }],
   paymentFrequency: "monthly",
@@ -244,7 +244,7 @@ ______________________________________________________________________
 
 ## Next Steps
 
-- [Subscription Payments](https://docs.tributary.so/subscription-payments/index.md) - Detailed subscription docs
-- [Milestone Payments](https://docs.tributary.so/milestone-payments/index.md) - Milestone implementation
-- [Pay-as-you-go](https://docs.tributary.so/pay-as-you-go/index.md) - Usage-based billing
+- [Subscription Payments](https://docs.tributary.so/policies/subscription/index.md) - Detailed subscription docs
+- [Milestone Payments](https://docs.tributary.so/policies/milestone/index.md) - Milestone implementation
+- [Pay-as-you-go](https://docs.tributary.so/policies/payasyougo/index.md) - Usage-based billing
 - [Integration Options](https://docs.tributary.so/integration/index.md) - Get started

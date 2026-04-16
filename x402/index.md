@@ -214,4 +214,4 @@ x402 builds on Tributary's smart contract infrastructure:
 - **Token Delegation**: One-time approval enables unlimited payments
 - **Fee Structure**: Protocol fees + gateway fees
 
-See [Pay-as-you-go Payments](https://docs.tributary.so/pay-as-you-go/index.md) and [Smart Contract](https://docs.tributary.so/smart-contract/index.md) for more details.
+See [Pay-as-you-go Payments](https://docs.tributary.so/policies/payasyougo/index.md) and [Smart Contract](https://docs.tributary.so/smart-contract/index.md) for more details.

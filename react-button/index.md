@@ -254,6 +254,6 @@ function SubscribePage() {
 
 ## Next Steps
 
-- [SDK Reference](https://docs.tributary.so/sdks/index.md) - Full SDK documentation
-- [Checkout Links](https://docs.tributary.so/quickstart/checkout/index.md) - Generate shareable payment URLs
+- [SDK Reference](https://docs.tributary.so/sdk/index.md) - Full SDK documentation
+- [Checkout Links](https://docs.tributary.so/checkout/index.md) - Generate shareable payment URLs
 - [API Reference](https://docs.tributary.so/api/overview/index.md) - Check subscription status

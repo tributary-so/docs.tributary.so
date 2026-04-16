@@ -24,9 +24,9 @@ import { Tributary } from "@tributary-so/sdk";
 
 const connection = new Connection("https://api.mainnet-beta.solana.com");
 const tributary = new Tributary(connection, wallet);
-const stripe = new PaymentsClient(connection, tributary);
+const payments = new PaymentsClient(connection, tributary);
 
-const session = await stripe.checkout.sessions.create({
+const session = await payments.checkout.sessions.create({
   mode: "subscription",
   line_items: [{ description: "Pro Plan", unitPrice: 10, quantity: 1 }],
   paymentFrequency: "monthly",
@@ -43,7 +43,7 @@ console.log(session.url); // Share this link!
 ### Check Status
 
 ```typescript
-const status = await stripe.subscriptions.checkStatus({
+const status = await payments.subscriptions.checkStatus({
   trackingId: "user-pro-plan",
   userPublicKey: "USER_WALLET",
 });
@@ -112,7 +112,7 @@ if (status.status === "active") {
 
 - [Integration Options](https://docs.tributary.so/integration/index.md) - Choose your integration method
 - [JWT Authentication](https://docs.tributary.so/jwt-auth/index.md) - Verify subscriptions after checkout
-- [Checkout Quickstart](https://docs.tributary.so/quickstart/checkout/index.md) - Generate payment links
-- [SDK Reference](https://docs.tributary.so/sdks/index.md) - Complete SDK documentation
+- [Checkout](https://docs.tributary.so/checkout/index.md) - Generate payment links
+- [SDK Reference](https://docs.tributary.so/sdk/index.md) - Complete SDK documentation
 - [API Reference](https://docs.tributary.so/api/overview/index.md) - REST & WebSocket APIs
 - [Use Cases](https://docs.tributary.so/use-cases/index.md) - Business applications
