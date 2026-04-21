@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://docs.tributary.so/fees/">
+        <link rel="canonical" href="https://docs.tributary.so/sdk-react/common/">
       
       
-        <link rel="prev" href="../providers/">
+        <link rel="prev" href="../hooks/">
       
       
-        <link rel="next" href="../referral-program/">
+        <link rel="next" href="../../x402/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Fees - Tributary Protocol Documentation</title>
+        <title>Common Patterns - Tributary Protocol Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -48,14 +48,14 @@
         
         
         
-        <link rel="stylesheet" href="../assets/external/fonts.googleapis.com/css.a490daf0.css">
+        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.a490daf0.css">
         <style>:root{--md-text-font:"Roboto Mono";--md-code-font:"Roboto Mono"}</style>
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#fee-structure" class="md-skip">
+        <a href="#common-patterns" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Tributary Protocol Documentation" class="md-header__button md-logo" aria-label="Tributary Protocol Documentation" data-md-component="logo">
+    <a href="../.." title="Tributary Protocol Documentation" class="md-header__button md-logo" aria-label="Tributary Protocol Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Fees
+              Common Patterns
             
           </span>
         </div>
@@ -225,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -244,7 +244,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../use-cases/" class="md-tabs__link">
+      <a href="../../use-cases/" class="md-tabs__link">
         
   
   
@@ -263,7 +263,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../faq/" class="md-tabs__link">
+      <a href="../../faq/" class="md-tabs__link">
         
   
   
@@ -286,7 +286,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../how/" class="md-tabs__link">
+        <a href="../../how/" class="md-tabs__link">
           
   
   
@@ -320,7 +320,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Tributary Protocol Documentation" class="md-nav__button md-logo" aria-label="Tributary Protocol Documentation" data-md-component="logo">
+    <a href="../.." title="Tributary Protocol Documentation" class="md-nav__button md-logo" aria-label="Tributary Protocol Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -350,7 +350,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -377,7 +377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-cases/" class="md-nav__link">
+      <a href="../../use-cases/" class="md-nav__link">
         
   
   
@@ -404,7 +404,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   
@@ -488,7 +488,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how/" class="md-nav__link">
+      <a href="../../how/" class="md-nav__link">
         
   
   
@@ -516,7 +516,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration/" class="md-nav__link">
+      <a href="../../integration/" class="md-nav__link">
         
   
   
@@ -541,8 +541,10 @@
                 
   
   
+    
   
   
+  
     
     
     
@@ -556,13 +558,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
         
           
           <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
@@ -583,7 +583,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -601,7 +601,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sdk/" class="md-nav__link">
+      <a href="../../sdk/" class="md-nav__link">
         
   
   
@@ -626,8 +626,10 @@
                 
   
   
+    
   
   
+  
     
     
     
@@ -638,13 +640,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3_2" checked>
         
           
           <label class="md-nav__link" for="__nav_4_3_2" id="__nav_4_3_2_label" tabindex="0">
@@ -665,7 +665,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_3_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_3_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_3_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -683,7 +683,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sdk-react/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -711,7 +711,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sdk-react/buttons/" class="md-nav__link">
+      <a href="../buttons/" class="md-nav__link">
         
   
   
@@ -739,7 +739,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sdk-react/hooks/" class="md-nav__link">
+      <a href="../hooks/" class="md-nav__link">
         
   
   
@@ -764,10 +764,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../sdk-react/common/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common Patterns
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -783,6 +810,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-pricing-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple Pricing Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yearly-with-discount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Yearly with Discount
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-hook-with-status-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Hook with Status Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#important-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -857,7 +959,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../x402/" class="md-nav__link">
+      <a href="../../x402/" class="md-nav__link">
         
   
   
@@ -885,7 +987,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../x402-getting-started/" class="md-nav__link">
+      <a href="../../x402-getting-started/" class="md-nav__link">
         
   
   
@@ -913,7 +1015,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../x402-api-reference/" class="md-nav__link">
+      <a href="../../x402-api-reference/" class="md-nav__link">
         
   
   
@@ -957,7 +1059,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tools/" class="md-nav__link">
+      <a href="../../tools/" class="md-nav__link">
         
   
   
@@ -1042,7 +1144,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../checkout/" class="md-nav__link">
+      <a href="../../checkout/" class="md-nav__link">
         
   
   
@@ -1070,7 +1172,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../jwt-auth/" class="md-nav__link">
+      <a href="../../jwt-auth/" class="md-nav__link">
         
   
   
@@ -1163,7 +1265,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/overview/" class="md-nav__link">
+      <a href="../../api/overview/" class="md-nav__link">
         
   
   
@@ -1191,7 +1293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/rest-api/" class="md-nav__link">
+      <a href="../../api/rest-api/" class="md-nav__link">
         
   
   
@@ -1219,7 +1321,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/websocket/" class="md-nav__link">
+      <a href="../../api/websocket/" class="md-nav__link">
         
   
   
@@ -1247,7 +1349,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/examples/" class="md-nav__link">
+      <a href="../../api/examples/" class="md-nav__link">
         
   
   
@@ -1280,8 +1382,6 @@
                 
   
   
-    
-  
   
   
     
@@ -1297,11 +1397,13 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
         
           
           <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="">
@@ -1322,7 +1424,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1340,7 +1442,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
+      <a href="../../architecture/" class="md-nav__link">
         
   
   
@@ -1368,7 +1470,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../smart-contract/" class="md-nav__link">
+      <a href="../../smart-contract/" class="md-nav__link">
         
   
   
@@ -1396,7 +1498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../providers/" class="md-nav__link">
+      <a href="../../providers/" class="md-nav__link">
         
   
   
@@ -1421,37 +1523,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Fees
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../fees/" class="md-nav__link">
         
   
   
@@ -1467,59 +1542,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#protocol-fees-built-in" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protocol Fees (Built-in)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#provider-fees-configurable" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Provider Fees (Configurable)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fee-distribution-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fee Distribution Example
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1532,7 +1554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../referral-program/" class="md-nav__link">
+      <a href="../../referral-program/" class="md-nav__link">
         
   
   
@@ -1560,7 +1582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/" class="md-nav__link">
+      <a href="../../security/" class="md-nav__link">
         
   
   
@@ -1642,7 +1664,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../policies/subscription/" class="md-nav__link">
+      <a href="../../policies/subscription/" class="md-nav__link">
         
   
   
@@ -1670,7 +1692,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../policies/milestone/" class="md-nav__link">
+      <a href="../../policies/milestone/" class="md-nav__link">
         
   
   
@@ -1698,7 +1720,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../policies/payasyougo/" class="md-nav__link">
+      <a href="../../policies/payasyougo/" class="md-nav__link">
         
   
   
@@ -1769,10 +1791,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#protocol-fees-built-in" class="md-nav__link">
+  <a href="#multiple-pricing-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Protocol Fees (Built-in)
+        Multiple Pricing Tiers
       
     </span>
   </a>
@@ -1780,10 +1802,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#provider-fees-configurable" class="md-nav__link">
+  <a href="#yearly-with-discount" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Provider Fees (Configurable)
+        Yearly with Discount
       
     </span>
   </a>
@@ -1791,10 +1813,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fee-distribution-example" class="md-nav__link">
+  <a href="#custom-hook-with-status-tracking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fee Distribution Example
+        Custom Hook with Status Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#important-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
       
     </span>
   </a>
@@ -1821,26 +1865,78 @@
   
 
 
-<h1 id="fee-structure">💰 Fee Structure<a class="headerlink" href="#fee-structure" title="Permanent link">&para;</a></h1>
-<h2 id="protocol-fees-built-in">Protocol Fees (Built-in)<a class="headerlink" href="#protocol-fees-built-in" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Protocol-level fee on all payments (goes into the treasury)</li>
-<li>Automatically collected by protocol</li>
-<li>Funds protocol development and maintenance</li>
-</ul>
-<h2 id="provider-fees-configurable">Provider Fees (Configurable)<a class="headerlink" href="#provider-fees-configurable" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Providers set their own fee structure</li>
-<li>Can be percentage-based or flat fees</li>
-<li>Collected alongside protocol fees</li>
-<li>Enables sustainable business models</li>
-</ul>
-<h2 id="fee-distribution-example">Fee Distribution Example<a class="headerlink" href="#fee-distribution-example" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>$100 Payment
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── $1.00 → Tributary Protocol (1%)
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── $2.00 → Payment Provider (2%, configurable)
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── $97.00 → Recipient
+<h1 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h1>
+<h2 id="multiple-pricing-tiers">Multiple Pricing Tiers<a class="headerlink" href="#multiple-pricing-tiers" title="Permanent link">&para;</a></h2>
+<div class="language-tsx highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">PricingTiers</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">tiers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Basic&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">price</span><span class="o">:</span><span class="w"> </span><span class="kt">5_000_000</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Subscribe Basic&quot;</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Pro&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">price</span><span class="o">:</span><span class="w"> </span><span class="kt">15_000_000</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Subscribe Pro&quot;</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Enterprise&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">price</span><span class="o">:</span><span class="w"> </span><span class="kt">99_000_000</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Subscribe Enterprise&quot;</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p">];</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">className</span><span class="o">=</span><span class="s">&quot;grid grid-cols-3 gap-4&quot;</span><span class="p">&gt;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="p">{</span><span class="nx">tiers</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">tier</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">key</span><span class="o">=</span><span class="p">{</span><span class="nx">tier</span><span class="p">.</span><span class="nx">name</span><span class="p">}&gt;</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">          </span><span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">            </span><span class="p">{</span><span class="nx">tier</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">$</span><span class="p">{</span><span class="nx">tier</span><span class="p">.</span><span class="nx">price</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1</span><span class="nx">_000_000</span><span class="p">}</span><span class="o">/</span><span class="nx">mo</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">          </span><span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">          </span><span class="p">&lt;</span><span class="nt">SubscriptionButton</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">            </span><span class="na">amount</span><span class="o">=</span><span class="p">{</span><span class="ow">new</span><span class="w"> </span><span class="nx">BN</span><span class="p">(</span><span class="nx">tier</span><span class="p">.</span><span class="nx">price</span><span class="p">)}</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">            </span><span class="na">recipient</span><span class="o">=</span><span class="p">{</span><span class="nx">RECIPIENT</span><span class="p">}</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">            </span><span class="na">gateway</span><span class="o">=</span><span class="p">{</span><span class="nx">GATEWAY</span><span class="p">}</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">            </span><span class="na">token</span><span class="o">=</span><span class="p">{</span><span class="nx">USDC_MINT</span><span class="p">}</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">            </span><span class="na">interval</span><span class="o">=</span><span class="p">{</span><span class="nx">PaymentInterval</span><span class="p">.</span><span class="nx">Monthly</span><span class="p">}</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">            </span><span class="na">label</span><span class="o">=</span><span class="p">{</span><span class="nx">tier</span><span class="p">.</span><span class="nx">label</span><span class="p">}</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">          </span><span class="p">/&gt;</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">        </span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">      </span><span class="p">))}</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="p">);</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="p">}</span>
 </span></code></pre></div>
+<h2 id="yearly-with-discount">Yearly with Discount<a class="headerlink" href="#yearly-with-discount" title="Permanent link">&para;</a></h2>
+<div class="language-tsx highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">SubscriptionButton</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="na">amount</span><span class="o">=</span><span class="p">{</span><span class="ow">new</span><span class="w"> </span><span class="nx">BN</span><span class="p">(</span><span class="mf">100</span><span class="nx">_000_000</span><span class="p">)}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">$</span><span class="na">100</span><span class="err">/</span><span class="na">year</span><span class="w"> </span><span class="err">($</span><span class="na">8.33</span><span class="err">/</span><span class="na">mo</span><span class="w"> </span><span class="na">equivalent</span><span class="err">)</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="na">interval</span><span class="o">=</span><span class="p">{</span><span class="nx">PaymentInterval</span><span class="p">.</span><span class="nx">Annually</span><span class="p">}</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="na">maxRenewals</span><span class="o">=</span><span class="p">{</span><span class="mf">1</span><span class="p">}</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="na">label</span><span class="o">=</span><span class="s">&quot;Subscribe Yearly (Save 17%)&quot;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">/&gt;</span>
+</span></code></pre></div>
+<h2 id="custom-hook-with-status-tracking">Custom Hook with Status Tracking<a class="headerlink" href="#custom-hook-with-status-tracking" title="Permanent link">&para;</a></h2>
+<div class="language-tsx highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">useSubscribeWithStatus</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createSubscription</span><span class="p">,</span><span class="w"> </span><span class="nx">loading</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useCreateSubscription</span><span class="p">();</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">txSignature</span><span class="p">,</span><span class="w"> </span><span class="nx">setTxSignature</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">&lt;</span><span class="nt">string</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="na">null</span><span class="p">&gt;(</span><span class="kc">null</span><span class="p">);</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">subscribe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="kt">CreateSubscriptionParams</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nx">setTxSignature</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">createSubscription</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="nx">setTxSignature</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">txId</span><span class="p">);</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">result</span><span class="p">;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="nx">err</span><span class="p">;</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="p">};</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">subscribe</span><span class="p">,</span><span class="w"> </span><span class="nx">loading</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">,</span><span class="w"> </span><span class="nx">txSignature</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="important-notes">Important Notes<a class="headerlink" href="#important-notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Wallet Required</strong>: All hooks and buttons require a connected wallet via <code>@solana/wallet-adapter-react</code></li>
+<li><strong>Token Balance</strong>: User must have sufficient token balance (USDC or configured token)</li>
+<li><strong>SOL for Fees</strong>: User needs SOL for transaction fees</li>
+<li><strong>Default Gateway</strong>: <code>CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr</code></li>
+<li><strong>Testing</strong>: Use devnet (<code>https://api.devnet.solana.com</code>) for testing</li>
+</ul>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../sdk/">SDK Reference</a> — Full SDK documentation for all packages</li>
+<li><a href="../../checkout/">Checkout Links</a> — Generate shareable payment URLs</li>
+<li><a href="../../integration/">Integration Options</a> — Compare all integration methods</li>
+<li><a href="../../api/overview/">API Reference</a> — Check subscription status server-side</li>
+</ul>
 
 
 
@@ -1911,10 +2007,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

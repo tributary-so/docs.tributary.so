@@ -94,7 +94,7 @@ One-click setup, total transparency, full control. Every payment is on-chain. Yo
 
 ### Developers
 
-Drop in a [React component](https://docs.tributary.so/react-button/index.md) and you're done. Need more control? Use the [TypeScript SDK](https://docs.tributary.so/sdk/index.md). Going no-code? Generate [checkout links](https://docs.tributary.so/checkout/index.md) in seconds. Everything is [open-source](https://github.com/tributary-so/tributary).
+Drop in a [React component or hook](https://docs.tributary.so/sdk-react/index.md) and you're done. Need more control? Use the [TypeScript SDK](https://docs.tributary.so/sdk/index.md). Going no-code? Generate [checkout links](https://docs.tributary.so/checkout/index.md) in seconds. Everything is [open-source](https://github.com/tributary-so/tributary).
 
 ### Businesses
 
@@ -123,7 +123,7 @@ ______________________________________________________________________
 
 ## Get Started
 
-1. **Pick your integration** — [React Button](https://docs.tributary.so/react-button/index.md), [TypeScript SDK](https://docs.tributary.so/sdk/index.md), or [Checkout Links](https://docs.tributary.so/checkout/index.md)
+1. **Pick your integration** — [React SDK](https://docs.tributary.so/sdk-react/index.md), [TypeScript SDK](https://docs.tributary.so/sdk/index.md), or [Checkout Links](https://docs.tributary.so/checkout/index.md)
 1. **Choose a payment type** — [Subscription](https://docs.tributary.so/policies/subscription/index.md), [Milestone](https://docs.tributary.so/policies/milestone/index.md), or [Pay-as-you-go](https://docs.tributary.so/policies/payasyougo/index.md)
 1. **Go live** — deploy on Solana mainnet in minutes
 1. **Monitor** — track payments via [REST API](https://docs.tributary.so/api/rest-api/index.md) or [WebSocket API](https://docs.tributary.so/api/websocket/index.md)
@@ -135,7 +135,7 @@ Check the [FAQ](https://docs.tributary.so/faq/index.md) or read the [Architectur
 ## Developer Tools
 
 - **[TypeScript SDK](https://docs.tributary.so/sdk/#typescript-sdk-tributary-sosdk)** - Complete protocol interaction
-- **[React SDK](https://docs.tributary.so/sdk/#react-sdk-tributary-sosdk-react)** - Pre-built payment components
+- **[React SDK](https://docs.tributary.so/sdk-react/index.md)** - Pre-built payment components and React hooks
 - **[Payments SDK](https://docs.tributary.so/sdk/#payments-sdk-tributary-sopayments)** - Simple Payments API with hosted checkout page (zero API keys)
 - **[x402 SDK](https://docs.tributary.so/sdk/#x402-sdk-tributary-sox402)** - HTTP 402 middleware for API monetization
 - **[CLI](https://docs.tributary.so/sdk/#cli-tributary-socli)** - Protocol management tools
@@ -537,7 +537,7 @@ ______________________________________________________________________
 
 What do you want to do?
 
-**I want to accept payments on my site** → [React Button](https://docs.tributary.so/react-button/index.md) for a drop-in component, or [Checkout Links](https://docs.tributary.so/checkout/index.md) for no-code hosted payment pages.
+**I want to accept payments on my site** → [React SDK](https://docs.tributary.so/sdk-react/index.md) for drop-in components and hooks, or [Checkout Links](https://docs.tributary.so/checkout/index.md) for no-code hosted payment pages.
 
 **I want full control over the payment flow** → [Integration Options](https://docs.tributary.so/integration/index.md) to compare approaches, then [SDK Reference](https://docs.tributary.so/sdk/index.md) for the complete TypeScript API.
 
@@ -632,7 +632,7 @@ ______________________________________________________________________
 | --------------------------------------------------------------------- | ----------------------------------------------- |
 | [Integration Options](https://docs.tributary.so/integration/index.md) | Compare all integration methods                 |
 | [SDK Reference](https://docs.tributary.so/sdk/index.md)               | TypeScript, React, Payments, x402, CLI packages |
-| [React Button](https://docs.tributary.so/react-button/index.md)       | Drop-in `<SubscriptionButton>` component        |
+| [React SDK](https://docs.tributary.so/sdk-react/index.md)             | Components, hooks, and payment buttons          |
 | [Checkout Links](https://docs.tributary.so/checkout/index.md)         | Hosted payment pages, no frontend required      |
 | [Payment Tokens](https://docs.tributary.so/jwt-auth/index.md)         | Server-side JWT verification                    |
 | [x402 Payments](https://docs.tributary.so/x402/index.md)              | HTTP 402 middleware for API monetization        |
@@ -697,27 +697,38 @@ const instructions = await tributary.createSubscriptionInstruction(/*...*/);
 
 ______________________________________________________________________
 
-### 3. React Button 🚀
+### 3. React SDK ⚛️
 
 Best for: Fast integration in React applications
 
-- Use `@tributary-so/sdk-react` for pre-built components
-- Drop-in subscription buttons with minimal code
-- Built-in wallet integration and error handling
+- Use `@tributary-so/sdk-react` for pre-built components and hooks
+- Drop-in payment buttons (subscription, milestone, pay-as-you-go)
+- React hooks for full control over the payment flow
+- Built-in wallet integration, transaction handling, and error states
 - Ideal for web apps and dashboards
 
 ```tsx
-import { SubscriptionButton } from "@tributary-so/sdk-react";
+import { SubscriptionButton, PaymentInterval } from "@tributary-so/sdk-react";
 
 <SubscriptionButton
   amount={new BN(10000000)}
   recipient={recipient}
+  gateway={gateway}
   interval={PaymentInterval.Monthly}
   label="Subscribe $10/month"
 />;
 ```
 
-👉 **Get Started:** [Button Integration](https://docs.tributary.so/react-button/index.md)
+Or use hooks for custom UI:
+
+```tsx
+import { useCreateSubscription } from "@tributary-so/sdk-react";
+
+const { createSubscription, loading, error } = useCreateSubscription();
+const result = await createSubscription({ amount, recipient, gateway, interval, ... });
+```
+
+👉 **Get Started:** [React SDK](https://docs.tributary.so/sdk-react/index.md)
 
 ______________________________________________________________________
 
@@ -776,20 +787,20 @@ ______________________________________________________________________
 | AI agent monetization    | Payments SDK         |
 | Custom payment UI        | Direct SDK           |
 | Complex payment logic    | Direct SDK           |
-| React web app            | React Button         |
+| React web app            | React SDK            |
 | Backend-only integration | REST API             |
 | API monetization         | x402                 |
 | Real-time notifications  | REST API + WebSocket |
 
 ## SDK Packages
 
-| Package                   | Purpose                   |
-| ------------------------- | ------------------------- |
-| `@tributary-so/sdk`       | Core protocol interaction |
-| `@tributary-so/payments`  | Simplified payments SDK   |
-| `@tributary-so/sdk-react` | React components          |
-| `@tributary-so/x402`      | HTTP 402 middleware       |
-| `@tributary-so/cli`       | Command-line tools        |
+| Package                   | Purpose                    |
+| ------------------------- | -------------------------- |
+| `@tributary-so/sdk`       | Core protocol interaction  |
+| `@tributary-so/payments`  | Simplified payments SDK    |
+| `@tributary-so/sdk-react` | React components and hooks |
+| `@tributary-so/x402`      | HTTP 402 middleware        |
+| `@tributary-so/cli`       | Command-line tools         |
 
 ## Next Steps
 
@@ -1918,266 +1929,6 @@ class MyPaymentProvider {
 The future of payments is automated, transparent, and user-controlled. Payment providers make this future accessible to everyone.
 
 Ready to start building? [Learn the Technical Details →](https://docs.tributary.so/how/index.md)
-
-# Subscription Button Quickstart
-
-Integrate the `SubscriptionButton` component from `@tributary-so/sdk-react` into your React application for one-click recurring payments.
-
-## Prerequisites
-
-- Node.js (v16 or higher)
-- pnpm package manager
-- A Solana wallet (Phantom, Solflare, Backpack, etc.)
-- Basic knowledge of React
-
-## Step 1: Installation
-
-```bash
-pnpm install @tributary-so/sdk-react @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/web3.js @coral-xyz/anchor
-```
-
-## Step 2: Setup Wallet Provider
-
-Configure wallet adapter in your app's entry point:
-
-```typescript
-import {
-  ConnectionProvider,
-  WalletProvider,
-} from "@solana/wallet-adapter-react";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-import { clusterApiUrl } from "@solana/web3.js";
-
-const wallets = [new PhantomWalletAdapter()];
-const endpoint = clusterApiUrl("mainnet-beta");
-
-function App() {
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>{/* Your app */}</WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
-  );
-}
-```
-
-## Step 3: Use Subscription Button
-
-```typescript
-import { SubscriptionButton, PaymentInterval } from "@tributary-so/sdk-react";
-import { PublicKey, BN } from "@solana/web3.js";
-import { useWallet } from "@solana/wallet-adapter-react";
-
-const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
-const RECIPIENT = new PublicKey("YOUR_RECIPIENT_WALLET");
-const GATEWAY = new PublicKey("CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr");
-
-function PricingPage() {
-  const { connected } = useWallet();
-
-  if (!connected) {
-    return <p>Please connect your wallet</p>;
-  }
-
-  return (
-    <SubscriptionButton
-      amount={new BN(10_000_000)} // 10 USDC (6 decimals)
-      token={USDC_MINT}
-      recipient={RECIPIENT}
-      gateway={GATEWAY}
-      interval={PaymentInterval.Monthly}
-      maxRenewals={12}
-      memo="Pro subscription"
-      executeImmediately={true}
-      label="Subscribe $10/month"
-      onSuccess={(tx) => console.log("Success:", tx)}
-      onError={(err) => console.error("Failed:", err)}
-    />
-  );
-}
-```
-
-## Props Reference
-
-| Prop                 | Type               | Required | Description                                               |
-| -------------------- | ------------------ | -------- | --------------------------------------------------------- |
-| `amount`             | `BN`               | Yes      | Payment amount in smallest token units (USDC: 6 decimals) |
-| `token`              | `PublicKey`        | Yes      | Token mint address (USDC: `EPjFWdd5...`)                  |
-| `recipient`          | `PublicKey`        | Yes      | Recipient wallet address                                  |
-| `gateway`            | `PublicKey`        | Yes      | Payment gateway address                                   |
-| `interval`           | `PaymentInterval`  | Yes      | Payment frequency                                         |
-| `custom_interval`    | `number`           | No       | Custom interval in seconds                                |
-| `maxRenewals`        | `number`           | No       | Maximum renewals (null = unlimited)                       |
-| `memo`               | `string`           | No       | Payment memo                                              |
-| `startTime`          | `number`           | No       | Start timestamp (null = now)                              |
-| `executeImmediately` | `boolean`          | No       | Execute first payment now (default: true)                 |
-| `label`              | `string`           | No       | Button text (default: "Subscribe")                        |
-| `className`          | `string`           | No       | CSS classes                                               |
-| `disabled`           | `boolean`          | No       | Disable button                                            |
-| `onSuccess`          | `(result) => void` | No       | Success callback                                          |
-| `onError`            | `(error) => void`  | No       | Error callback                                            |
-
-## Payment Intervals
-
-```typescript
-enum PaymentInterval {
-  Daily,
-  Weekly,
-  Monthly,
-  Quarterly,
-  SemiAnnually,
-  Annually,
-}
-```
-
-For custom intervals:
-
-```typescript
-<SubscriptionButton
-  interval={PaymentInterval.Custom}
-  custom_interval={604800} // 7 days in seconds
-  // ... other props
-/>
-```
-
-## Multiple Tiers
-
-```typescript
-function PricingTiers() {
-  return (
-    <div className="grid grid-cols-3 gap-4">
-      {/* Basic */}
-      <div>
-        <h3>Basic - $5/mo</h3>
-        <SubscriptionButton
-          amount={new BN(5_000_000)}
-          recipient={RECIPIENT}
-          gateway={GATEWAY}
-          token={USDC_MINT}
-          interval={PaymentInterval.Monthly}
-          label="Subscribe Basic"
-        />
-      </div>
-
-      {/* Pro */}
-      <div>
-        <h3>Pro - $15/mo</h3>
-        <SubscriptionButton
-          amount={new BN(15_000_000)}
-          recipient={RECIPIENT}
-          gateway={GATEWAY}
-          token={USDC_MINT}
-          interval={PaymentInterval.Monthly}
-          label="Subscribe Pro"
-        />
-      </div>
-
-      {/* Enterprise */}
-      <div>
-        <h3>Enterprise - $99/mo</h3>
-        <SubscriptionButton
-          amount={new BN(99_000_000)}
-          recipient={RECIPIENT}
-          gateway={GATEWAY}
-          token={USDC_MINT}
-          interval={PaymentInterval.Monthly}
-          label="Subscribe Enterprise"
-        />
-      </div>
-    </div>
-  );
-}
-```
-
-## Handling Success/Error
-
-```typescript
-function SubscribePage() {
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
-  const [txSignature, setTxSignature] = useState<string | null>(null);
-
-  return (
-    <div>
-      {status === "success" && (
-        <div className="text-green-600">
-          Subscription created!
-          <a href={`https://solscan.io/tx/${txSignature}`}>View transaction</a>
-        </div>
-      )}
-
-      {status === "error" && (
-        <div className="text-red-600">Failed to create subscription</div>
-      )}
-
-      <SubscriptionButton
-        // ... props
-        onSuccess={(result) => {
-          setStatus("success");
-          setTxSignature(result.signature);
-        }}
-        onError={(error) => {
-          setStatus("error");
-          console.error(error);
-        }}
-      />
-    </div>
-  );
-}
-```
-
-## Common Patterns
-
-### Yearly with Discount
-
-```typescript
-<SubscriptionButton
-  amount={new BN(100_000_000)} // $100/year ($8.33/mo equivalent)
-  interval={PaymentInterval.Annually}
-  maxRenewals={1} // One year commitment
-  label="Subscribe Yearly (Save 17%)"
-/>
-```
-
-### Time-Limited Subscription
-
-```typescript
-<SubscriptionButton
-  amount={new BN(29_000_000)}
-  interval={PaymentInterval.Monthly}
-  maxRenewals={3} // 3 months max
-  label="3-Month Access"
-/>
-```
-
-### Custom Start Date
-
-```typescript
-<SubscriptionButton
-  amount={new BN(10_000_000)}
-  interval={PaymentInterval.Monthly}
-  startTime={Math.floor(Date.now() / 1000) + 86400} // Tomorrow
-  executeImmediately={false}
-  label="Start Tomorrow"
-/>
-```
-
-## Important Notes
-
-- **Wallet Required**: Button only works when wallet is connected
-- **Token Balance**: User must have sufficient token balance
-- **SOL for Fees**: User needs SOL for transaction fees
-- **Gateway**: Use `CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr` (default Tributary gateway)
-- **Testing**: Use devnet (`https://api.devnet.solana.com`) for testing
-
-## Next Steps
-
-- [SDK Reference](https://docs.tributary.so/sdk/index.md) - Full SDK documentation
-- [Checkout Links](https://docs.tributary.so/checkout/index.md) - Generate shareable payment URLs
-- [API Reference](https://docs.tributary.so/api/overview/index.md) - Check subscription status
 
 # Referral Program
 
@@ -6885,3 +6636,618 @@ const approvalAmount = amount.mul(new BN(effectiveRenewals));
 | **Predictability** | High               | Medium                 | Low                |
 | **Best For**       | Recurring services | Project deliverables   | Variable usage     |
 | **User Control**   | Set up once        | Approve per milestone  | Period limits      |
+
+# React SDK (`@tributary-so/sdk-react`)
+
+Drop-in payment components and React hooks for Tributary. Handles wallet interaction, transaction construction, signing, and confirmation — so you don't have to.
+
+## Installation
+
+```bash
+pnpm install @tributary-so/sdk-react @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/web3.js @coral-xyz/anchor
+```
+
+## Wallet Provider Setup
+
+All components and hooks require `@solana/wallet-adapter-react` providers. Wrap your app once:
+
+```typescript
+import {
+  ConnectionProvider,
+  WalletProvider,
+} from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
+import { clusterApiUrl } from "@solana/web3.js";
+
+const wallets = [new PhantomWalletAdapter()];
+const endpoint = clusterApiUrl("mainnet-beta");
+
+function App() {
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <WalletModalProvider>{/* Your app */}</WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+}
+```
+
+## SDK Components
+
+- [Hooks](https://docs.tributary.so/sdk-react/hooks/index.md)
+- [Quick Buttons](https://docs.tributary.so/sdk-react/buttons/index.md)
+- [Common Patterns](https://docs.tributary.so/sdk-react/common/index.md)
+
+# Payment Buttons
+
+Pre-built button components for each payment type. Render them, pass props, done.
+
+## SubscriptionButton
+
+```tsx
+import { SubscriptionButton, PaymentInterval } from "@tributary-so/sdk-react";
+import { PublicKey, BN } from "@solana/web3.js";
+
+const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+const RECIPIENT = new PublicKey("YOUR_RECIPIENT_WALLET");
+const GATEWAY = new PublicKey("CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr");
+
+<SubscriptionButton
+  amount={new BN(10_000_000)} // 10 USDC (6 decimals)
+  token={USDC_MINT}
+  recipient={RECIPIENT}
+  gateway={GATEWAY}
+  interval={PaymentInterval.Monthly}
+  maxRenewals={12}
+  memo="Pro subscription"
+  executeImmediately={true}
+  label="Subscribe $10/month"
+  onSuccess={(result) => console.log("Success:", result.txId)}
+  onError={(err) => console.error("Failed:", err)}
+/>;
+```
+
+### SubscriptionButton Props
+
+| Prop                 | Type               | Required | Description                                                 |
+| -------------------- | ------------------ | -------- | ----------------------------------------------------------- |
+| `amount`             | `BN`               | Yes      | Payment amount in smallest token units (USDC: 6 decimals)   |
+| `token`              | `PublicKey`        | Yes      | Token mint address                                          |
+| `recipient`          | `PublicKey`        | Yes      | Recipient wallet address                                    |
+| `gateway`            | `PublicKey`        | Yes      | Payment gateway address                                     |
+| `interval`           | `PaymentInterval`  | Yes      | Payment frequency                                           |
+| `custom_interval`    | `number`           | No       | Custom interval in seconds (required if interval is Custom) |
+| `maxRenewals`        | `number`           | No       | Maximum renewals (null = unlimited)                         |
+| `memo`               | `string`           | No       | Payment memo                                                |
+| `startTime`          | `number`           | No       | Start timestamp (null = now)                                |
+| `executeImmediately` | `boolean`          | No       | Execute first payment now (default: true)                   |
+| `label`              | `string`           | No       | Button text (default: "Subscribe")                          |
+| `className`          | `string`           | No       | CSS classes                                                 |
+| `disabled`           | `boolean`          | No       | Disable button                                              |
+| `onSuccess`          | `(result) => void` | No       | Success callback with `{ txId, instructions }`              |
+| `onError`            | `(error) => void`  | No       | Error callback                                              |
+
+## MilestoneButton
+
+```tsx
+import { MilestoneButton } from "@tributary-so/sdk-react";
+import { PublicKey, BN } from "@coral-xyz/anchor";
+
+<MilestoneButton
+  milestoneAmounts={[new BN(5_000_000), new BN(5_000_000), new BN(10_000_000)]}
+  milestoneTimestamps={[
+    new BN(1717200000),
+    new BN(1719792000),
+    new BN(1722470400),
+  ]}
+  releaseCondition={0}
+  token={USDC_MINT}
+  recipient={RECIPIENT}
+  gateway={GATEWAY}
+  label="Start Project"
+  onSuccess={(result) => console.log("Milestone created:", result.txId)}
+/>;
+```
+
+### MilestoneButton Props
+
+| Prop                  | Type               | Required | Description                                        |
+| --------------------- | ------------------ | -------- | -------------------------------------------------- |
+| `milestoneAmounts`    | `BN[]`             | Yes      | Payment amount per milestone (up to 4)             |
+| `milestoneTimestamps` | `BN[]`             | Yes      | Unix timestamps for each milestone                 |
+| `releaseCondition`    | `number`           | Yes      | 0 = time-based, 1 = manual approval, 2 = automatic |
+| `token`               | `PublicKey`        | Yes      | Token mint address                                 |
+| `recipient`           | `PublicKey`        | Yes      | Recipient wallet address                           |
+| `gateway`             | `PublicKey`        | Yes      | Payment gateway address                            |
+| `memo`                | `string`           | No       | Payment memo                                       |
+| `approvalAmount`      | `BN`               | No       | Token approval amount                              |
+| `executeImmediately`  | `boolean`          | No       | Execute first milestone now (default: true)        |
+| `label`               | `string`           | No       | Button text (default: "Create Milestone Payment")  |
+| `className`           | `string`           | No       | CSS classes                                        |
+| `disabled`            | `boolean`          | No       | Disable button                                     |
+| `onSuccess`           | `(result) => void` | No       | Success callback with `{ txId, instructions }`     |
+| `onError`             | `(error) => void`  | No       | Error callback                                     |
+
+## PayAsYouGoButton
+
+```tsx
+import { PayAsYouGoButton } from "@tributary-so/sdk-react";
+import { PublicKey, BN } from "@coral-xyz/anchor";
+
+<PayAsYouGoButton
+  maxAmountPerPeriod={new BN(50_000_000)}
+  maxChunkAmount={new BN(1_000_000)}
+  periodLengthSeconds={new BN(86400)}
+  token={USDC_MINT}
+  recipient={RECIPIENT}
+  gateway={GATEWAY}
+  label="Enable Pay-as-you-go"
+  onSuccess={(result) => console.log("Created:", result.txId)}
+/>;
+```
+
+### PayAsYouGoButton Props
+
+| Prop                  | Type               | Required | Description                                    |
+| --------------------- | ------------------ | -------- | ---------------------------------------------- |
+| `maxAmountPerPeriod`  | `BN`               | Yes      | Spending cap per billing period                |
+| `maxChunkAmount`      | `BN`               | Yes      | Maximum per individual claim                   |
+| `periodLengthSeconds` | `BN`               | Yes      | Period duration in seconds                     |
+| `token`               | `PublicKey`        | Yes      | Token mint address                             |
+| `recipient`           | `PublicKey`        | Yes      | Recipient wallet address                       |
+| `gateway`             | `PublicKey`        | Yes      | Payment gateway address                        |
+| `memo`                | `string`           | No       | Payment memo                                   |
+| `approvalAmount`      | `BN`               | No       | Token approval amount                          |
+| `label`               | `string`           | No       | Button text (default: "Create Pay-as-you-go")  |
+| `className`           | `string`           | No       | CSS classes                                    |
+| `disabled`            | `boolean`          | No       | Disable button                                 |
+| `onSuccess`           | `(result) => void` | No       | Success callback with `{ txId, instructions }` |
+| `onError`             | `(error) => void`  | No       | Error callback                                 |
+
+## Payment Intervals
+
+Used by `SubscriptionButton`:
+
+```typescript
+enum PaymentInterval {
+  Daily = "daily",
+  Weekly = "weekly",
+  Monthly = "monthly",
+  Quarterly = "quarterly",
+  SemiAnnually = "semiAnnually",
+  Annually = "annually",
+  Custom = "custom",
+}
+```
+
+Custom interval example:
+
+```tsx
+<SubscriptionButton
+  interval={PaymentInterval.Custom}
+  custom_interval={604800} // 7 days in seconds
+  // ... other props
+/>
+```
+
+# Common Patterns
+
+## Multiple Pricing Tiers
+
+```tsx
+function PricingTiers() {
+  const tiers = [
+    { name: "Basic", price: 5_000_000, label: "Subscribe Basic" },
+    { name: "Pro", price: 15_000_000, label: "Subscribe Pro" },
+    { name: "Enterprise", price: 99_000_000, label: "Subscribe Enterprise" },
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      {tiers.map((tier) => (
+        <div key={tier.name}>
+          <h3>
+            {tier.name} - ${tier.price / 1_000_000}/mo
+          </h3>
+          <SubscriptionButton
+            amount={new BN(tier.price)}
+            recipient={RECIPIENT}
+            gateway={GATEWAY}
+            token={USDC_MINT}
+            interval={PaymentInterval.Monthly}
+            label={tier.label}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+## Yearly with Discount
+
+```tsx
+<SubscriptionButton
+  amount={new BN(100_000_000)} // $100/year ($8.33/mo equivalent)
+  interval={PaymentInterval.Annually}
+  maxRenewals={1}
+  label="Subscribe Yearly (Save 17%)"
+/>
+```
+
+## Custom Hook with Status Tracking
+
+```tsx
+function useSubscribeWithStatus() {
+  const { createSubscription, loading, error } = useCreateSubscription();
+  const [txSignature, setTxSignature] = useState<string | null>(null);
+
+  const subscribe = async (params: CreateSubscriptionParams) => {
+    setTxSignature(null);
+    try {
+      const result = await createSubscription(params);
+      setTxSignature(result.txId);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  return { subscribe, loading, error, txSignature };
+}
+```
+
+## Important Notes
+
+- **Wallet Required**: All hooks and buttons require a connected wallet via `@solana/wallet-adapter-react`
+- **Token Balance**: User must have sufficient token balance (USDC or configured token)
+- **SOL for Fees**: User needs SOL for transaction fees
+- **Default Gateway**: `CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr`
+- **Testing**: Use devnet (`https://api.devnet.solana.com`) for testing
+
+## Next Steps
+
+- [SDK Reference](https://docs.tributary.so/sdk/index.md) — Full SDK documentation for all packages
+- [Checkout Links](https://docs.tributary.so/checkout/index.md) — Generate shareable payment URLs
+- [Integration Options](https://docs.tributary.so/integration/index.md) — Compare all integration methods
+- [API Reference](https://docs.tributary.so/api/overview/index.md) — Check subscription status server-side
+
+# Hooks
+
+For full control over the UI, use hooks directly. Each hook manages its own loading/error state and returns an async function you call when ready.
+
+## `useTributarySDK`
+
+Returns an initialized `Tributary` SDK instance (or `null` if the wallet isn't connected). All other payment hooks depend on this internally — use it when you need raw SDK access.
+
+```typescript
+import { useTributarySDK } from "@tributary-so/sdk-react";
+
+function MyComponent() {
+  const sdk = useTributarySDK();
+
+  if (!sdk) return <p>Connect your wallet</p>;
+
+  // Use sdk.createSubscription(), sdk.createMilestone(), etc. directly
+  const policies = await sdk.getUserPolicies(wallet.publicKey);
+}
+```
+
+**Returns:** `Tributary | null`
+
+______________________________________________________________________
+
+## `useCreateSubscription`
+
+Creates a subscription policy. Handles instruction building, transaction signing, and on-chain confirmation.
+
+```typescript
+import {
+  useCreateSubscription,
+  PaymentInterval,
+} from "@tributary-so/sdk-react";
+import { PublicKey, BN } from "@solana/web3.js";
+
+function SubscribeForm() {
+  const { createSubscription, loading, error } = useCreateSubscription();
+
+  const handleSubscribe = async () => {
+    const result = await createSubscription({
+      amount: new BN(10_000_000), // 10 USDC
+      token: new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+      recipient: new PublicKey("RECIPIENT_WALLET"),
+      gateway: new PublicKey("CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr"),
+      interval: PaymentInterval.Monthly,
+      memo: "Pro plan",
+      executeImmediately: true,
+    });
+
+    console.log("Subscription created:", result.txId);
+  };
+
+  return (
+    <button onClick={handleSubscribe} disabled={loading}>
+      {loading ? "Creating..." : "Subscribe $10/mo"}
+    </button>
+  );
+}
+```
+
+**Parameters:** `CreateSubscriptionParams`
+
+| Field                | Type              | Required | Description                   |
+| -------------------- | ----------------- | -------- | ----------------------------- |
+| `amount`             | `BN`              | Yes      | Amount per cycle              |
+| `token`              | `PublicKey`       | Yes      | Token mint                    |
+| `recipient`          | `PublicKey`       | Yes      | Recipient wallet              |
+| `gateway`            | `PublicKey`       | Yes      | Gateway address               |
+| `interval`           | `PaymentInterval` | Yes      | Billing frequency             |
+| `custom_interval`    | `number`          | No       | Seconds (required for Custom) |
+| `maxRenewals`        | `number`          | No       | Cap on renewals               |
+| `memo`               | `string`          | No       | On-chain memo                 |
+| `startTime`          | `Date`            | No       | First payment date            |
+| `approvalAmount`     | `BN`              | No       | Token delegation amount       |
+| `executeImmediately` | `boolean`         | No       | Charge first payment now      |
+
+**Returns:** `{ createSubscription, loading, error }`
+
+______________________________________________________________________
+
+## `useCreateMilestone`
+
+Creates a milestone payment with up to 4 deliverable phases. Each milestone has its own amount and due timestamp.
+
+```typescript
+import { useCreateMilestone } from "@tributary-so/sdk-react";
+import { BN } from "@coral-xyz/anchor";
+
+function MilestoneForm() {
+  const { createMilestone, loading, error } = useCreateMilestone();
+
+  const handleCreate = async () => {
+    const result = await createMilestone({
+      milestoneAmounts: [
+        new BN(3_000_000),
+        new BN(3_000_000),
+        new BN(4_000_000),
+      ],
+      milestoneTimestamps: [
+        new BN(Math.floor(Date.now() / 1000) + 86400 * 30),
+        new BN(Math.floor(Date.now() / 1000) + 86400 * 60),
+        new BN(Math.floor(Date.now() / 1000) + 86400 * 90),
+      ],
+      releaseCondition: 0, // time-based release
+      token: USDC_MINT,
+      recipient: RECIPIENT,
+      gateway: GATEWAY,
+      memo: "Website redesign project",
+      executeImmediately: true,
+    });
+
+    console.log("Milestones created:", result.txId);
+  };
+
+  return (
+    <button onClick={handleCreate} disabled={loading}>
+      {loading ? "Creating..." : "Start Project"}
+    </button>
+  );
+}
+```
+
+**Parameters:** `CreateMilestoneParams`
+
+| Field                 | Type        | Required | Description                         |
+| --------------------- | ----------- | -------- | ----------------------------------- |
+| `milestoneAmounts`    | `BN[]`      | Yes      | Amount per milestone (max 4)        |
+| `milestoneTimestamps` | `BN[]`      | Yes      | Unix timestamps for each milestone  |
+| `releaseCondition`    | `number`    | Yes      | 0=time-based, 1=manual, 2=automatic |
+| `token`               | `PublicKey` | Yes      | Token mint                          |
+| `recipient`           | `PublicKey` | Yes      | Recipient wallet                    |
+| `gateway`             | `PublicKey` | Yes      | Gateway address                     |
+| `memo`                | `string`    | No       | On-chain memo                       |
+| `approvalAmount`      | `BN`        | No       | Token delegation amount             |
+| `executeImmediately`  | `boolean`   | No       | Release first milestone now         |
+
+**Returns:** `{ createMilestone, loading, error }`
+
+______________________________________________________________________
+
+## `useCreatePayAsYouGo`
+
+Creates a pay-as-you-go policy with a spending cap per period. The provider claims incrementally as the user consumes.
+
+```typescript
+import { useCreatePayAsYouGo } from "@tributary-so/sdk-react";
+import { BN } from "@coral-xyz/anchor";
+
+function PayGoForm() {
+  const { createPayAsYouGo, loading, error } = useCreatePayAsYouGo();
+
+  const handleCreate = async () => {
+    const result = await createPayAsYouGo({
+      maxAmountPerPeriod: new BN(50_000_000), // 50 USDC per day
+      maxChunkAmount: new BN(1_000_000), // Max 1 USDC per claim
+      periodLengthSeconds: new BN(86400), // Daily period
+      token: USDC_MINT,
+      recipient: RECIPIENT,
+      gateway: GATEWAY,
+      memo: "API usage",
+    });
+
+    console.log("Pay-as-you-go created:", result.txId);
+  };
+
+  return (
+    <button onClick={handleCreate} disabled={loading}>
+      {loading ? "Creating..." : "Enable Usage Billing"}
+    </button>
+  );
+}
+```
+
+**Parameters:** `CreatePayAsYouGoParams`
+
+| Field                 | Type        | Required | Description                  |
+| --------------------- | ----------- | -------- | ---------------------------- |
+| `maxAmountPerPeriod`  | `BN`        | Yes      | Spending cap per period      |
+| `maxChunkAmount`      | `BN`        | Yes      | Maximum per individual claim |
+| `periodLengthSeconds` | `BN`        | Yes      | Period duration in seconds   |
+| `token`               | `PublicKey` | Yes      | Token mint                   |
+| `recipient`           | `PublicKey` | Yes      | Recipient wallet             |
+| `gateway`             | `PublicKey` | Yes      | Gateway address              |
+| `memo`                | `string`    | No       | On-chain memo                |
+| `approvalAmount`      | `BN`        | No       | Token delegation amount      |
+
+**Returns:** `{ createPayAsYouGo, loading, error }`
+
+______________________________________________________________________
+
+## `useCheckoutSession`
+
+Generates checkout URLs or redirects users to the hosted Tributary checkout page. Works for both one-time payments and subscriptions. No wallet connection required — the checkout page handles that.
+
+```typescript
+import { useCheckoutSession } from "@tributary-so/sdk-react";
+
+function CheckoutButton() {
+  const { generateUrl, initiate } = useCheckoutSession(
+    "https://checkout.tributary.so"
+  );
+
+  const opts = {
+    mode: "subscription" as const,
+    tokenMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    recipient: "YOUR_WALLET_ADDRESS",
+    gateway: "CwNybLVQ3sVmcZ3Q1veS6x99gUZcAF2duNDe3qbcEMGr",
+    amount: 10, // 10 USDC
+    paymentFrequency: "monthly",
+    trackingId: "user-pro-plan",
+    memo: "Pro subscription",
+  };
+
+  return (
+    <div>
+      <button onClick={() => initiate(opts)}>Pay with Checkout</button>
+      <a href={generateUrl(opts)}>Share payment link</a>
+    </div>
+  );
+}
+```
+
+**Parameters:** `CheckoutOptions`
+
+| Field              | Type                          | Required | Description                 |
+| ------------------ | ----------------------------- | -------- | --------------------------- |
+| `mode`             | `"payment" \| "subscription"` | Yes      | Payment type                |
+| `tokenMint`        | `string`                      | Yes      | Token mint address          |
+| `recipient`        | `string`                      | Yes      | Recipient wallet            |
+| `gateway`          | `string`                      | No       | Gateway address             |
+| `amount`           | `number`                      | Yes      | Payment amount              |
+| `trackingId`       | `string`                      | No       | Your reference ID           |
+| `successPath`      | `string`                      | No       | Redirect path after success |
+| `cancelPath`       | `string`                      | No       | Redirect path after cancel  |
+| `paymentFrequency` | `string`                      | No       | Frequency for subscriptions |
+| `autoRenew`        | `boolean`                     | No       | Auto-renew (default: true)  |
+| `maxRenewals`      | `number \| null`              | No       | Cap renewals                |
+| `memo`             | `string`                      | No       | Payment memo                |
+
+**Returns:** `{ generateUrl, initiate }`
+
+- `generateUrl(opts)` — returns a checkout URL string
+- `initiate(opts)` — redirects the browser to the checkout page
+
+______________________________________________________________________
+
+## `useTributaryToken`
+
+Verifies a Tributary JWT token (e.g., from a checkout callback) and decodes its payload. Use this to confirm an active subscription on the client side.
+
+```typescript
+import { useTributaryToken } from "@tributary-so/sdk-react";
+
+function SuccessPage() {
+  const { token, payload, loading, error } = useTributaryToken();
+
+  if (loading) return <p>Verifying...</p>;
+  if (error) return <p>Verification failed: {error}</p>;
+  if (!payload) return <p>No token found</p>;
+
+  return (
+    <div>
+      <h1>Subscription Active</h1>
+      <p>Status: {payload.status}</p>
+      <p>Tracking ID: {payload.trackingId}</p>
+    </div>
+  );
+}
+```
+
+The hook reads the token from the URL query parameter `?token=` by default. Pass a token string explicitly to override.
+
+```typescript
+const { payload } = useTributaryToken(myJwtToken);
+```
+
+**Parameters:** `token?: string, baseUrl?: string`
+
+**Returns:** `{ token, payload, loading, error }`
+
+| Field     | Type                          | Description                  |
+| --------- | ----------------------------- | ---------------------------- |
+| `token`   | `string \| null`              | Raw JWT string               |
+| `payload` | `TributaryJWTPayload \| null` | Decoded and verified payload |
+| `loading` | `boolean`                     | Verification in progress     |
+| `error`   | `string \| null`              | Verification error message   |
+
+______________________________________________________________________
+
+## `useActionCode`
+
+Integrates with [Action Codes](https://actioncodes.xyz) for transaction relay via action codes. This enables mobile wallet flows where a user scans a code instead of connecting a browser wallet.
+
+```typescript
+import { useActionCode } from "@tributary-so/sdk-react";
+
+function MobilePay() {
+  const {
+    actionCode,
+    resolvedPubkey,
+    resolveActionCode,
+    clearActionCode,
+    submitTransaction,
+  } = useActionCode();
+
+  const handleScan = async (code: string) => {
+    const result = await resolveActionCode(code);
+    if (result.success) {
+      console.log("Resolved wallet:", result.pubkey.toString());
+    }
+  };
+
+  const handlePay = async () => {
+    const { txSig } = await submitTransaction({
+      amount: new BN(10_000_000),
+      token: USDC_MINT,
+      gateway: GATEWAY,
+      interval: PaymentInterval.Monthly,
+      executeImmediately: true,
+    });
+    console.log("Paid:", txSig);
+  };
+
+  return <button onClick={() => handleScan("...")}>Scan & Pay</button>;
+}
+```
+
+**Returns:** `{ actionCode, resolvedPubkey, resolveActionCode, clearActionCode, submitTransaction }`
+
+| Field               | Type                                            | Description                           |
+| ------------------- | ----------------------------------------------- | ------------------------------------- |
+| `actionCode`        | `string \| null`                                | Current action code                   |
+| `resolvedPubkey`    | `PublicKey \| null`                             | Resolved wallet from the code         |
+| `resolveActionCode` | `(code: string) => Promise<{success, pubkey?}>` | Resolve an action code to a pubkey    |
+| `clearActionCode`   | `() => void`                                    | Reset state                           |
+| `submitTransaction` | `(params) => Promise<{ txSig: string }>`        | Build, sign, and relay a subscription |

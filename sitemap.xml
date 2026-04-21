@@ -37,10 +37,6 @@
          <lastmod>2026-04-21</lastmod>
     </url>
     <url>
-         <loc>https://docs.tributary.so/react-button/</loc>
-         <lastmod>2026-04-21</lastmod>
-    </url>
-    <url>
          <loc>https://docs.tributary.so/referral-program/</loc>
          <lastmod>2026-04-21</lastmod>
     </url>
@@ -102,6 +98,22 @@
     </url>
     <url>
          <loc>https://docs.tributary.so/policies/subscription/</loc>
+         <lastmod>2026-04-21</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.tributary.so/sdk-react/</loc>
+         <lastmod>2026-04-21</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.tributary.so/sdk-react/buttons/</loc>
+         <lastmod>2026-04-21</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.tributary.so/sdk-react/common/</loc>
+         <lastmod>2026-04-21</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.tributary.so/sdk-react/hooks/</loc>
          <lastmod>2026-04-21</lastmod>
     </url>
 </urlset>

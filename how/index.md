@@ -8,7 +8,7 @@ ______________________________________________________________________
 
 What do you want to do?
 
-**I want to accept payments on my site** → [React Button](https://docs.tributary.so/react-button/index.md) for a drop-in component, or [Checkout Links](https://docs.tributary.so/checkout/index.md) for no-code hosted payment pages.
+**I want to accept payments on my site** → [React SDK](https://docs.tributary.so/sdk-react/index.md) for drop-in components and hooks, or [Checkout Links](https://docs.tributary.so/checkout/index.md) for no-code hosted payment pages.
 
 **I want full control over the payment flow** → [Integration Options](https://docs.tributary.so/integration/index.md) to compare approaches, then [SDK Reference](https://docs.tributary.so/sdk/index.md) for the complete TypeScript API.
 
@@ -103,7 +103,7 @@ ______________________________________________________________________
 | --------------------------------------------------------------------- | ----------------------------------------------- |
 | [Integration Options](https://docs.tributary.so/integration/index.md) | Compare all integration methods                 |
 | [SDK Reference](https://docs.tributary.so/sdk/index.md)               | TypeScript, React, Payments, x402, CLI packages |
-| [React Button](https://docs.tributary.so/react-button/index.md)       | Drop-in `<SubscriptionButton>` component        |
+| [React SDK](https://docs.tributary.so/sdk-react/index.md)             | Components, hooks, and payment buttons          |
 | [Checkout Links](https://docs.tributary.so/checkout/index.md)         | Hosted payment pages, no frontend required      |
 | [Payment Tokens](https://docs.tributary.so/jwt-auth/index.md)         | Server-side JWT verification                    |
 | [x402 Payments](https://docs.tributary.so/x402/index.md)              | HTTP 402 middleware for API monetization        |
