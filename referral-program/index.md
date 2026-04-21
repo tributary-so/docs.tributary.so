@@ -60,13 +60,11 @@ Critical: Account Order Matters
 
 The SDK returns `[L1, L2, L3]` but the Rust program **reverses the reward assignment**. This is intentional and follows the spec:
 
-```text
 - `level1_referrer` (60%) = L3 (original referrer - index 2)
 - `level2_referrer` (30%) = L2 (middle - index 1)
 - `level3_referrer` (10%) = L1 (immediate - index 0)
 
 The terminology "Level 1" means "closest to origin" not "first in array."
-```
 
 ### Reward Distribution
 

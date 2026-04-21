@@ -2,122 +2,106 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.tributary.so/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/architecture/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/checkout/</loc>
-         <lastmod>2026-04-16</lastmod>
-    </url>
-    <url>
-         <loc>https://docs.tributary.so/contributions/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/faq/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/fees/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/how/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/integration/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/jwt-auth/</loc>
-         <lastmod>2026-04-16</lastmod>
-    </url>
-    <url>
-         <loc>https://docs.tributary.so/networkeffect/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/providers/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/react-button/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/referral-program/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/sdk/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/security/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/smart-contract/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/tools/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/use-cases/</loc>
-         <lastmod>2026-04-16</lastmod>
-    </url>
-    <url>
-         <loc>https://docs.tributary.so/what/</loc>
-         <lastmod>2026-04-16</lastmod>
-    </url>
-    <url>
-         <loc>https://docs.tributary.so/why/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/x402-api-reference/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/x402-getting-started/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/x402/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/api/examples/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/api/overview/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/api/rest-api/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/api/websocket/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/policies/milestone/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/policies/payasyougo/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
     <url>
          <loc>https://docs.tributary.so/policies/subscription/</loc>
-         <lastmod>2026-04-16</lastmod>
+         <lastmod>2026-04-21</lastmod>
     </url>
 </urlset>

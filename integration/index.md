@@ -6,7 +6,7 @@ Tributary offers multiple ways to integrate automated payments. Choose the metho
 
 ### 1. Payments SDK 🛒
 
-*Best for: Quick checkout links with zero API keys*
+Best for: Quick checkout links with zero API keys
 
 - Use `@tributary-so/payments` for simplified payments via hosted checkout page
 - Generate shareable payment URLs
@@ -31,7 +31,7 @@ ______________________________________________________________________
 
 ### 2. Direct SDK Integration 💻
 
-*Best for: Full programmatic control and custom flows*
+Best for: Full programmatic control and custom flows
 
 - Use `@tributary-so/sdk` for complete protocol interaction
 - Build custom payment UI and logic
@@ -51,7 +51,7 @@ ______________________________________________________________________
 
 ### 3. React Button 🚀
 
-*Best for: Fast integration in React applications*
+Best for: Fast integration in React applications
 
 - Use `@tributary-so/sdk-react` for pre-built components
 - Drop-in subscription buttons with minimal code
@@ -75,7 +75,7 @@ ______________________________________________________________________
 
 ### 4. REST API 📡
 
-*Best for: Backend integration and real-time notifications*
+Best for: Backend integration and real-time notifications
 
 - Query subscription status and payment events
 - WebSocket notifications for payment events
@@ -96,7 +96,7 @@ ______________________________________________________________________
 
 ### 5. x402 HTTP Payments 🌐
 
-*Best for: API monetization and micropayments*
+Best for: API monetization and micropayments
 
 - Express.js middleware for HTTP 402 payments
 - Subscription or pay-as-you-go billing
@@ -145,7 +145,7 @@ ______________________________________________________________________
 
 ## Next Steps
 
-1. **Learn the Protocol:** [What is Tributary?](https://docs.tributary.so/what/index.md)
+1. **Learn the Protocol:** [Tributary Overview](https://docs.tributary.so/index.md)
 1. **Choose Your Integration:** Review quickstart guides above
 1. **JWT Authentication:** [Verify subscriptions after checkout](https://docs.tributary.so/jwt-auth/index.md)
 1. **Explore Payment Types:** [Subscriptions](https://docs.tributary.so/policies/subscription/index.md), [Milestones](https://docs.tributary.so/policies/milestone/index.md), [Pay-as-you-go](https://docs.tributary.so/policies/payasyougo/index.md)
