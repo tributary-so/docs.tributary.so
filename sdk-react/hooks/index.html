@@ -865,10 +865,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useactioncode" class="md-nav__link">
+  <a href="#usetrackingid" class="md-nav__link">
     <span class="md-ellipsis">
       
-        useActionCode
+        useTrackingId
       
     </span>
   </a>
@@ -1879,10 +1879,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useactioncode" class="md-nav__link">
+  <a href="#usetrackingid" class="md-nav__link">
     <span class="md-ellipsis">
       
-        useActionCode
+        useTrackingId
       
     </span>
   </a>
@@ -1912,6 +1912,9 @@
 <h1 id="hooks">Hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h1>
 <p>For full control over the UI, use hooks directly. Each hook manages its own loading/error state and returns an async function you call when ready.</p>
 <h2 id="usetributarysdk"><code>useTributarySDK</code><a class="headerlink" href="#usetributarysdk" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Full example integration:</strong> <a href="https://github.com/tributary-so/tributary/tree/develop/apps/example-payments">github.com/tributary-so/tributary/example-payments</a></p>
+</blockquote>
 <p>Returns an initialized <code>Tributary</code> SDK instance (or <code>null</code> if the wallet isn't connected). All other payment hooks depend on this internally — use it when you need raw SDK access.</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useTributarySDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/sdk-react&quot;</span><span class="p">;</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -1927,6 +1930,9 @@
 <p><strong>Returns:</strong> <code>Tributary | null</code></p>
 <hr />
 <h2 id="usecreatesubscription"><code>useCreateSubscription</code><a class="headerlink" href="#usecreatesubscription" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Full example integration:</strong> <a href="https://github.com/tributary-so/tributary/tree/develop/apps/example-payments">github.com/tributary-so/tributary/example-payments</a></p>
+</blockquote>
 <p>Creates a subscription policy. Handles instruction building, transaction signing, and on-chain confirmation.</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nx">useCreateSubscription</span><span class="p">,</span>
@@ -2040,6 +2046,9 @@
 <p><strong>Returns:</strong> <code>{ createSubscription, loading, error }</code></p>
 <hr />
 <h2 id="usecreatemilestone"><code>useCreateMilestone</code><a class="headerlink" href="#usecreatemilestone" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Full example integration:</strong> <a href="https://github.com/tributary-so/tributary/tree/develop/apps/example-payments">github.com/tributary-so/tributary/example-payments</a></p>
+</blockquote>
 <p>Creates a milestone payment with up to 4 deliverable phases. Each milestone has its own amount and due timestamp.</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useCreateMilestone</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/sdk-react&quot;</span><span class="p">;</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">BN</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@coral-xyz/anchor&quot;</span><span class="p">;</span>
@@ -2147,6 +2156,9 @@
 <p><strong>Returns:</strong> <code>{ createMilestone, loading, error }</code></p>
 <hr />
 <h2 id="usecreatepayasyougo"><code>useCreatePayAsYouGo</code><a class="headerlink" href="#usecreatepayasyougo" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Full example integration:</strong> <a href="https://github.com/tributary-so/tributary/tree/develop/apps/example-payments">github.com/tributary-so/tributary/example-payments</a></p>
+</blockquote>
 <p>Creates a pay-as-you-go policy with a spending cap per period. The provider claims incrementally as the user consumes.</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useCreatePayAsYouGo</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/sdk-react&quot;</span><span class="p">;</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">BN</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@coral-xyz/anchor&quot;</span><span class="p">;</span>
@@ -2239,6 +2251,9 @@
 <p><strong>Returns:</strong> <code>{ createPayAsYouGo, loading, error }</code></p>
 <hr />
 <h2 id="usecheckoutsession"><code>useCheckoutSession</code><a class="headerlink" href="#usecheckoutsession" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Full example integration:</strong> <a href="https://github.com/tributary-so/tributary/tree/develop/apps/example-payments">github.com/tributary-so/tributary/example-payments</a></p>
+</blockquote>
 <p>Generates checkout URLs or redirects users to the hosted Tributary checkout page. Works for both one-time payments and subscriptions. No wallet connection required — the checkout page handles that.</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useCheckoutSession</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/sdk-react&quot;</span><span class="p">;</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
@@ -2358,6 +2373,9 @@
 </ul>
 <hr />
 <h2 id="usetributarytoken"><code>useTributaryToken</code><a class="headerlink" href="#usetributarytoken" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Full example integration:</strong> <a href="https://github.com/tributary-so/tributary/tree/develop/apps/example-payments">github.com/tributary-so/tributary/example-payments</a></p>
+</blockquote>
 <p>Verifies a Tributary JWT token (e.g., from a checkout callback) and decodes its payload. Use this to confirm an active subscription on the client side.</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useTributaryToken</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/sdk-react&quot;</span><span class="p">;</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
@@ -2414,41 +2432,71 @@
 </tbody>
 </table>
 <hr />
-<h2 id="useactioncode"><code>useActionCode</code><a class="headerlink" href="#useactioncode" title="Permanent link">&para;</a></h2>
-<p>Integrates with <a href="https://actioncodes.xyz">Action Codes</a> for transaction relay via action codes. This enables mobile wallet flows where a user scans a code instead of connecting a browser wallet.</p>
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useActionCode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/sdk-react&quot;</span><span class="p">;</span>
+<h2 id="usetrackingid"><code>useTrackingId</code><a class="headerlink" href="#usetrackingid" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Full example integration:</strong> <a href="https://github.com/tributary-so/tributary/tree/develop/apps/example-payments">github.com/tributary-so/tributary/example-payments</a></p>
+</blockquote>
+<p>Fetches and verifies a payment token for a given tracking ID. Use this to confirm a user's subscription status on the client side by resolving a tracking ID (set during checkout) to a verified JWT payload.</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useTrackingId</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/sdk-react&quot;</span><span class="p">;</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">MobilePay</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nx">actionCode</span><span class="p">,</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nx">resolvedPubkey</span><span class="p">,</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nx">resolveActionCode</span><span class="p">,</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nx">clearActionCode</span><span class="p">,</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="nx">submitTransaction</span><span class="p">,</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useActionCode</span><span class="p">();</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">handleScan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">resolveActionCode</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Resolved wallet:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">pubkey</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span><span class="p">};</span>
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">handlePay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">txSig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">submitTransaction</span><span class="p">({</span>
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">      </span><span class="nx">amount</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">BN</span><span class="p">(</span><span class="mf">10</span><span class="nx">_000_000</span><span class="p">),</span>
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">      </span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="kt">USDC_MINT</span><span class="p">,</span>
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">      </span><span class="nx">gateway</span><span class="o">:</span><span class="w"> </span><span class="kt">GATEWAY</span><span class="p">,</span>
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">      </span><span class="nx">interval</span><span class="o">:</span><span class="w"> </span><span class="kt">PaymentInterval.Monthly</span><span class="p">,</span>
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">      </span><span class="nx">executeImmediately</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">    </span><span class="p">});</span>
-</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Paid:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">txSig</span><span class="p">);</span>
-</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">  </span><span class="p">};</span>
-</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
-</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">button</span><span class="w"> </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">handleScan</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)}</span><span class="o">&gt;</span><span class="nx">Scan</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nx">Pay</span><span class="o">&lt;</span><span class="err">/button&gt;;</span>
-</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="p">}</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">SubscriptionStatus</span><span class="p">({</span><span class="w"> </span><span class="nx">trackingId</span><span class="p">,</span><span class="w"> </span><span class="nx">recipient</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">payload</span><span class="p">,</span><span class="w"> </span><span class="nx">loading</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">,</span><span class="w"> </span><span class="nx">refresh</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useTrackingId</span><span class="p">(</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nx">trackingId</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nx">recipient</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="s2">&quot;EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&quot;</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="p">);</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">loading</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Loading</span><span class="p">...</span><span class="o">&lt;</span><span class="err">/p&gt;;</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="ne">Error</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">error</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;;</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">No</span><span class="w"> </span><span class="nx">active</span><span class="w"> </span><span class="nx">subscription</span><span class="o">&lt;</span><span class="err">/p&gt;;</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Status</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">payload</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Tracking</span><span class="w"> </span><span class="nx">ID</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">payload</span><span class="p">.</span><span class="nx">trackingId</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">button</span><span class="w"> </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">refresh</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">Refresh</span><span class="o">&lt;</span><span class="err">/button&gt;</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span><span class="p">);</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Returns:</strong> <code>{ actionCode, resolvedPubkey, resolveActionCode, clearActionCode, submitTransaction }</code></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>trackingId</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Your reference ID set during checkout</td>
+</tr>
+<tr>
+<td><code>recipient</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Recipient wallet address</td>
+</tr>
+<tr>
+<td><code>tokenMint</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Token mint address to filter by</td>
+</tr>
+<tr>
+<td><code>baseUrl</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>API base URL (default: <code>https://api.tributary.so</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>PaymentTokenState</code></p>
 <table>
 <thead>
 <tr>
@@ -2459,29 +2507,24 @@
 </thead>
 <tbody>
 <tr>
-<td><code>actionCode</code></td>
+<td><code>payload</code></td>
+<td><code>TributaryJWTPayload \| null</code></td>
+<td>Decoded and verified JWT payload</td>
+</tr>
+<tr>
+<td><code>loading</code></td>
+<td><code>boolean</code></td>
+<td>Token fetch in progress</td>
+</tr>
+<tr>
+<td><code>error</code></td>
 <td><code>string \| null</code></td>
-<td>Current action code</td>
+<td>Error message if fetch failed</td>
 </tr>
 <tr>
-<td><code>resolvedPubkey</code></td>
-<td><code>PublicKey \| null</code></td>
-<td>Resolved wallet from the code</td>
-</tr>
-<tr>
-<td><code>resolveActionCode</code></td>
-<td><code>(code: string) =&gt; Promise&lt;{success, pubkey?}&gt;</code></td>
-<td>Resolve an action code to a pubkey</td>
-</tr>
-<tr>
-<td><code>clearActionCode</code></td>
+<td><code>refresh</code></td>
 <td><code>() =&gt; void</code></td>
-<td>Reset state</td>
-</tr>
-<tr>
-<td><code>submitTransaction</code></td>
-<td><code>(params) =&gt; Promise&lt;{ txSig: string }&gt;</code></td>
-<td>Build, sign, and relay a subscription</td>
+<td>Re-trigger the token fetch</td>
 </tr>
 </tbody>
 </table>
