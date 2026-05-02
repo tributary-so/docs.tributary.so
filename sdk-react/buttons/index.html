@@ -1964,10 +1964,17 @@
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="na">maxRenewals</span><span class="o">=</span><span class="p">{</span><span class="mf">12</span><span class="p">}</span>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="na">memo</span><span class="o">=</span><span class="s">&quot;Pro subscription&quot;</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="na">executeImmediately</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="na">label</span><span class="o">=</span><span class="s">&quot;Subscribe $10/month&quot;</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="na">onSuccess</span><span class="o">=</span><span class="p">{(</span><span class="nx">result</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Success:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">txId</span><span class="p">)}</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="na">onError</span><span class="o">=</span><span class="p">{(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Failed:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)}</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="p">/&gt;;</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="na">fetchToken</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="na">tokenIssuerConfig</span><span class="o">=</span><span class="p">{{</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="nx">apiBaseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://api.tributary.so&quot;</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="nx">trackingId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;your-tracking-id&quot;</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span><span class="p">}}</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="na">label</span><span class="o">=</span><span class="s">&quot;Subscribe $10/month&quot;</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="na">radius</span><span class="o">=</span><span class="s">&quot;lg&quot;</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span><span class="na">size</span><span class="o">=</span><span class="s">&quot;lg&quot;</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span><span class="na">onSuccess</span><span class="o">=</span><span class="p">{(</span><span class="nx">result</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Success:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">txId</span><span class="p">)}</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="na">onError</span><span class="o">=</span><span class="p">{(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Failed:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)}</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="p">/&gt;;</span>
 </span></code></pre></div>
 <h3 id="subscriptionbutton-props">SubscriptionButton Props<a class="headerlink" href="#subscriptionbutton-props" title="Permanent link">&para;</a></h3>
 <table>
@@ -2030,15 +2037,33 @@
 </tr>
 <tr>
 <td><code>startTime</code></td>
-<td><code>number</code></td>
+<td><code>Date</code></td>
 <td>No</td>
-<td>Start timestamp (null = now)</td>
+<td>Start date (null = now)</td>
+</tr>
+<tr>
+<td><code>approvalAmount</code></td>
+<td><code>BN</code></td>
+<td>No</td>
+<td>Token approval amount</td>
 </tr>
 <tr>
 <td><code>executeImmediately</code></td>
 <td><code>boolean</code></td>
 <td>No</td>
 <td>Execute first payment now (default: true)</td>
+</tr>
+<tr>
+<td><code>fetchToken</code></td>
+<td><code>boolean</code></td>
+<td>No</td>
+<td>Fetch token info from issuer API before creating subscription (default: false)</td>
+</tr>
+<tr>
+<td><code>tokenIssuerConfig</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>Token issuer config: <code>{ apiBaseUrl: string, trackingId?: string }</code></td>
 </tr>
 <tr>
 <td><code>label</code></td>
@@ -2057,6 +2082,18 @@
 <td><code>boolean</code></td>
 <td>No</td>
 <td>Disable button</td>
+</tr>
+<tr>
+<td><code>radius</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Button radius: <code>"none"</code> | <code>"sm"</code> | <code>"md"</code> | <code>"lg"</code> | <code>"full"</code> (default: "none")</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Button size: <code>"sm"</code> | <code>"md"</code> | <code>"lg"</code> (default: "lg")</td>
 </tr>
 <tr>
 <td><code>onSuccess</code></td>
