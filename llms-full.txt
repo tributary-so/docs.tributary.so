@@ -200,6 +200,91 @@ Tributary is the non-custodial money-moving primitive on Solana: you delegate pu
 
 Check our [Integration Guide](https://docs.tributary.so/integration-guide/index.md) for SDK integration. The React components make it easy to add subscription buttons in minutes.
 
+# Migration: v1 → v2
+
+Tributary v2 adds the ComposablePolicy layer (validation + forward hooks) to the existing PaymentPolicy layer. **Existing v1 integrations continue to work unchanged** — v2 is a program upgrade, not a breaking change. This guide covers what changed, what didn't, and when you might want to opt in.
+
+## What changed
+
+| Area         | v1                                                        | v2                                                                           |
+| ------------ | --------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Policy types | `PaymentPolicy` (subscription, milestone, pay-as-you-go)  | + `ComposablePolicy` (same types + validation + forward hooks)               |
+| New variants | —                                                         | + `OneTime`, `UpTo`                                                          |
+| Delegate     | `UserPayment` PDA or legacy global `PaymentsDelegate` PDA | Same — dual-delegate fully backward-compatible                               |
+| Fees         | `FEATURE_NET_AMOUNT` flag controls gross/net pull         | Composable always input-side (ADR-0026); PaymentPolicy still honors the flag |
+| SDK          | `createSubscription`, `createPayAsYouGo`, etc.            | + `createComposable`, `executeComposable`, `lighthouse` facade               |
+
+## What did NOT change
+
+- **Program ID** — same: `TRibg8W8zmPHQqWtyAD1rEBRXEdyU13Mu6qX1Sg42tJ`
+- **PDA seeds for v1 accounts** — `PaymentPolicy`, `UserPayment`, `PaymentGateway`, `ProgramConfig` all unchanged
+- **v1 instruction signatures** — `create_payment_policy`, `execute_payment`, etc. work exactly as before
+- **Your existing delegate approvals** — if you approved the `UserPayment` PDA or the legacy `PaymentsDelegate` PDA, those still work for both v1 and v2 policies
+- **Fee model** — the unified gateway fee model (ADR-0018) applies to both
+
+## The dual-delegate model
+
+Tributary accepts two delegate authorities on a user's token account:
+
+1. **`UserPayment` PDA** (recommended) — `["user_payment", owner, mint]`. This is the default for new SDK integrations. Per-user, per-mint.
+1. **`PaymentsDelegate` PDA** (legacy) — `["payments"]`. A single global delegate. Still accepted for backward compatibility.
+
+At execution time, `resolve_delegate` checks both paths. If either matches the actual delegate on the token account, execution proceeds.
+
+### Do I need to migrate?
+
+**No.** If your v1 integration uses the legacy global delegate, it keeps working. New composable policies created via the SDK default to the `UserPayment` PDA, but the program accepts either.
+
+### When to switch to UserPayment PDA
+
+- **New integrations** — start with `UserPayment`. It's per-user, per-mint, so revoking one user's delegation doesn't affect others.
+- **Security upgrades** — the `UserPayment` PDA provides finer-grained control. You can revoke delegation for a specific user+mint pair without touching others.
+- **Never required** — the legacy delegate is not deprecated. It's just less granular.
+
+### How to switch (optional)
+
+```typescript
+// Old: legacy global delegate approved on token account
+// (nothing to do — it still works)
+
+// New: re-approve to the UserPayment PDA
+const { address: userPaymentPda } = sdk.getUserPaymentPda(owner, mint);
+const approveIx = createApproveInstruction(
+  ownerTokenAccount,
+  userPaymentPda, // delegate
+  owner,
+  amount
+);
+```
+
+After re-approval, both v1 `PaymentPolicy` and v2 `ComposablePolicy` execute against the `UserPayment` PDA.
+
+## Upgrading your SDK
+
+```bash
+pnpm add @tributary-so/sdk@latest
+```
+
+The SDK is backward-compatible. All v1 methods (`createSubscription`, `createPayAsYouGo`, `executePayment`, etc.) work exactly as before. New v2 methods (`createComposable`, `executeComposable`) are additive.
+
+## Adopting composable policies (optional)
+
+You don't have to. But if you want validation hooks or forward swaps:
+
+1. Read the [composable overview](https://docs.tributary.so)
+1. Try a [quickstart](https://docs.tributary.so) (\<10 min)
+1. The same `UserPayment` PDA serves both `PaymentPolicy` and `ComposablePolicy` — no new delegate approval needed if you're already on `UserPayment`
+
+### Counter independence
+
+`PaymentPolicy` IDs come from `user_payment.created_policies_count`. `ComposablePolicy` IDs come from `user_payment.created_composable_count`. These are **independent** — a v1 policy #1 and a v2 policy #1 can coexist on the same `UserPayment` with different PDA addresses.
+
+## Questions?
+
+- [FAQ](https://docs.tributary.so)
+- [Existing team migration notice](https://docs.tributary.so)
+- [Full ADR list](https://docs.tributary.so)
+
 # Use Cases
 
 Tributary's three payment types support diverse business models. Each type is optimized for specific scenarios.
@@ -3450,6 +3535,157 @@ ______________________________________________________________________
 - ❓ [FAQ](https://docs.tributary.so/faq/index.md)
 - 💬 [Discord](https://discord.gg/tributary)
 
+# Guide: Forward CPI Integration
+
+A composable policy can transform the pulled token before delivering it to the recipient — pull USDC, swap to SOL via Meteora DLMM, deliver SOL. This guide shows how to wire any allowlisted forward program into a composable policy and pin it so only the exact instruction you approve can run.
+
+## Why constraints exist
+
+The forward step is a CPI — Tributary calls an external program (`invoke_signed`) with caller-supplied instruction data and accounts. Without constraints, a malicious gateway could substitute any instruction on the allowlisted program (e.g. a Meteora "withdraw" instead of "swap").
+
+Tributary solves this with `InstructionConstraint`: you pin the instruction **selector** (first 8 bytes) and optionally pin specific **account positions** to concrete pubkeys. At execute time, the program validates both before the CPI fires.
+
+## The three pieces
+
+```text
+ForwardConfig
+├── instructionConstraint: InstructionConstraint
+│   ├── programId: PublicKey          ← must be in ALLOWED_FORWARD_PROGRAMS
+│   ├── dataChecks: ByteRangeCheck[4] ← pin the instruction selector
+│   └── pinnedAccounts: PinnedAccount[2] ← pin specific account slots
+├── inputMint: PublicKey              ← the user's token (what's pulled)
+├── outputMint: PublicKey             ← what the recipient receives
+└── forwardFlags: u8                  ← bit0 = native SOL unwrap
+```
+
+Currently `ALLOWED_FORWARD_PROGRAMS` contains only **Meteora DLMM** (`LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo`).
+
+## Step 1: Extract the discriminator
+
+Every Anchor/SPL instruction starts with an 8-byte discriminator (the first 8 bytes of `instruction.data`). Pin those bytes at offset 0 to lock the instruction type.
+
+```typescript
+import DLMM from "@meteora-ag/dlmm";
+
+const METEORA_DLMM_PUBKEY = new PublicKey(
+  "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+);
+
+// Build the swap ix once with a dummy user — you only need the data layout
+const dummyIx = await buildSwapIx(PublicKey.default);
+
+// The first 8 bytes are the Anchor instruction discriminator
+const discriminator = dummyIx.data.slice(0, 8);
+```
+
+## Step 2: Build the InstructionConstraint
+
+At least one `ByteRangeCheck` must pin offset 0. The `dataChecks` array is fixed-size (4 entries); pad unused slots with zero-length checks.
+
+```typescript
+const forwardConfig = {
+  instructionConstraint: {
+    programId: METEORA_DLMM_PUBKEY,
+    numDataChecks: 1,
+    dataChecks: [
+      { offset: 0, length: 8, expected: Buffer.from(discriminator) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) }, // unused
+      { offset: 0, length: 0, expected: Buffer.alloc(8) }, // unused
+      { offset: 0, length: 0, expected: Buffer.alloc(8) }, // unused
+    ],
+    numPinnedAccounts: 0,
+    pinnedAccounts: [],
+  },
+  inputMint: USDC_MINT,
+  outputMint: NATIVE_MINT,
+  forwardFlags: 0,
+};
+```
+
+### PinnedAccounts (optional)
+
+If the forward instruction has accounts that must be a specific pubkey (e.g. the pool address), pin them by their **index** in the forward-account slice:
+
+```typescript
+// Suppose the DLMM pool is at index 2 in the swap instruction's accounts
+pinnedAccounts: [
+  { index: 2, pubkey: DLMM_POOL },
+  // up to 2 pins total
+],
+numPinnedAccounts: 1,
+```
+
+At execute time, Tributary checks `remaining_accounts[fwd_base + pin.index].pubkey == pin.pubkey` for each active pin. No duplicate indices allowed.
+
+## Step 3: The three settlement shapes
+
+`outputMint` controls what happens after the forward CPI:
+
+| `outputMint`                  | Forward                          | Shape                    | Behaviour                                                                          |
+| ----------------------------- | -------------------------------- | ------------------------ | ---------------------------------------------------------------------------------- |
+| `== inputMint`                | disabled (`programId = default`) | **deliver-no-transform** | sweep input directly to recipient                                                  |
+| `!= inputMint`, concrete mint | enabled                          | **deliver-transform**    | swap → sweep output to recipient                                                   |
+| `PublicKey.default()`         | enabled                          | **act mode**             | no output ATA, no sweep — forward acts on the input (e.g. deposit to a subaccount) |
+
+## Step 4: Execute — the forward accounts
+
+At execute time, the caller supplies the live forward instruction data and the forward accounts. The forward accounts come from the swap instruction's `keys` — map them to `AccountMeta`:
+
+```typescript
+const swapIx = await buildSwapIx(composablePolicyPDA); // real PDA as user
+
+const forwardAccounts = swapIx.keys.map((k) => ({
+  pubkey: k.pubkey,
+  isSigner: false, // Tributary strips all is_signer from forward accounts
+  isWritable: true, // mark all writable — safe, avoids stale-IDL mismatches
+}));
+
+// remaining_accounts = [validation targets..., forward accounts...]
+const remainingAccounts = [
+  ...guard.accounts, // Lighthouse targets (empty if no validation)
+  ...forwardAccounts, // DLMM swap accounts
+];
+
+const execIxs = await sdk.executeComposable(
+  composablePolicyPDA,
+  Buffer.from(swapIx.data), // the raw instruction data (selector must match)
+  new anchor.BN(amount), // pull amount (null for subscription)
+  remainingAccounts
+);
+```
+
+Signer sanitization
+
+Tributary forces `isSigner: false` on ALL forward (and validation) accounts. This prevents the fee payer — a Signer — from granting signer authority to the forward program via remaining_accounts. Do not attempt to pass signer flags; they are stripped.
+
+## Common patterns
+
+### Meteora DLMM swap
+
+See the [Swap & Deliver example](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/swap-and-deliver/index.md) and the [Auto-DCA quickstart](https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/auto-dca/index.md) for complete working code, including the `hostFeeIn` fix (rewrite the SystemProgram placeholder → DLMM program id).
+
+### Native SOL delivery (WSOL unwrap)
+
+Set `forwardFlags = 1` (`FORWARD_FLAG_NATIVE_OUTPUT`) to unwrap WSOL to native SOL via `closeAccount` after the swap. The recipient gets native SOL in their system account — no WSOL ATA needed. See the [Native SOL topup example](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/native-sol-topup/index.md).
+
+### Same-mint topup (no swap)
+
+When `inputMint === outputMint` and forward is disabled (`programId = PublicKey.default()`), the policy is **deliver-no-transform**: the pull goes straight to the recipient with no forward CPI. See the [AI agent budget quickstart](https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/ai-agent-budget/index.md).
+
+## Checklist before you ship
+
+- [ ] `programId` is in `ALLOWED_FORWARD_PROGRAMS`
+- [ ] At least one `ByteRangeCheck` pins offset 0 (the discriminator)
+- [ ] `outputMint` matches your intended settlement shape
+- [ ] Forward accounts at execute time are marked `isWritable: true`
+- [ ] Swap-level slippage (`minOutAmount` in the swap ix) is set — or use [post-validation](https://docs.tributary.so/integration-guide/programmable-pull-payments/lighthouse-facade/index.md) as an output floor
+
+## Related
+
+- [Forward Hook reference](https://docs.tributary.so/protocol-reference/composable-policy/forward-hook/index.md) — on-chain mechanics
+- [Allowlists & Sentinels](https://docs.tributary.so/protocol-reference/composable-policy/allowlists-and-sentinels/index.md) — disabled forward
+- [SDK reference](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `ForwardConfig` type
+
 # The Lighthouse Facade
 
 Lighthouse is a read-only on-chain assertion program. Tributary stores a serialized Lighthouse assertion in a `ValidationPda` and replays it via CPI at `execute_composable` time — the transaction reverts if the assertion doesn't hold.
@@ -3486,7 +3722,7 @@ interface LighthouseAssertion {
 The facade owns **only** the Lighthouse `target_account(s)`. The caller assembles Tributary's full `remaining_accounts`:
 
 ```typescript
-// executeComposable's remaining_accounts (caller-supplied, SDK prepends the ValidationPda):
+// Caller assembles remaining_accounts = validation targets + forward accounts:
 const remainingAccounts = [...guard.accounts, ...forwardAccounts];
 ```
 
@@ -3589,7 +3825,7 @@ const guard = lighthouse
   .amount(50_000_000, "<")
   .build();
 
-// 2. Create the policy — validation enabled, forward disabled
+// 2. Create the policy — pre-validation enabled via program-call, forward disabled
 const createIx = await sdk.getCreateComposablePolicyInstruction(
   USDC_MINT,
   recipient,
@@ -3597,18 +3833,18 @@ const createIx = await sdk.getCreateComposablePolicyInstruction(
   policyType,
   "Balance guard",
   forwardConfig,
-  LIGHTHOUSE_PROGRAM_ID,
-  guard.numAccounts,
-  guard.data,
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
+  guard.accounts, // prePinnedAccounts
+  guard.data // preValidationData
+  // postValidation defaults to disabled
 );
 
-// 3. Execute — remaining_accounts gets [...guard.accounts, ...forwardAccounts]
-//    (the SDK auto-prepends the ValidationPda)
-const execIx = await sdk.executeComposable(
+// 3. Execute — forward is disabled, so remaining_accounts is just guard.accounts
+const [execIx] = await sdk.executeComposable(
   composablePolicyPDA,
-  Buffer.alloc(0), // forward disabled → empty
+  Buffer.alloc(0),
   new BN(50_000_000),
-  guard.accounts,
+  guard.accounts
 );
 ```
 
@@ -3627,19 +3863,21 @@ A **ComposablePolicy** is a pull payment that runs two optional hooks **between*
 
 Both hooks are **opt-in via sentinel values**. A composable policy with both disabled behaves like a `PaymentPolicy` but lives in its own PDA namespace and routes through an intermediate ATA hop. Both families reuse the same `PolicyType` enum (`Subscription` / `Milestone` / `PayAsYouGo`), the same `UserPayment` account, and the same fee-distribution logic.
 
-## The lifecycle: pull → validate → forward → settle
+## The lifecycle: pull → skim → pre-validate → forward → post-validate → settle
 
 ```
 graph TD
     Pull["1. PULL<br/>UserPayment PDA signs:<br/>user_token_account → intermediate_input_ata"]
-    Val["2. VALIDATE (optional)<br/>CPI into Lighthouse with stored<br/>assertion data + read-accounts.<br/>Fails the tx if assertion doesn't hold."]
-    Fwd["3. FORWARD (optional)<br/>CPI into Meteora DLMM:<br/>swap intermediate_input_ata → intermediate_output_ata.<br/>ByteRangeChecks pin the swap selector."]
-    Settle["4. SETTLE<br/>Sweep intermediate_output → recipient +<br/>protocol fee + gateway fee.<br/>min_output_amount enforced on NET (post-fee)."]
+    Skim["2. SKIM (input-side)<br/>Protocol + gateway + scheduler fees<br/>deducted from intermediate_input_ata.<br/>Remaining = face amount for forward."]
+    PreVal["3. PRE-VALIDATE (optional)<br/>CPI into Lighthouse with stored<br/>assertion data + read-accounts.<br/>Fails the tx if assertion doesn't hold."]
+    Fwd["4. FORWARD (optional)<br/>CPI into Meteora DLMM:<br/>swap intermediate_input_ata → intermediate_output_ata.<br/>ByteRangeChecks pin the swap selector."]
+    PostVal["5. POST-VALIDATE (optional)<br/>CPI into Lighthouse with stored<br/>assertion data + read-accounts.<br/>Guards minimum output after forward."]
+    Settle["6. SETTLE<br/>Sweep intermediate_output → recipient.<br/>Fees already skimmed in phase 2 —<br/>settle moves only principal."]
 
-    Pull --> Val --> Fwd --> Settle
+    Pull --> Skim --> PreVal --> Fwd --> PostVal --> Settle
 
     classDef phase fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    class Pull,Val,Fwd,Settle phase
+    class Pull,Skim,PreVal,Fwd,PostVal,Settle phase
 ```
 
 Key invariants enforced on-chain:
@@ -3655,10 +3893,10 @@ Key invariants enforced on-chain:
 
 | Hook you want to disable | Sentinel value                                        |
 | ------------------------ | ----------------------------------------------------- |
-| No validation            | `validation_program = SystemProgram.programId`        |
+| No validation            | `ValidationSpec::Disabled` (SDK: `{ disabled: {} }`)  |
 | No forward               | `forward_config.target_program = PublicKey.default()` |
 
-The SDK accepts `validationProgram = PublicKey.default()` and rewrites it to `SystemProgram.programId` internally (see `getCreateComposablePolicyInstruction`). When forward is disabled, `num_data_checks` must be `0` and `input_mint` must equal `output_mint` (no conversion step — it's a same-mint pull → sweep).
+The SDK accepts `{ disabled: {} }` as the `ValidationSpec` for both `preValidation` and `postValidation`. When forward is disabled, `instruction_constraint.data_checks` should be empty and `input_mint` must equal `output_mint` (no conversion step — it's a same-mint pull → sweep).
 
 ## When to choose ComposablePolicy vs PaymentPolicy
 
@@ -3673,7 +3911,7 @@ The SDK accepts `validationProgram = PublicKey.default()` and rewrites it to `Sy
 
 ## Where to next
 
-- [SDK surface](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `getCreateComposablePolicyInstruction`, `executeComposable`, `ForwardConfig`, `ValidationConfig`.
+- [SDK surface](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `getCreateComposablePolicyInstruction`, `executeComposable`, `ForwardConfig`, `ValidationSpec`.
 - [Lighthouse facade](https://docs.tributary.so/integration-guide/programmable-pull-payments/lighthouse-facade/index.md) — build assertions with `lighthouse.tokenAccount(ata).amount(threshold, "<").build()`.
 - Examples: [Auto-topup guard](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/auto-topup-guard/index.md) · [Swap & deliver](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/swap-and-deliver/index.md) · [Native SOL topup](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/native-sol-topup/index.md).
 - Deep technical reference → [Protocol Reference → Composable Policy](https://docs.tributary.so/protocol-reference/composable-policy/overview/index.md).
@@ -3692,11 +3930,10 @@ import {
   lighthouse,
   LIGHTHOUSE_PROGRAM_ID,
 } from "@tributary-so/sdk";
-import { Tributary as TributarySDK } from "@tributary-so/sdk";
 import { BN } from "@coral-xyz/anchor";
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 
-const sdk: TributarySDK = new Tributary(connection, wallet.payer);
+const sdk = new Tributary(connection, wallet.payer);
 ```
 
 ## `getCreateComposablePolicyInstruction()`
@@ -3709,11 +3946,14 @@ async getCreateComposablePolicyInstruction(
   recipient: PublicKey,
   gateway: PublicKey,
   policyType: PolicyType,                       // { subscription | milestone | payAsYouGo }
-  memo: string,                                 // free-form, max 64 bytes (SDK encodes it)
-  forwardConfig: ForwardConfig,                 // target_program = PublicKey.default() disables forward
-  validationProgram: PublicKey = PublicKey.default(),  // SystemProgram disables validation
-  numValidationAccounts: number = 0,
-  validationData: Buffer = Buffer.alloc(0),     // from lighthouse.<...>.build().data
+  memo: string,                                 // free-form, max 32 bytes (SDK encodes it)
+  forwardConfig: ForwardConfig,                 // instructionConstraint.programId = Pubkey.default() disables forward
+  preValidation: ValidationSpec = { disabled: {} },
+  prePinnedAccounts: PublicKey[] = [],
+  preValidationData: Buffer = Buffer.alloc(0),  // from lighthouse.<...>.build().data
+  postValidation: ValidationSpec = { disabled: {} },
+  postPinnedAccounts: PublicKey[] = [],
+  postValidationData: Buffer = Buffer.alloc(0),
   feePayer?: PublicKey                          // defaults to provider wallet
 ): Promise<TransactionInstruction>
 ```
@@ -3749,22 +3989,28 @@ const policyType = {
   },
 };
 
-// Forward disabled: sentinel target_program = PublicKey.default().
+// Forward disabled: sentinel programId = PublicKey.default().
 // num_data_checks MUST be 0 (no forward instruction to byte-range validate).
 // dataChecks must still be a full [4]-array of zeroed entries (fixed-size).
 const forwardConfig = {
-  targetProgram: PublicKey.default(),
+  instructionConstraint: {
+    programId: PublicKey.default(),
+    numDataChecks: 0,
+    dataChecks: [
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+    ],
+    numPinnedAccounts: 0,
+    pinnedAccounts: [
+      { index: 0, pubkey: PublicKey.default },
+      { index: 0, pubkey: PublicKey.default },
+    ],
+  },
   inputMint: USDC_MINT,
   outputMint: USDC_MINT, // must equal inputMint when forward disabled
-  minOutputAmount: null,
   forwardFlags: 0,
-  numDataChecks: 0,
-  dataChecks: [
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-  ],
 };
 
 const ix = await sdk.getCreateComposablePolicyInstruction(
@@ -3774,9 +4020,12 @@ const ix = await sdk.getCreateComposablePolicyInstruction(
   policyType,
   "Auto topup guard",
   forwardConfig,
-  LIGHTHOUSE_PROGRAM_ID, // validation program (SystemProgram = none)
-  guard.numAccounts, // 1
-  guard.data, // the Lighthouse assertion buffer
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
+  [hotWalletUsdcAta], // prePinnedAccounts
+  guard.data // preValidationData
+  // postValidation defaults to { disabled: {} }
+  // postPinnedAccounts defaults to []
+  // postValidationData defaults to Buffer.alloc(0)
 );
 ```
 
@@ -3790,22 +4039,21 @@ async executeComposable(
   instructionData: Buffer,        // forward program ix data (empty Buffer if forward disabled)
   forwardAmount?: BN | null,      // amount to pull through the forward step
   remainingAccounts?: AccountMeta[]
-): Promise<TransactionInstruction>
+): Promise<TransactionInstruction[]>
 ```
 
 ### `remaining_accounts` layout
 
 ```text
 remaining_accounts =
-  [ ValidationPda                          // 1st (only if validation enabled)
-  , ...guard.accounts                       // Lighthouse read-accounts (numValidationAccounts of them)
+  [ ...guard.accounts                       // Lighthouse read-accounts (pre + post validation targets)
   , ...forwardAccounts                      // forward program accounts (empty if forward disabled)
   ]
 ```
 
-SDK auto-prepends the ValidationPda
+ValidationPda is in `accountsStrict`, not `remaining_accounts`
 
-`executeComposable()` detects whether the policy has validation enabled and **prepends** the `ValidationPda` to the `remaining_accounts` you pass. Do **not** include it yourself — pass only `[...guard.accounts, ...forwardAccounts]`. The PDA derivation uses `getValidationPda(composablePolicy, programId)`.
+The `preValidationPda` and `postValidationPda` are already declared in the `accountsStrict` map on the execute instruction. Pass only the Lighthouse read-accounts (from `guard.accounts`) and the forward program accounts.
 
 ### Minimal example — validation only (no forward)
 
@@ -3817,14 +4065,14 @@ import { BN } from "@coral-xyz/anchor";
 // Forward disabled → instruction_data is unused by the program. Pass empty.
 const instructionData = Buffer.alloc(0);
 
-// remaining_accounts = guard.accounts only (the SDK adds the ValidationPda).
+// remaining_accounts = guard.accounts (Lighthouse read-accounts; ValidationPda is in accountsStrict).
 const remainingAccounts = guard.accounts; // [{ pubkey: hotWalletUsdcAta, isSigner: false, isWritable: false }]
 
-const ix = await sdk.executeComposable(
+const [ix] = await sdk.executeComposable(
   composablePolicyPDA,
   instructionData,
   new BN(50_000_000), // forward amount (the pull size)
-  remainingAccounts,
+  remainingAccounts
 );
 ```
 
@@ -3845,11 +4093,11 @@ const remainingAccounts = [
   ...forwardAccounts,
 ];
 
-const ix = await sdk.executeComposable(
+const [ix] = await sdk.executeComposable(
   composablePolicyPDA,
   Buffer.from(swapIx.data), // the forward program instruction data
   new BN(SWAP_INPUT_AMOUNT),
-  remainingAccounts,
+  remainingAccounts
 );
 ```
 
@@ -3859,8 +4107,9 @@ The SDK exposes four read-only helpers for querying `ComposablePolicy` accounts.
 
 ```typescript
 // Fetch a single composable policy by its address (null if not found)
-const policy: ComposablePolicy | null =
-  await sdk.getComposablePolicy(policyAddress);
+const policy: ComposablePolicy | null = await sdk.getComposablePolicy(
+  policyAddress
+);
 
 // All composable policies for a given UserPayment PDA
 const policies = await sdk.getComposablePoliciesByUserPayment(userPaymentPda);
@@ -3900,21 +4149,33 @@ Recipient filtering is not supported via memcmp — `recipient` sits deep in the
 
 ```typescript
 type ForwardConfig = {
-  targetProgram: PublicKey; // Pubkey.default() = disabled (sentinel)
+  instructionConstraint: InstructionConstraint;
   inputMint: PublicKey; // must == user_payment.token_mint
-  outputMint: PublicKey; // recipient delivery mint (NATIVE_MINT for WSOL)
-  minOutputAmount: BN | null; // NET (post-fee) minimum, DeFi convention
+  outputMint: PublicKey; // recipient delivery mint; Pubkey.default() = act mode
   forwardFlags: number; // bit 0 = FORWARD_FLAG_NATIVE_OUTPUT
-  numDataChecks: number; // 0 if forward disabled, else 1..4
-  dataChecks: ByteRangeCheck[]; // length must be 4 (fixed-size); pin selector at offset 0
 };
 ```
 
-Rules enforced on-chain (`validate_forward_config`):
+### `InstructionConstraint`
 
-- `targetProgram == PublicKey.default()` → `num_data_checks` MUST be `0` and `input_mint` MUST equal `output_mint`.
-- Otherwise `targetProgram` MUST be in `ALLOWED_FORWARD_PROGRAMS`, and at least one `ByteRangeCheck` MUST pin bytes at `offset: 0, length: > 0` (discriminator coverage).
-- `FORWARD_FLAG_NATIVE_OUTPUT` (bit 0) → `output_mint` MUST be `NATIVE_MINT`.
+```typescript
+type InstructionConstraint = {
+  programId: PublicKey; // Pubkey.default() = forward disabled (sentinel)
+  numDataChecks: number; // 0 if forward disabled, else 1..4
+  dataChecks: ByteRangeCheck[]; // length 4 (fixed-size); pin selector at offset 0
+  numPinnedAccounts: number;
+  pinnedAccounts: PinnedAccount[]; // length 2 (fixed-size); indexed forward-account pins
+};
+```
+
+### `PinnedAccount`
+
+```typescript
+type PinnedAccount = {
+  index: number;
+  pubkey: PublicKey;
+};
+```
 
 ### `ByteRangeCheck`
 
@@ -3926,23 +4187,29 @@ type ByteRangeCheck = {
 };
 ```
 
-### `ValidationConfig`
+### `ValidationSpec`
 
 ```typescript
-type ValidationConfig = {
-  validationProgram: PublicKey; // SystemProgram.programId = disabled (sentinel)
-  numValidationAccounts: number; // 0..=10 read-accounts for the assertion
-};
+type ValidationSpec =
+  | { disabled: {} }
+  | { programCall: { programId: PublicKey } }
+  | { inline: { reserved: number } };
 ```
 
-The assertion **data** (≤512 bytes) is NOT stored inline — it lives in a separate `ValidationPda` account (`["composable_validation", composable_policy]`) that the create handler initializes via `invoke_signed`.
+Rules enforced on-chain (`validate_forward_config`):
+
+- `programId == Pubkey.default()` → `num_data_checks` MUST be `0`, `pinned_accounts` MUST be empty, and `input_mint` MUST equal `output_mint`.
+- Otherwise `programId` MUST be in `ALLOWED_FORWARD_PROGRAMS`, and at least one `ByteRangeCheck` MUST pin bytes at `offset: 0, length: > 0` (discriminator coverage).
+- `FORWARD_FLAG_NATIVE_OUTPUT` (bit 0) → `output_mint` MUST be `NATIVE_MINT`.
+
+The assertion **data** (≤512 bytes) is NOT stored inline — it lives in separate `ValidationPda` accounts (`["composable_validation_pre", composable_policy]` and `["composable_validation_post", composable_policy]`) that the create handler initializes via `invoke_signed`.
 
 ## Disabling the hooks
 
-| Hook       | Disabling recipe                                                                                                                          |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Forward    | `forwardConfig.targetProgram = PublicKey.default()`, `numDataChecks = 0`, `inputMint === outputMint`                                      |
-| Validation | `validationProgram = PublicKey.default()` (or `SystemProgram.programId`), `numValidationAccounts = 0`, `validationData = Buffer.alloc(0)` |
+| Hook       | Disabling recipe                                                                                                       |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Forward    | `forwardConfig.instructionConstraint.programId = PublicKey.default()`, `numDataChecks = 0`, `inputMint === outputMint` |
+| Validation | `ValidationSpec = { disabled: {} }` (the default for both `preValidation` and `postValidation`)                        |
 
 Why `Pubkey::default()` instead of the Token program?
 
@@ -4024,7 +4291,7 @@ const guard = lighthouse
 
 ## 2. Create the composable policy
 
-Forward disabled: `targetProgram = PublicKey.default()`. Because there's no swap step, `num_data_checks` must be `0` and `input_mint === output_mint`.
+Forward disabled: `instructionConstraint.programId = PublicKey.default()`. Because there's no swap step, `num_data_checks` must be `0` and `input_mint === output_mint`.
 
 ```typescript
 const policyType = {
@@ -4034,34 +4301,38 @@ const policyType = {
     periodLengthSeconds: new anchor.BN(30 * 24 * 3600),
     currentPeriodStart: new anchor.BN(Math.floor(Date.now() / 1000)),
     currentPeriodTotal: new BN(0),
-    padding: new Array(88).fill(0),
+    expiryDate: null,
+    padding: new Array(79).fill(0),
   },
 };
 
 const forwardConfig = {
-  targetProgram: PublicKey.default(), // sentinel → forward disabled
+  instructionConstraint: {
+    programId: PublicKey.default(),
+    numDataChecks: 0,
+    dataChecks: [
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+    ],
+    numPinnedAccounts: 0,
+    pinnedAccounts: [],
+  },
   inputMint: USDC_MINT,
-  outputMint: USDC_MINT, // must equal inputMint when disabled
-  minOutputAmount: null,
+  outputMint: USDC_MINT,
   forwardFlags: 0,
-  numDataChecks: 0,
-  dataChecks: [
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-  ],
 };
 
 const createIx = await sdk.getCreateComposablePolicyInstruction(
   USDC_MINT,
-  hotWallet.publicKey, // recipient
+  hotWallet.publicKey,
   gatewayPDA,
   policyType,
   "Auto topup guard",
   forwardConfig,
-  LIGHTHOUSE_PROGRAM_ID, // validation program (SystemProgram = none)
-  guard.numAccounts, // 1
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } },
+  [hotWalletUsdcAta],
   guard.data
 );
 
@@ -4079,25 +4350,24 @@ A `PayAsYouGo` policy caps both per-call (`max_chunk_amount`) and per-period (`m
 
 ## 3. Execute (permissionless)
 
-The executor is any gateway signer (or the user / recipient). Forward disabled → `instructionData` is unused; pass an empty buffer. `remaining_accounts` = the Lighthouse read-accounts (`guard.accounts`). The SDK auto-prepends the `ValidationPda`.
+The executor is any gateway signer (or the user / recipient). Forward disabled → `instructionData` is unused; pass an empty buffer. `remaining_accounts` = the Lighthouse read-accounts (`guard.accounts`). The ValidationPdas are resolved from the composable policy account — no need to pass them.
 
 ```typescript
-const composablePolicyPDA = getComposablePolicyPda(
+const { address: composablePolicyPDA } = sdk.getComposablePolicyPda(
   userPaymentPDA,
-  composablePolicyId,
-  programId
-).address;
+  composablePolicyId
+);
 
-const execIx = await sdk.executeComposable(
+const execIxs = await sdk.executeComposable(
   composablePolicyPDA,
-  Buffer.alloc(0), // forward disabled
+  Buffer.alloc(0),
   new anchor.BN(TOPUP_CHUNK),
-  guard.accounts // the SDK prepends the ValidationPda; you only pass the read-accounts
+  guard.accounts
 );
 
 await sendAndConfirmTransaction(
   connection,
-  new Transaction().add(execIx),
+  new Transaction().add(...execIxs),
   [coldWallet],
   { commitment: "processed" }
 );
@@ -4105,9 +4375,10 @@ await sendAndConfirmTransaction(
 
 ## What happens on-chain
 
-1. **Pull** — `UserPayment` PDA signs a `transfer` from `coldWalletUsdcAta` into the `intermediate_input_ata` (owned by the `ComposablePolicy` PDA).
-1. **Validate** — Tributary CPIs Lighthouse with `guard.data` + `[hotWalletUsdcAta]` as read-accounts. Lighthouse asserts `hotWalletUsdcAta.amount < 50 USDC`. If the hot wallet is already at or above the threshold, the assertion fails and the **whole transaction reverts** — no funds move.
-1. **Settle** — Because forward is disabled, the program sweeps the intermediate USDC directly to `hotWalletUsdcAta` (minus the protocol fee + gateway fee). `min_output_amount` is checked against the **net** amount.
+1. **Pull** — `UserPayment` PDA signs a `transfer` from `coldWalletUsdcAta` into the `intermediate_input_ata` (owned by the `ComposablePolicy` PDA). The pull is gross: `face + fees`.
+1. **Skim fees** — Protocol fee + gateway fee are routed from the `intermediate_input_ata` to their respective fee accounts. After skimming, the intermediate holds exactly the `face` amount.
+1. **Pre-validate** — Tributary CPIs Lighthouse with `guard.data` + `[hotWalletUsdcAta]` as read-accounts. Lighthouse asserts `hotWalletUsdcAta.amount < 50 USDC`. If the hot wallet is at or above the threshold, the assertion fails and the **whole transaction reverts** — no funds move.
+1. **Settle (deliver-no-transform)** — Because forward is disabled, the program sweeps the remaining USDC from the intermediate to `hotWalletUsdcAta`.
 
 ## Failure modes
 
@@ -4132,7 +4403,8 @@ This is the swap-and-deliver flow plus one flag bit: `ForwardConfig.forwardFlags
 
 ```
 graph LR
-    Cold["coldWallet<br/>(user, USDC)"] -->|"pull USDC"| In["intermediate USDC ATA"]
+    Cold["coldWallet<br/>(user, USDC)"] -->|"pull USDC (gross)"| In["intermediate USDC ATA"]
+    In -->|"skim fees (USDC, input-side)"| Fees["fee ATAs<br/>(protocol + gateway)"]
     In -->|"Meteora DLMM swap"| Out["intermediate WSOL ATA<br/>(owned by ComposablePolicy PDA)"]
     Out -->|"closeAccount<br/>(FORWARD_FLAG_NATIVE_OUTPUT)"| Hot["hotWallet<br/>(recipient, SYSTEM wallet)<br/>receives native SOL"]
 
@@ -4140,8 +4412,7 @@ graph LR
     classDef pda fill:#e3f2fd,stroke:#1565c0
     classDef native fill:#fce4ec,stroke:#880e4f
     class Cold,Hot user
-    class In,Out pda
-    class Hot native
+    class In,Out,Fees pda
 ```
 
 ## The `FORWARD_FLAG_NATIVE_OUTPUT` bit
@@ -4181,6 +4452,8 @@ import DLMM from "@meteora-ag/dlmm";
 import {
   Tributary,
   lighthouse,
+  getPreValidationPda,
+  getPostValidationPda,
   LIGHTHOUSE_PROGRAM_ID,
 } from "@tributary-so/sdk";
 
@@ -4249,18 +4522,24 @@ const discriminator = Array.from(
 
 ```typescript
 const forwardConfig = {
-  targetProgram: METEORA_DLMM_PUBKEY,
   inputMint: USDC_MINT,
   outputMint: NATIVE_MINT, // REQUIRED — NATIVE_OUTPUT requires WSOL output
-  minOutputAmount: null,
   forwardFlags: FORWARD_FLAG_NATIVE_OUTPUT, // ← bit 0 set
-  numDataChecks: 1,
-  dataChecks: [
-    { offset: 0, length: 8, expected: discriminator },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-  ],
+  instructionConstraint: {
+    programId: METEORA_DLMM_PUBKEY,
+    numDataChecks: 1,
+    dataChecks: [
+      { offset: 0, length: 8, expected: discriminator },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+    ],
+    numPinnedAccounts: 0,
+    pinnedAccounts: [
+      { index: 0, pubkey: PublicKey.default },
+      { index: 0, pubkey: PublicKey.default },
+    ],
+  },
 };
 
 const createIx = await sdk.getCreateComposablePolicyInstruction(
@@ -4270,9 +4549,10 @@ const createIx = await sdk.getCreateComposablePolicyInstruction(
   policyType,
   "Native SOL topup",
   forwardConfig,
-  LIGHTHOUSE_PROGRAM_ID,
-  guard.numAccounts,
-  guard.data
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
+  [hotWallet.publicKey], // prePinnedAccounts
+  guard.data // preValidationData
+  // postValidation: disabled (default)
 );
 ```
 
@@ -4294,11 +4574,18 @@ const forwardAccounts = swapIx.keys.map((k) => ({
   isWritable: true,
 }));
 
-const remainingAccounts = [
-  { pubkey: validationPDA, isSigner: false, isWritable: false },
-  ...guard.accounts,
-  ...forwardAccounts,
-];
+// ValidationPda is a named account post-ADR-0016; remaining_accounts is
+// the bare [target, ...forward] slice (no leading ValidationPda entry).
+const { address: preValidationPda } = getPreValidationPda(
+  composablePolicyPDA,
+  program.programId
+);
+const { address: postValidationPda } = getPostValidationPda(
+  composablePolicyPDA,
+  program.programId
+);
+
+const remainingAccounts = [...guard.accounts, ...forwardAccounts];
 
 const ix = await program.methods
   .executeComposable(Buffer.from(swapIx.data), new anchor.BN(SWAP_INPUT_AMOUNT))
@@ -4309,7 +4596,10 @@ const ix = await program.methods
     userPayment: userPaymentPDA,
     gateway: gatewayPDA,
     config: configPDA,
-    validationProgram: LIGHTHOUSE_PUBKEY,
+    preValidationProgram: LIGHTHOUSE_PROGRAM_ID,
+    postValidationProgram: SystemProgram.programId,
+    preValidationPda,
+    postValidationPda,
     userTokenAccount: coldWalletUsdcAta,
     mint: USDC_MINT,
     outputMint: NATIVE_MINT,
@@ -4324,8 +4614,8 @@ const ix = await program.methods
       true
     ),
     recipientTokenAccount: hotWallet.publicKey, // ← SYSTEM WALLET, not ATA
-    gatewayFeeAccount: feeRecipientWsolAta, // fees are still WSOL
-    protocolFeeAccount: adminWsolAta,
+    gatewayFeeAccount: feeRecipientUsdcAta, // input-side (USDC, ADR-0026)
+    protocolFeeAccount: adminUsdcAta,
     tokenProgram: TOKEN_PROGRAM_ID,
     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     systemProgram: SystemProgram.programId,
@@ -4334,9 +4624,9 @@ const ix = await program.methods
   .instruction();
 ```
 
-Fees are still WSOL
+Fees are input-side (USDC, ADR-0026)
 
-`gateway_fee_account` and `protocol_fee_account` are still WSOL ATAs — the fee slice of the output is delivered via `transfer_checked`, only the recipient's slice is unwrapped via `closeAccount`. Recipient WSOL ATA is not required.
+Composable fees are always skimmed from the intermediate input (USDC) before the forward swap runs, not from the output. `gatewayFeeAccount` and `protocolFeeAccount` are USDC ATAs, not WSOL.
 
 ## When to use native SOL vs WSOL delivery
 
@@ -4369,22 +4659,26 @@ Native SOL delivery costs one extra `closeAccount` CPI and skips the recipient A
 
 This is a composable policy with:
 
-- **Forward enabled** — `targetProgram = METEORA_DLMM_PUBKEY`, with a `ByteRangeCheck` pinning the swap instruction discriminator at offset 0.
+- **Forward enabled** — `programId = METEORA_DLMM_PUBKEY` on the `instructionConstraint`, with a `ByteRangeCheck` pinning the swap instruction discriminator at offset 0.
 - **Optional validation** — same pattern as the topup guard (e.g. only swap when the recipient's WSOL balance is below a threshold).
+- **Input-side fees** — protocol and gateway fees are skimmed from the gross USDC pull in Phase 1b (ADR-0026), before the forward runs. The swap and deliver phases move only the net principal.
 
 ```
 graph LR
-    Cold["coldWallet<br/>(user, USDC)"] -->|"pull USDC<br/>(UserPayment PDA signs)"| In["intermediate USDC ATA"]
-    Val["Lighthouse CPI<br/>(optional)"] -.->|"assertion holds → continue"| In
-    In -->|"Meteora DLMM swap<br/>(ComposablePolicy PDA signs)"| Out["intermediate WSOL ATA"]
-    Out -->|"sweep WSOL"| Hot["hotWallet<br/>(recipient, WSOL ATA)<br/>+ protocol fee + gateway fee"]
+    Cold["coldWallet<br/>(user, USDC)"] -->|"pull USDC (gross)<br/>(UserPayment PDA signs)"| In["intermediate USDC ATA"]
+    In -->|"skim fees<br/>(input-side)"| Fee["protocol fee + gateway fee<br/>(USDC)"]
+    PreVal["Lighthouse CPI<br/>(pre‑validation)"] -.->|"assertion → continue"| In
+    In -->|"swap via DLMM<br/>(ComposablePolicy PDA signs)"| Out["intermediate WSOL ATA"]
+    PostVal["Lighthouse CPI<br/>(post‑validation)"] -.->|"assertion → continue"| Out
+    Out -->|"sweep WSOL"| Hot["hotWallet<br/>(recipient, WSOL ATA)"]
 
     classDef user fill:#e8f5e8,stroke:#1b5e20
     classDef pda fill:#e3f2fd,stroke:#1565c0
     classDef val fill:#fff3e0,stroke:#e65100
     class Cold,Hot user
     class In,Out pda
-    class Val val
+    class PreVal,PostVal val
+    class Fee user
 ```
 
 ## Constants
@@ -4404,7 +4698,7 @@ const SWAP_INPUT_AMOUNT = 50_000_000; // 50 USDC
 
 Pool choice matters
 
-The pool you pass to `pool.swap()` must have `USDC_MINT` as one leg and `NATIVE_MINT` as the other. Tributary does not validate the pool itself — only that the `targetProgram` is allowlisted and the instruction selector matches the pinned `ByteRangeCheck`.
+The pool you pass to `pool.swap()` must have `USDC_MINT` as one leg and `NATIVE_MINT` as the other. Tributary does not validate the pool itself — only that the forward program id is allowlisted and the instruction selector matches the pinned `ByteRangeCheck`.
 
 ## 1. Build the DLMM swap instruction
 
@@ -4472,29 +4766,30 @@ async function buildSwapIx(user: PublicKey): Promise<TransactionInstruction> {
 }
 
 // Build once just to extract the discriminator for the ByteRangeCheck.
-const discriminator = Array.from(
-  (await buildSwapIx(PublicKey.default)).data.slice(0, 8)
-);
+const discriminator = (await buildSwapIx(PublicKey.default)).data.slice(0, 8);
 ```
 
 ## 2. Create the composable policy
 
-Forward enabled: `targetProgram = METEORA_DLMM_PUBKEY`, at least one `ByteRangeCheck` pins the discriminator at offset 0.
+Forward enabled: `programId = METEORA_DLMM_PUBKEY` on the `instructionConstraint`, at least one `ByteRangeCheck` pins the discriminator at offset 0.
 
 ```typescript
 const forwardConfig = {
-  targetProgram: METEORA_DLMM_PUBKEY,
+  instructionConstraint: {
+    programId: METEORA_DLMM_PUBKEY,
+    numDataChecks: 1,
+    dataChecks: [
+      { offset: 0, length: 8, expected: Buffer.from(discriminator) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) },
+    ],
+    numPinnedAccounts: 0,
+    pinnedAccounts: [],
+  },
   inputMint: USDC_MINT,
   outputMint: NATIVE_MINT,
-  minOutputAmount: null, // we let pool.swapQuote handle slippage at the swap layer
   forwardFlags: 0, // WSOL ATA delivery — see native-sol-topup.md for the unwrap variant
-  numDataChecks: 1,
-  dataChecks: [
-    { offset: 0, length: 8, expected: discriminator }, // pin the swap selector
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-  ],
 };
 
 // Optional Lighthouse guard: only swap when recipient WSOL is below 1 WSOL.
@@ -4510,9 +4805,9 @@ const createIx = await sdk.getCreateComposablePolicyInstruction(
   policyType,
   "Topup WSOL swap",
   forwardConfig,
-  LIGHTHOUSE_PROGRAM_ID,
-  guard.numAccounts,
-  guard.data
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
+  guard.accounts, // prePinnedAccounts — owner-declared Lighthouse target accounts
+  guard.data // preValidationData
 );
 ```
 
@@ -4525,8 +4820,8 @@ Without a `ByteRangeCheck` at offset 0, a malicious gateway could substitute any
 The caller supplies:
 
 - `instructionData` = the raw DLMM swap ix data (the same bytes whose first 8 must match the pinned `ByteRangeCheck`).
-- `forwardAmount` = the USDC pull size.
-- `remaining_accounts` = `[...guard.accounts, ...forwardAccounts]` — the SDK auto-prepends the `ValidationPda`.
+- `forwardAmount` = the USDC pull size (required for PayAsYouGo; pass `null` for subscription/onetime).
+- `remaining_accounts` = `[...guard.accounts, ...forwardAccounts]` — the `ValidationPda` is in the `accountsStrict` map; the remaining accounts slice is just the Lighthouse target accounts + forward accounts.
 
 ```typescript
 // Two distinct intermediates (input_mint != output_mint), both owned by the
@@ -4546,54 +4841,629 @@ const forwardAccounts = swapIx.keys.map((k) => ({
 }));
 
 const remainingAccounts = [
-  ...guard.accounts, // validation read-accounts (the SDK prepends ValidationPda)
+  ...guard.accounts, // Lighthouse target accounts (no leading ValidationPda)
   ...forwardAccounts, // DLMM swap accounts (includes the self-listed DLMM program)
 ];
 
-const execIx = await sdk.executeComposable(
+const [execIx] = await sdk.executeComposable(
   composablePolicyPDA,
   Buffer.from(swapIx.data),
   new anchor.BN(SWAP_INPUT_AMOUNT),
   remainingAccounts
 );
+// Returns [executeInstruction] — also ATA ensures for recipient + fee recipients
 ```
 
-## `min_output_amount` semantics
+## `minOutputAmount` (removed)
 
-`minOutputAmount` on the `ForwardConfig` is checked against the **NET (post-fee)** output — i.e. the amount that actually lands in the recipient's ATA after the protocol fee (default 100 bps) and gateway fee are deducted.
+`ForwardConfig.minOutputAmount` was removed in v2.1. The `ByteRangeCheck` pins the swap instruction selector, so swap-level slippage (`minOutAmount` on `pool.swapQuote`) is the caller's responsibility — it's encoded inside the forward instruction data that the CPI executes verbatim.
 
-```text
-swap_output_amount
-   ├── protocol_fee   = swap_output * effective_protocol_fee_bps / 10000  → ProgramConfig.fee_recipient
-   ├── gateway_fee    = swap_output * gateway_fee_bps / 10000             → PaymentGateway.fee_recipient
-   └── net (swept)                                              → recipient
-                              ↑
-                       min_output_amount compared against THIS
+For net-level guarantees (output after fees), use the **post-validation** hook: a Lighthouse assertion against the intermediate output ATA balance after the swap but before the sweep. This replaces the old inline `minOutputAmount` field.
+
+```typescript
+const netGuard = lighthouse
+  .tokenAccount(intermediateOutputAta)
+  .amount(desiredMinOut, ">=")
+  .build();
+
+const createIx = await sdk.getCreateComposablePolicyInstruction(
+  USDC_MINT,
+  hotWallet.publicKey,
+  gatewayPDA,
+  policyType,
+  "Topup WSOL swap",
+  forwardConfig,
+  preValidationSpec,
+  prePinnedAccounts,
+  preValidationData,
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // postValidation
+  netGuard.accounts, // postPinnedAccounts
+  netGuard.data // postValidationData
+);
 ```
 
-!!! info "Two slippage knobs" - **Swap-level** slippage: `minOutAmount` in `pool.swapQuote(...)` — protects against the DLMM price moving within the swap itself. - **Net-level** slippage: `ForwardConfig.minOutputAmount` — protects against the post-fee delivered amount being below an acceptable floor.
+Slippage protection
 
-```text
-The DLMM `minOutAmount` is the primary defence. The Tributary
-`minOutputAmount` is a backstop on the net amount; set it to `null` if the
-swap-level slippage already covers your requirements.
-```
+The DLMM `minOutAmount` inside the swap ix is the primary price-slippage defence. The post-validation hook is an optional backstop on the delivered amount; leave it disabled if swap-level slippage already covers your requirements.
 
 ## Failure modes
 
-| Condition                                                      | Outcome                                                                                  |
-| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Swap selector doesn't match the pinned `ByteRangeCheck`        | `DiscriminatorCheckRequired` / `ByteRangeCheckFailed` → tx reverts.                      |
-| PayAsYouGo period cap exhausted                                | Rejected before the swap CPI runs.                                                       |
-| Lighthouse assertion fails (recipient already has enough WSOL) | Tx reverts before the swap.                                                              |
-| Insufficient delegate amount on `userTokenAccount`             | `InsufficientDelegatedAmount`.                                                           |
-| Pool moves adversarially between quote and execute             | `minOutAmount` in the swap ix (and `ForwardConfig.minOutputAmount` if set) protects you. |
+| Condition                                                      | Outcome                                                                      |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Swap selector doesn't match the pinned `ByteRangeCheck`        | `DiscriminatorCheckRequired` / `ByteRangeCheckFailed` → tx reverts.          |
+| PayAsYouGo period cap exhausted                                | Rejected before the swap CPI runs.                                           |
+| Lighthouse assertion fails (recipient already has enough WSOL) | Tx reverts before the swap.                                                  |
+| Insufficient delegate amount on `userTokenAccount`             | `InsufficientDelegatedAmount`.                                               |
+| Pool moves adversarially between quote and execute             | `minOutAmount` in the swap ix (or a post‑validation assertion) protects you. |
 
 ## Reference
 
 - Working test: `tests/topup-balance-swap.test.ts` (runs against Surfpool with a mainnet-forked DLMM pool).
 - [SDK surface](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `executeComposable` and `remaining_accounts` layout.
 - Next: [Native SOL topup](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/native-sol-topup/index.md) — same flow but unwraps WSOL to native SOL via the `FORWARD_FLAG_NATIVE_OUTPUT` bit.
+
+# Quickstart: AI Agent Budget
+
+Give an AI agent a capped USDC allowance. It can pull funds on-demand, but only up to a per-period ceiling — and only when its hot wallet actually needs it. No forward, no swap: pure conditional pull.
+
+**You'll build:** a PayAsYouGo composable policy with a Lighthouse balance guard. The agent pulls USDC only when its wallet dips below a threshold.
+
+**Time to first value:** \<10 min if you have a funded devnet wallet.
+
+## Prerequisites
+
+- Node 18+, `@solana/web3.js`, `@coral-xyz/anchor`, `@tributary-so/sdk`
+- A funded Solana wallet (devnet or mainnet)
+- A `PaymentGateway` — create one via the SDK manager CLI or `sdk.createPaymentGateway()`
+- USDC in your wallet (the funder)
+
+## Setup
+
+```typescript
+import * as anchor from "@coral-xyz/anchor";
+import { PublicKey, Connection, Keypair } from "@solana/web3.js";
+import { getAssociatedTokenAddressSync } from "@solana/spl-token";
+import { Tributary, lighthouse, LIGHTHOUSE_PROGRAM_ID } from "@tributary-so/sdk";
+
+const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+const connection = new Connection("https://api.devnet.solana.com");
+
+// Your wallet (funder) and the agent's wallet (recipient)
+const funder = Keypair.generate();   // load from your wallet provider
+const agentWallet = Keypair.generate();
+
+const sdk = new Tributary(connection, {
+  publicKey: funder.publicKey,
+  signTransaction: /* your signer */,
+} as any);
+
+const gatewayPDA = new PublicKey("<your gateway PDA>");
+
+// The agent's USDC ATA — Lighthouse will read its balance
+const agentUsdcAta = getAssociatedTokenAddressSync(USDC_MINT, agentWallet.publicKey);
+```
+
+## Step 1: Build the guard
+
+Only allow pulls when the agent's USDC balance is below 50 USDC. This prevents the agent from draining funds it doesn't need.
+
+```typescript
+const THRESHOLD = 50_000_000; // 50 USDC (6 decimals)
+
+const guard = lighthouse
+  .tokenAccount(agentUsdcAta)
+  .amount(THRESHOLD, "<")
+  .build();
+```
+
+## Step 2: Create the policy
+
+One call handles ATA creation, UserPayment, the composable policy, and delegate approval.
+
+```typescript
+const CAP_MONTHLY = 1_000_000_000; // 1000 USDC / month
+const CAP_PER_CALL = 50_000_000; // 50 USDC / call
+const THIRTY_DAYS_S = 30 * 24 * 3600;
+
+const policyType = {
+  payAsYouGo: {
+    maxAmountPerPeriod: new anchor.BN(CAP_MONTHLY),
+    maxChunkAmount: new anchor.BN(CAP_PER_CALL),
+    periodLengthSeconds: new anchor.BN(THIRTY_DAYS_S),
+    currentPeriodStart: new anchor.BN(Math.floor(Date.now() / 1000)),
+    currentPeriodTotal: new anchor.BN(0),
+    expiryDate: null,
+    padding: new Array(79).fill(0),
+  },
+};
+
+// Forward disabled — same-mint (USDC → USDC), no swap
+const forwardConfig = {
+  instructionConstraint: {
+    programId: PublicKey.default(), // sentinel: forward disabled
+    numDataChecks: 0,
+    dataChecks: Array(4).fill({
+      offset: 0,
+      length: 0,
+      expected: Buffer.alloc(8),
+    }),
+    numPinnedAccounts: 0,
+    pinnedAccounts: [],
+  },
+  inputMint: USDC_MINT,
+  outputMint: USDC_MINT,
+  forwardFlags: 0,
+};
+
+const ixs = await sdk.createComposable(
+  USDC_MINT,
+  agentWallet.publicKey, // recipient = the AI agent
+  gatewayPDA,
+  policyType,
+  "AI agent budget",
+  forwardConfig,
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
+  [agentUsdcAta], // prePinnedAccounts
+  guard.data, // preValidationData
+  undefined, // feePayer (defaults to provider)
+  new anchor.BN(CAP_MONTHLY) // approvalAmount
+);
+
+// Send the transaction
+await sendAndConfirmTransaction(connection, new Transaction().add(...ixs), [
+  funder,
+]);
+```
+
+## Step 3: Execute (permissionless)
+
+Anyone can execute — the agent itself, a scheduler, or your backend. The guard fires first: if the agent's balance is ≥ threshold, the tx reverts.
+
+```typescript
+const { address: composablePolicyPDA } = sdk.getComposablePolicyPda(
+  sdk.getUserPaymentPda(funder.publicKey, USDC_MINT).address,
+  1 // first composable policy
+);
+
+const execIxs = await sdk.executeComposable(
+  composablePolicyPDA,
+  Buffer.alloc(0), // no forward instruction data
+  new anchor.BN(CAP_PER_CALL), // pull 50 USDC
+  guard.accounts // Lighthouse read-accounts
+);
+
+await sendAndConfirmTransaction(connection, new Transaction().add(...execIxs), [
+  funder,
+]);
+```
+
+## What happened
+
+1. **Pull** — 50 USDC + fees pulled from your wallet to the intermediate ATA.
+1. **Skim** — Protocol + gateway fees skimmed (input-side, USDC).
+1. **Pre-validate** — Lighthouse checks `agentUsdcAta.amount < 50 USDC`. Passes only when the agent is low on funds.
+1. **Settle** — USDC swept to the agent's ATA.
+
+If the agent already has ≥ 50 USDC, the assertion fails and nothing moves.
+
+## Next steps
+
+- [Auto-topup quickstart](https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/auto-topup/index.md) — same guard but with a USDC→SOL swap
+- [Auto-DCA quickstart](https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/auto-dca/index.md) — recurring subscription with a forward swap
+- [Lighthouse facade guide](https://docs.tributary.so/integration-guide/programmable-pull-payments/lighthouse-facade/index.md) — every assertion family
+- [SDK reference](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — full composable API
+
+# Quickstart: Auto-DCA
+
+Automatically dollar-cost-average into SOL every week. A subscription composable policy pulls USDC on a schedule, swaps it to SOL via Meteora DLMM, and delivers SOL to your wallet — all on-chain, no custodian.
+
+**You'll build:** a Subscription composable policy with a Meteora forward. USDC is pulled weekly, swapped to SOL, and delivered.
+
+**Time to first value:** \<15 min (requires a DLMM pool address).
+
+## Prerequisites
+
+- Node 18+, `@solana/web3.js`, `@coral-xyz/anchor`, `@tributary-so/sdk`
+- `@meteora-ag/dlmm` installed
+- A funded Solana wallet
+- A `PaymentGateway`
+- USDC in your wallet
+- A Meteora DLMM pool address (USDC/SOL pair) — find one on [Meteora](https://app.meteora.ag/) or use the SDK to discover pools
+
+## Setup
+
+```typescript
+import * as anchor from "@coral-xyz/anchor";
+import {
+  PublicKey,
+  Connection,
+  Transaction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
+import { getAssociatedTokenAddressSync, NATIVE_MINT } from "@solana/spl-token";
+import {
+  Tributary,
+  lighthouse,
+  LIGHTHOUSE_PROGRAM_ID,
+} from "@tributary-so/sdk";
+import DLMM from "@meteora-ag/dlmm";
+
+const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+const METEORA_DLMM_PUBKEY = new PublicKey(
+  "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+);
+const DLMM_POOL = new PublicKey("<your USDC/SOL pool address>");
+
+const connection = new Connection("https://api.devnet.solana.com");
+// ... initialise sdk, wallet, gatewayPDA as usual
+```
+
+## Step 1: Build the DLMM swap helper
+
+The swap `user` must be the ComposablePolicy PDA (it owns the intermediate ATAs). Build a helper that can produce the swap ix for any `user` — you'll call it twice: once to extract the discriminator (at create time), once with the real PDA (at execute time).
+
+```typescript
+const DCA_AMOUNT = 100_000_000; // 100 USDC per swap
+
+const dlmmPool = await DLMM.create(connection, DLMM_POOL, {
+  cluster: "mainnet-beta",
+  skipSolWrappingOperation: true, // Tributary manages intermediates
+});
+
+async function buildSwapIx(user: PublicKey) {
+  const swapForY = USDC_MINT.equals(dlmmPool.tokenX.publicKey);
+  const binArrays = await dlmmPool.getBinArrayForSwap(swapForY);
+  const quote = dlmmPool.swapQuote(
+    new anchor.BN(DCA_AMOUNT),
+    swapForY,
+    new anchor.BN(100), // 1% slippage
+    binArrays
+  );
+
+  const swapTx = await dlmmPool.swap({
+    lbPair: DLMM_POOL,
+    inToken: USDC_MINT,
+    outToken: NATIVE_MINT,
+    inAmount: new anchor.BN(DCA_AMOUNT),
+    minOutAmount: quote.minOutAmount,
+    user,
+    binArraysPubkey: quote.binArraysPubkey as PublicKey[],
+  });
+
+  // Keep only the DLMM instruction (pool.swap returns extras)
+  const found = swapTx.instructions.find((i) =>
+    i.programId.equals(METEORA_DLMM_PUBKEY)
+  );
+  if (!found) throw new Error("DLMM swap instruction not found");
+
+  // hostFeeIn fix: rewrite SystemProgram placeholder → DLMM program id
+  const keys = found.keys.map((k) =>
+    k.pubkey.equals(PublicKey.default) ||
+    k.pubkey.equals(SystemProgram.programId)
+      ? { ...k, pubkey: METEORA_DLMM_PUBKEY }
+      : k
+  );
+  return new TransactionInstruction({
+    keys,
+    programId: found.programId,
+    data: found.data,
+  });
+}
+
+// Extract the discriminator for the ByteRangeCheck
+const discriminator = (await buildSwapIx(PublicKey.default)).data.slice(0, 8);
+```
+
+## Step 2: Create the policy
+
+Subscription: 100 USDC every 7 days, swapped to SOL, delivered to you.
+
+```typescript
+const WEEK_S = 7 * 24 * 3600;
+
+const policyType = {
+  subscription: {
+    amount: new anchor.BN(DCA_AMOUNT), // 100 USDC
+    paymentFrequency: new anchor.BN(WEEK_S),
+    nextPaymentDue: new anchor.BN(Math.floor(Date.now() / 1000) + WEEK_S),
+    maxRenewals: 52, // 1 year of weekly DCA
+    autoRenew: true,
+    padding: new Array(72).fill(0),
+  },
+};
+
+const forwardConfig = {
+  instructionConstraint: {
+    programId: METEORA_DLMM_PUBKEY,
+    numDataChecks: 1,
+    dataChecks: [
+      { offset: 0, length: 8, expected: Buffer.from(discriminator) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) },
+    ],
+    numPinnedAccounts: 0,
+    pinnedAccounts: [],
+  },
+  inputMint: USDC_MINT,
+  outputMint: NATIVE_MINT, // WSOL delivery
+  forwardFlags: 0,
+};
+
+const ixs = await sdk.createComposable(
+  USDC_MINT,
+  wallet.publicKey, // you are the recipient
+  gatewayPDA,
+  policyType,
+  "Weekly DCA",
+  forwardConfig
+);
+
+await sendAndConfirmTransaction(connection, new Transaction().add(...ixs), [
+  wallet,
+]);
+```
+
+No validation guard?
+
+This DCA runs unconditionally on schedule. To add a price guard (e.g. only buy SOL when price < $200), add a pre-validation Lighthouse assertion. See the [Lighthouse facade guide](https://docs.tributary.so/integration-guide/programmable-pull-payments/lighthouse-facade/index.md).
+
+## Step 3: Execute (permissionless)
+
+A scheduler (or anyone) calls execute when `next_payment_due` has passed. The caller supplies the live swap instruction data.
+
+```typescript
+const { address: composablePolicyPDA } = sdk.getComposablePolicyPda(
+  sdk.getUserPaymentPda(wallet.publicKey, USDC_MINT).address,
+  1
+);
+
+// Build the swap ix with the REAL composable policy PDA as user
+const swapIx = await buildSwapIx(composablePolicyPDA);
+
+// Map DLMM accounts → AccountMeta (all writable, all non-signer)
+const forwardAccounts = swapIx.keys.map((k) => ({
+  pubkey: k.pubkey,
+  isSigner: false,
+  isWritable: true,
+}));
+
+const execIxs = await sdk.executeComposable(
+  composablePolicyPDA,
+  Buffer.from(swapIx.data), // the raw swap instruction data
+  null, // null for subscription (fixed amount)
+  forwardAccounts // DLMM swap accounts
+);
+
+await sendAndConfirmTransaction(connection, new Transaction().add(...execIxs), [
+  wallet,
+]);
+```
+
+## What happened
+
+1. **Pull** — 100 USDC + fees pulled from your wallet to the intermediate ATA.
+1. **Skim** — Protocol + gateway fees skimmed (input-side, USDC).
+1. **Forward** — DLMM swap: USDC → WSOL via the intermediate ATAs.
+1. **Settle (deliver-transform)** — WSOL swept to your wallet's WSOL ATA.
+1. **Schedule advance** — `next_payment_due` += 7 days.
+
+## Next steps
+
+- [AI agent budget](https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/ai-agent-budget/index.md) — PayAsYouGo with validation, no swap
+- [Auto-topup](https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/auto-topup/index.md) — balance guard + swap
+- [Swap & Deliver example](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/swap-and-deliver/index.md) — deeper dive with post-validation
+- [Forward CPI guide](https://docs.tributary.so/integration-guide/programmable-pull-payments/forward-cpi-guide/index.md) — how to pin any forward instruction
+
+# Quickstart: Auto-Topup
+
+Keep a hot wallet topped up with SOL. When the hot wallet's USDC balance drops below a threshold, a composable policy pulls USDC from your cold wallet, swaps it to SOL via Meteora DLMM, and delivers it. Conditional + transformative in one primitive.
+
+**You'll build:** a PayAsYouGo composable with a Lighthouse balance guard and a Meteora DLMM forward swap.
+
+**Time to first value:** \<15 min (requires a DLMM pool address).
+
+## Prerequisites
+
+- Node 18+, `@solana/web3.js`, `@coral-xyz/anchor`, `@tributary-so/sdk`
+- `@meteora-ag/dlmm` installed
+- Two wallets: cold (funder) and hot (recipient)
+- A `PaymentGateway`
+- USDC in the cold wallet
+- A Meteora DLMM pool address (USDC/SOL pair)
+
+## Setup
+
+```typescript
+import * as anchor from "@coral-xyz/anchor";
+import {
+  PublicKey,
+  Connection,
+  Transaction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
+import { getAssociatedTokenAddressSync, NATIVE_MINT } from "@solana/spl-token";
+import {
+  Tributary,
+  lighthouse,
+  LIGHTHOUSE_PROGRAM_ID,
+} from "@tributary-so/sdk";
+import DLMM from "@meteora-ag/dlmm";
+
+const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+const METEORA_DLMM_PUBKEY = new PublicKey(
+  "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+);
+const DLMM_POOL = new PublicKey("<your USDC/SOL pool address>");
+
+const connection = new Connection("https://api.devnet.solana.com");
+// ... initialise sdk with coldWallet as provider, gatewayPDA
+
+const hotWalletUsdcAta = getAssociatedTokenAddressSync(
+  USDC_MINT,
+  hotWallet.publicKey
+);
+```
+
+## Step 1: Build the guard + swap helper
+
+```typescript
+const THRESHOLD = 50_000_000; // 50 USDC — trigger when below this
+const TOPUP_CHUNK = 50_000_000; // 50 USDC per execute call
+
+// Guard: only top up when hot wallet is below threshold
+const guard = lighthouse
+  .tokenAccount(hotWalletUsdcAta)
+  .amount(THRESHOLD, "<")
+  .build();
+
+// Swap helper (same pattern as auto-DCA quickstart)
+const dlmmPool = await DLMM.create(connection, DLMM_POOL, {
+  cluster: "mainnet-beta",
+  skipSolWrappingOperation: true,
+});
+
+async function buildSwapIx(user: PublicKey) {
+  const swapForY = USDC_MINT.equals(dlmmPool.tokenX.publicKey);
+  const binArrays = await dlmmPool.getBinArrayForSwap(swapForY);
+  const quote = dlmmPool.swapQuote(
+    new anchor.BN(TOPUP_CHUNK),
+    swapForY,
+    new anchor.BN(100), // 1% slippage
+    binArrays
+  );
+  const swapTx = await dlmmPool.swap({
+    lbPair: DLMM_POOL,
+    inToken: USDC_MINT,
+    outToken: NATIVE_MINT,
+    inAmount: new anchor.BN(TOPUP_CHUNK),
+    minOutAmount: quote.minOutAmount,
+    user,
+    binArraysPubkey: quote.binArraysPubkey as PublicKey[],
+  });
+  const found = swapTx.instructions.find((i) =>
+    i.programId.equals(METEORA_DLMM_PUBKEY)
+  );
+  if (!found) throw new Error("DLMM swap instruction not found");
+  const keys = found.keys.map((k) =>
+    k.pubkey.equals(PublicKey.default) ||
+    k.pubkey.equals(SystemProgram.programId)
+      ? { ...k, pubkey: METEORA_DLMM_PUBKEY }
+      : k
+  );
+  return new TransactionInstruction({
+    keys,
+    programId: found.programId,
+    data: found.data,
+  });
+}
+
+const discriminator = (await buildSwapIx(PublicKey.default)).data.slice(0, 8);
+```
+
+## Step 2: Create the policy
+
+PayAsYouGo: up to 200 USDC/month, 50 USDC per call, with the balance guard and the SOL swap forward.
+
+```typescript
+const policyType = {
+  payAsYouGo: {
+    maxAmountPerPeriod: new anchor.BN(200_000_000), // 200 USDC / month
+    maxChunkAmount: new anchor.BN(TOPUP_CHUNK), // 50 USDC / call
+    periodLengthSeconds: new anchor.BN(30 * 24 * 3600),
+    currentPeriodStart: new anchor.BN(Math.floor(Date.now() / 1000)),
+    currentPeriodTotal: new anchor.BN(0),
+    expiryDate: null,
+    padding: new Array(79).fill(0),
+  },
+};
+
+const forwardConfig = {
+  instructionConstraint: {
+    programId: METEORA_DLMM_PUBKEY,
+    numDataChecks: 1,
+    dataChecks: [
+      { offset: 0, length: 8, expected: Buffer.from(discriminator) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) },
+      { offset: 0, length: 0, expected: Buffer.alloc(8) },
+    ],
+    numPinnedAccounts: 0,
+    pinnedAccounts: [],
+  },
+  inputMint: USDC_MINT,
+  outputMint: NATIVE_MINT, // WSOL delivery
+  forwardFlags: 0,
+};
+
+const ixs = await sdk.createComposable(
+  USDC_MINT,
+  hotWallet.publicKey, // recipient = the hot wallet
+  gatewayPDA,
+  policyType,
+  "Auto SOL topup",
+  forwardConfig,
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
+  [hotWalletUsdcAta], // prePinnedAccounts
+  guard.data, // preValidationData
+  undefined,
+  new anchor.BN(200_000_000) // approvalAmount
+);
+
+await sendAndConfirmTransaction(connection, new Transaction().add(...ixs), [
+  coldWallet,
+]);
+```
+
+## Step 3: Execute (permissionless)
+
+A scheduler polls the hot wallet balance and fires this when the guard would pass. The guard reverts the tx if the balance is still above threshold.
+
+```typescript
+const { address: composablePolicyPDA } = sdk.getComposablePolicyPda(
+  sdk.getUserPaymentPda(coldWallet.publicKey, USDC_MINT).address,
+  1
+);
+
+const swapIx = await buildSwapIx(composablePolicyPDA);
+
+const forwardAccounts = swapIx.keys.map((k) => ({
+  pubkey: k.pubkey,
+  isSigner: false,
+  isWritable: true,
+}));
+
+const remainingAccounts = [
+  ...guard.accounts, // Lighthouse target accounts
+  ...forwardAccounts, // DLMM swap accounts
+];
+
+const execIxs = await sdk.executeComposable(
+  composablePolicyPDA,
+  Buffer.from(swapIx.data), // swap instruction data
+  new anchor.BN(TOPUP_CHUNK), // pull amount
+  remainingAccounts
+);
+
+await sendAndConfirmTransaction(connection, new Transaction().add(...execIxs), [
+  coldWallet,
+]);
+```
+
+## What happened
+
+1. **Pull** — 50 USDC + fees pulled from cold wallet to intermediate ATA.
+1. **Skim** — Protocol + gateway fees skimmed (input-side, USDC).
+1. **Pre-validate** — Lighthouse checks `hotWalletUsdcAta.amount < 50 USDC`. Reverts if the hot wallet doesn't need a topup.
+1. **Forward** — DLMM swap: USDC → WSOL.
+1. **Settle (deliver-transform)** — WSOL swept to the hot wallet's WSOL ATA.
+
+## Next steps
+
+- [AI agent budget](https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/ai-agent-budget/index.md) — same guard, no swap (simplest)
+- [Auto-DCA](https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/auto-dca/index.md) — recurring schedule with swap
+- [Native SOL topup example](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/native-sol-topup/index.md) — unwrap WSOL to native SOL with `FORWARD_FLAG_NATIVE_OUTPUT`
+- [Forward CPI guide](https://docs.tributary.so/integration-guide/programmable-pull-payments/forward-cpi-guide/index.md) — how to pin forward instructions
 
 # Checkout Page Quickstart
 
@@ -9244,50 +10114,58 @@ Allowlisting exists because both hooks receive `invoke_signed`-style authority o
 
 ## Sentinel conventions
 
-| Hook       | Disabled when…                                                                                 | Constant            |
-| ---------- | ---------------------------------------------------------------------------------------------- | ------------------- |
-| Forward    | `forward_config.target_program == Pubkey::default()`                                           | `Pubkey::default()` |
-| Validation | `validation_config.validation_program == SystemProgram` (or `Pubkey::default()` via `Default`) | `SystemProgram`     |
+| Hook       | Disabled when…                                           | Sentinel            |
+| ---------- | -------------------------------------------------------- | ------------------- |
+| Forward    | `instruction_constraint.program_id == Pubkey::default()` | `Pubkey::default()` |
+| Validation | `ValidationSpec::Disabled`                               | enum variant        |
 
-The two hooks use **different** sentinel pubkeys. This is intentional: it mirrors the semantic distinction between "no CPI target at all" (forward, where the disabled path skips the entire Phase 3) and "no assertion program needed" (validation, where `SystemProgram` is a harmless no-op CPI target that the caller can still pass as a real account without special handling).
+The two hooks use **different** sentinel conventions. Forward uses a pubkey sentinel (`Pubkey::default()` on `instruction_constraint.program_id`) since program ID is the single gate. Validation uses an enum variant (`ValidationSpec::Disabled`) because the spec carries no pubkey — when disabled no assertion data is stored, no `ValidationPda` is allocated, and the caller passes `SystemProgram` as the program account.
 
 ### Forward-disabled invariants
 
-When `target_program == Pubkey::default()`:
+When `instruction_constraint.program_id == Pubkey::default()`:
 
-- `num_data_checks == 0` (no forward instruction selector to pin).
-- `input_mint == output_mint` (no conversion step — the "same-mint topup" pattern. The intermediate is funded by the pull and swept directly).
+- `ic.num_data_checks == 0` (no forward instruction selector to pin).
+- `output_mint == input_mint` (no conversion step — the "same-mint topup" pattern. The intermediate is funded by the pull and swept directly).
 - Execute handler skips both the byte-range check and `run_forward_cpi`.
 
 ### Validation-disabled invariants
 
-When `validation_program == SystemProgram`:
+When the spec is `ValidationSpec::Disabled`:
 
-- `validation_data.is_empty()` (no assertion to store).
-- No `ValidationPda` account is allocated.
-- Execute handler skips Phase 2 entirely and consumes zero `remaining_accounts` for validation.
+- `validation_data.is_empty()` (no assertion to store — enforced by `validate_init` at create time).
+- No `ValidationPda` account is allocated (neither pre nor post).
+- Execute handler skips Phase 2 (pre-validation) and Phase 4 (post-validation) entirely; it consumes zero `remaining_accounts` for validation, and the caller passes `SystemProgram` as the program account.
 
-## Create-time checks (`validate_forward_config`)
+## Create-time checks
 
-`create_composable_policy` extracts the forward-leg rules into a unit-testable helper:
+### Forward config (`validate_forward_config`)
+
+The forward-leg rules are extracted into a unit-testable helper. The current function reads `num_data_checks` and `program_id` through the nested `instruction_constraint`:
 
 ```rust
-pub(crate) fn validate_forward_config(forward_config: &ForwardConfig) -> Result<()> {
-    let forward_disabled = forward_config.target_program == Pubkey::default();
+pub fn validate_forward_config(forward_config: &ForwardConfig) -> Result<()> {
+    let ic = &forward_config.instruction_constraint;
+    let forward_disabled = ic.is_disabled();
+
     require!(
-        forward_disabled || ALLOWED_FORWARD_PROGRAMS.contains(&forward_config.target_program),
-        TributaryError::InvalidForwardProgram,
+        forward_disabled || ALLOWED_FORWARD_PROGRAMS.contains(&ic.program_id),
+        TributaryError::InvalidForwardProgram
     );
 
     if forward_disabled {
-        require!(forward_config.num_data_checks == 0,
+        require!(ic.num_data_checks == 0,
                  TributaryError::InsufficientByteRangeChecks);
-        require!(forward_config.input_mint == forward_config.output_mint,
+        require!(forward_config.output_mint == forward_config.input_mint,
                  TributaryError::ForwardDisabledRequiresSameMint);
     } else {
-        require!(forward_config.num_data_checks >= 1
-                 && forward_config.num_data_checks <= MAX_BYTE_RANGE_CHECKS as u8,
+        require!(ic.num_data_checks >= 1
+                 && ic.num_data_checks <= MAX_BYTE_RANGE_CHECKS as u8,
                  TributaryError::InsufficientByteRangeChecks);
+        require!(ic.has_effective_pins(),
+                 TributaryError::DegenerateForwardPins);
+        require!(!ic.has_duplicate_indices(),
+                 TributaryError::DuplicatePinIndex);
     }
 
     if forward_config.is_native_output() {
@@ -9298,7 +10176,36 @@ pub(crate) fn validate_forward_config(forward_config: &ForwardConfig) -> Result<
 }
 ```
 
-The validation-program allowlist check and the per-`ByteRangeCheck` sanity loop (including the discriminator-pin requirement) live in the handler body itself — see `create_composable_policy.rs`.
+The per-`ByteRangeCheck` sanity loop (including the discriminator-pin requirement for offset 0) lives in the handler body itself, iterating `forward_config.instruction_constraint.data_checks[i]` — see `create_composable_policy.rs`.
+
+### Validation specs (`validate_spec_and_program` + `validate_init`)
+
+Validation is now handled per-slot (pre and post) through the `ValidationSpec` enum. At create time the handler calls:
+
+```rust
+// Resolve each spec against the caller-supplied program account.
+validate_spec_and_program(pre_validation,
+    ctx.accounts.pre_validation_program.key(),
+    ctx.accounts.system_program.key())?;
+validate_spec_and_program(post_validation,
+    ctx.accounts.post_validation_program.key(),
+    ctx.accounts.system_program.key())?;
+
+// Then validate the init data for each (assertion bytes, pin set).
+validate_init(&pre_validation, &pre_init)?;
+validate_init(&post_validation, &post_init)?;
+```
+
+Where `validate_spec_and_program` dispatches on the enum:
+
+- `ValidationSpec::Disabled` → the passed program account must be `SystemProgram` (no CPI target needed). No `ValidationPda` is allocated.
+- `ValidationSpec::ProgramCall { program_id }` → the passed program must match `program_id`, which must be in `ALLOWED_VALIDATION_PROGRAMS`.
+- `ValidationSpec::Inline { .. }` → returns `InlineValidationNotImplemented`.
+
+And `validate_init` ensures:
+
+- When `Disabled`: `validation_data` must be empty (no assertion to store).
+- When `ProgramCall`: `validation_data` must be non-empty and ≤ 1024 bytes, pins must be non-default, indices unique, within bounds.
 
 The handler also re-pins the named `input_mint` / `output_mint` accounts against the caller-supplied `forward_config` Pubkeys and runs the full Token-2022 extension allowlist on both (`validate_mint_compatible`). Without this, a policy could be created against a `TransferHook` / `PermanentDelegate` / `ConfidentialTransferMint` mint that breaks `transfer_checked` at execute time, or drains the PDA-owned intermediate ATA in the `PermanentDelegate` case (see `reports/L-02-mint-validation-call-sites-incomplete.md`).
 
@@ -9311,7 +10218,7 @@ The execute handler re-checks several invariants that were already enforced at c
 | `validate_mint_compatible(input_mint)` AND `(output_mint)` (Token-2022 extensions mutate) | L-02          |
 | `n <= checks.len()` before indexing `data_checks[i]`                                      | H-04          |
 | `ByteRangeCheck::validate` rejects `length > 8` rather than panicking                     | H-06          |
-| `validation_program == stored_validation_program`                                         | C-1           |
+| `pre_validation.program_id() == pre_program_info.key()` (+ same for post)                 | C-1           |
 | `forward_config.target_program` allowlist (transitively, via stored state)                | —             |
 
 ## Emergency pause
@@ -9331,6 +10238,260 @@ When the pause flag is true, **every** `execute_composable` (and `execute_paymen
 
 The flag is intended for incident response — e.g. an unresolved vulability in an allowlisted forward program. It does **not** freeze existing policy state; recipients and users retain full custody, and the flag can be cleared to resume execution.
 
+# Composable API Reference
+
+Complete reference for the four composable instructions, their accounts, and the key types.
+
+## Instructions
+
+| Instruction                | Description                                    |
+| -------------------------- | ---------------------------------------------- |
+| `create_composable_policy` | Initialize a new ComposablePolicy              |
+| `execute_composable`       | Execute a pull + validation + forward + settle |
+| `delete_composable_policy` | Close a paused/terminated policy (owner only)  |
+| `change_composable_status` | Toggle policy between Active and Paused        |
+
+______________________________________________________________________
+
+## `create_composable_policy`
+
+Creates a ComposablePolicy PDA and optionally the pre/post ValidationPdas.
+
+### Accounts
+
+| Account                   | Type                        | Signer | Notes                                                            |
+| ------------------------- | --------------------------- | ------ | ---------------------------------------------------------------- |
+| `fee_payer`               | `Signer`                    | ✅     | Pays for account creation                                        |
+| `user`                    | `Signer`                    | ✅     | `user_payment.owner` — must sign                                 |
+| `recipient`               | `UncheckedAccount`          | ❌     | Must be non-default                                              |
+| `composable_policy`       | `Account<ComposablePolicy>` | PDA    | `init`, seeds = `["composable_policy", user_payment, policy_id]` |
+| `user_payment`            | `Account<UserPayment>`      | PDA    | Must be active                                                   |
+| `gateway`                 | `Account<PaymentGateway>`   | PDA    | Must be active                                                   |
+| `config`                  | `Account<ProgramConfig>`    | PDA    | `!emergency_pause`                                               |
+| `pre_validation_program`  | `UncheckedAccount`          | ❌     | Lighthouse or SystemProgram                                      |
+| `post_validation_program` | `UncheckedAccount`          | ❌     | Lighthouse or SystemProgram                                      |
+| `pre_validation_pda`      | `UncheckedAccount`          | ❌     | `init` if pre-validation enabled                                 |
+| `post_validation_pda`     | `UncheckedAccount`          | ❌     | `init` if post-validation enabled                                |
+| `input_mint`              | `InterfaceAccount<Mint>`    | ❌     | `== user_payment.token_mint`                                     |
+| `output_mint`             | `UncheckedAccount`          | ❌     | SPL Mint or SystemProgram (act mode)                             |
+| `system_program`          | `Program`                   | ❌     |                                                                  |
+
+### Arguments
+
+| Arg                    | Type             | Notes                                                  |
+| ---------------------- | ---------------- | ------------------------------------------------------ |
+| `policy_type`          | `PolicyType`     | subscription / payAsYouGo / milestone / oneTime / upto |
+| `memo`                 | `[u8; 32]`       | 32-byte UTF-8 memo                                     |
+| `forward_config`       | `ForwardConfig`  | See types below                                        |
+| `pre_validation`       | `ValidationSpec` | `Disabled` or `ProgramCall { program_id }`             |
+| `pre_validation_init`  | `ValidationInit` | Pinned accounts + assertion data                       |
+| `post_validation`      | `ValidationSpec` | Same as pre                                            |
+| `post_validation_init` | `ValidationInit` | Same as pre                                            |
+
+### SDK
+
+```typescript
+// High-level (handles ATA + UserPayment + delegate approval):
+const ixs = await sdk.createComposable(
+  tokenMint,
+  recipient,
+  gateway,
+  policyType,
+  memo,
+  forwardConfig,
+  preValidation,
+  prePinnedAccounts,
+  preValidationData,
+  postValidation,
+  postPinnedAccounts,
+  postValidationData
+);
+
+// Low-level (instruction only):
+const ix = await sdk.getCreateComposablePolicyInstruction(
+  tokenMint,
+  recipient,
+  gateway,
+  policyType,
+  memo,
+  forwardConfig,
+  preValidation,
+  prePinnedAccounts,
+  preValidationData,
+  postValidation,
+  postPinnedAccounts,
+  postValidationData
+);
+```
+
+______________________________________________________________________
+
+## `execute_composable`
+
+Executes the 7-phase flow: Pull → Skim → Pre-validate → Forward → Post-validate → Settle. Permissionless if the gateway has the `FEATURE_PERMISSIONLESS` flag.
+
+### Accounts
+
+| Account                      | Type                                     | Signer | Notes                                                            |
+| ---------------------------- | ---------------------------------------- | ------ | ---------------------------------------------------------------- |
+| `fee_payer`                  | `Signer`                                 | ✅     | Gateway signer, owner, recipient, or any signer (permissionless) |
+| `payments_delegate`          | `UncheckedAccount`                       | PDA    | Legacy global delegate `["payments"]`                            |
+| `composable_policy`          | `Account<ComposablePolicy>`              | PDA    | Must be `Active`                                                 |
+| `user_payment`               | `Account<UserPayment>`                   | PDA    | Must be active                                                   |
+| `gateway`                    | `Account<PaymentGateway>`                | PDA    | Must match policy's gateway                                      |
+| `config`                     | `Account<ProgramConfig>`                 | PDA    | `!emergency_pause`                                               |
+| `pre_validation_program`     | `UncheckedAccount`                       | ❌     | Lighthouse or SystemProgram                                      |
+| `post_validation_program`    | `UncheckedAccount`                       | ❌     | Lighthouse or SystemProgram                                      |
+| `pre_validation_pda`         | `UncheckedAccount`                       | ❌     | Deserialised in handler if enabled                               |
+| `post_validation_pda`        | `UncheckedAccount`                       | ❌     | Deserialised in handler if enabled                               |
+| `user_token_account`         | `InterfaceAccount<TokenAccount>`         | ❌     | Delegate must be UserPayment or PaymentsDelegate PDA             |
+| `mint`                       | `InterfaceAccount<Mint>`                 | ❌     | `== forward_config.input_mint`                                   |
+| `output_mint`                | `UncheckedAccount`                       | ❌     | SPL Mint or SystemProgram (act mode)                             |
+| `intermediate_input_ata`     | `InterfaceAccount<TokenAccount>`         | ❌     | Owned by ComposablePolicy PDA                                    |
+| `intermediate_output_ata`    | `InterfaceAccount<TokenAccount>`         | ❌     | Owned by ComposablePolicy PDA (deliver-transform only)           |
+| `recipient_token_account`    | `InterfaceAccount<TokenAccount>`         | ❌     | Output-mint ATA of recipient                                     |
+| `gateway_fee_recipient_ata`  | `InterfaceAccount<TokenAccount>`         | ❌     | Input-mint ATA of gateway.fee_recipient                          |
+| `protocol_fee_recipient_ata` | `InterfaceAccount<TokenAccount>`         | ❌     | Input-mint ATA of config.fee_recipient                           |
+| `scheduler_ata`              | `Option<InterfaceAccount<TokenAccount>>` | ❌     | Input-mint ATA of caller (scheduler cut, if applicable)          |
+| `token_program`              | `Program<Token>`                         | ❌     |                                                                  |
+| `system_program`             | `Program<System>`                        | ❌     |                                                                  |
+| `remaining_accounts`         | `Vec<AccountInfo>`                       | ❌     | `[...preValTargets, ...forwardAccounts, ...postValTargets]`      |
+
+### Arguments
+
+| Arg                | Type          | Notes                                                          |
+| ------------------ | ------------- | -------------------------------------------------------------- |
+| `instruction_data` | `Vec<u8>`     | Forward program instruction data (empty if forward disabled)   |
+| `forward_amount`   | `Option<u64>` | Pull amount (required for PayAsYouGo; `None` for subscription) |
+
+### SDK
+
+```typescript
+const execIxs = await sdk.executeComposable(
+  composablePolicyPDA,
+  instructionData, // Buffer — forward instruction data
+  forwardAmount, // BN | null
+  remainingAccounts // AccountMeta[]
+);
+// Returns: [recipientATAEnsure?, gatewayFeeATAEnsure?, protocolFeeATAEnsure?, executeIx]
+```
+
+______________________________________________________________________
+
+## `delete_composable_policy`
+
+Closes a non-Active ComposablePolicy account and reclaims rent. Owner only.
+
+### Accounts
+
+| Account             | Type                        | Signer | Notes                |
+| ------------------- | --------------------------- | ------ | -------------------- |
+| `owner`             | `Signer`                    | ✅     | `user_payment.owner` |
+| `user_payment`      | `Account<UserPayment>`      | PDA    |                      |
+| `composable_policy` | `Account<ComposablePolicy>` | PDA    | Must NOT be `Active` |
+| `config`            | `Account<ProgramConfig>`    | PDA    | `!emergency_pause`   |
+| `system_program`    | `Program<System>`           | ❌     |                      |
+
+### Arguments
+
+| Arg         | Type  |
+| ----------- | ----- |
+| `policy_id` | `u32` |
+
+______________________________________________________________________
+
+## `change_composable_status`
+
+Toggles a ComposablePolicy between `Active` and `Paused`. Owner only.
+
+### Accounts
+
+| Account             | Type                        | Signer | Notes                       |
+| ------------------- | --------------------------- | ------ | --------------------------- |
+| `owner`             | `Signer`                    | ✅     | `user_payment.owner`        |
+| `user_payment`      | `Account<UserPayment>`      | PDA    |                             |
+| `composable_policy` | `Account<ComposablePolicy>` | PDA    |                             |
+| `gateway`           | `Account<PaymentGateway>`   | PDA    | Must match policy's gateway |
+| `config`            | `Account<ProgramConfig>`    | PDA    |                             |
+
+### Arguments
+
+| Arg         | Type           | Notes                |
+| ----------- | -------------- | -------------------- |
+| `policy_id` | `u32`          |                      |
+| `status`    | `PolicyStatus` | `Active` or `Paused` |
+
+______________________________________________________________________
+
+## Key types
+
+### `ComposablePolicy`
+
+| Field             | Type             | Size | Notes                                                  |
+| ----------------- | ---------------- | ---- | ------------------------------------------------------ |
+| `user_payment`    | `Pubkey`         | 32   | Parent UserPayment                                     |
+| `policy_id`       | `u32`            | 4    | From `created_composable_count`                        |
+| `gateway`         | `Pubkey`         | 32   |                                                        |
+| `recipient`       | `Pubkey`         | 32   |                                                        |
+| `status`          | `PolicyStatus`   | 1    | Active / Paused / Terminated                           |
+| `policy_type`     | `PolicyType`     | 128  | subscription / payAsYouGo / milestone / oneTime / upto |
+| `forward_config`  | `ForwardConfig`  | 205  | See below                                              |
+| `pre_validation`  | `ValidationSpec` | 33   |                                                        |
+| `post_validation` | `ValidationSpec` | 33   |                                                        |
+| `memo`            | `[u8; 32]`       | 32   | ADR-0017                                               |
+| `total_output`    | `u64`            | 8    | Lifetime output accumulated                            |
+| `bump`            | `u8`             | 1    |                                                        |
+| `padding`         | `[u8; 192]`      | 192  | ADR-0022                                               |
+
+### `ForwardConfig` (205 bytes)
+
+| Field                    | Type                    | Notes                                                               |
+| ------------------------ | ----------------------- | ------------------------------------------------------------------- |
+| `instruction_constraint` | `InstructionConstraint` | 140 bytes — see below                                               |
+| `input_mint`             | `Pubkey`                | `== user_payment.token_mint`                                        |
+| `output_mint`            | `Pubkey`                | Concrete mint, `== input_mint` (no swap), or `default()` (act mode) |
+| `forward_flags`          | `u8`                    | Bit 0 = `FORWARD_FLAG_NATIVE_OUTPUT`                                |
+
+### `InstructionConstraint` (140 bytes)
+
+| Field                 | Type                  | Notes                                                         |
+| --------------------- | --------------------- | ------------------------------------------------------------- |
+| `program_id`          | `Pubkey`              | `Pubkey::default()` = forward disabled                        |
+| `num_data_checks`     | `u8`                  | Active entries in `data_checks`                               |
+| `data_checks`         | `[ByteRangeCheck; 4]` | Fixed-size; at least 1 must pin offset 0 when forward enabled |
+| `num_pinned_accounts` | `u8`                  | Active entries in `pinned_accounts`                           |
+| `pinned_accounts`     | `[PinnedAccount; 2]`  | Fixed-size                                                    |
+
+### `ByteRangeCheck`
+
+| Field      | Type      | Notes                                       |
+| ---------- | --------- | ------------------------------------------- |
+| `offset`   | `u16`     | Byte offset in instruction data             |
+| `length`   | `u8`      | 1–8                                         |
+| `expected` | `[u8; 8]` | Expected value at `[offset, offset+length)` |
+
+### `PinnedAccount`
+
+| Field    | Type     | Notes                                          |
+| -------- | -------- | ---------------------------------------------- |
+| `index`  | `u8`     | Position in the forward-account slice          |
+| `pubkey` | `Pubkey` | Must be concrete (no default-pubkey wildcards) |
+
+### `ValidationSpec`
+
+| Variant       | Payload                  | Notes                                    |
+| ------------- | ------------------------ | ---------------------------------------- |
+| `Disabled`    | —                        | No validation                            |
+| `ProgramCall` | `{ program_id: Pubkey }` | Must be in `ALLOWED_VALIDATION_PROGRAMS` |
+| `Inline`      | `{ reserved: u8 }`       | Not implemented; errors at create        |
+
+## Related
+
+- [Overview](https://docs.tributary.so/protocol-reference/composable-policy/overview/index.md) — 7-phase execution flow
+- [Validation Hook](https://docs.tributary.so/protocol-reference/composable-policy/validation-hook/index.md) — Lighthouse CPI mechanics
+- [Forward Hook](https://docs.tributary.so/protocol-reference/composable-policy/forward-hook/index.md) — Forward CPI mechanics
+- [SDK reference](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md)
+
 # Forward Hook
 
 The **forward hook** is an opt-in token-transform CPI that runs **after** the validation hook (Phase 2) and **before** settlement (Phase 4). It lets a policy pull one token from the user and deliver a different token to the recipient — e.g. pull USDC, swap to WSOL via Meteora DLMM, then settle in WSOL (or native SOL — see [native-output.md](https://docs.tributary.so/protocol-reference/composable-policy/native-output/index.md)).
@@ -9342,46 +10503,73 @@ The only forward target currently allowlisted is **Meteora DLMM** (`LBUZKhRxPF3X
 Stored inline on the `ComposablePolicy` account:
 
 ```rust
-pub const MAX_BYTE_RANGE_CHECKS: usize = 4;
-
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq)]
 pub struct ForwardConfig {
-    /// CPI target. `Pubkey::default()` is the "forward disabled" sentinel
-    /// (see allowlists-and-sentinels.md). Otherwise must be in
-    /// ALLOWED_FORWARD_PROGRAMS.
-    pub target_program: Pubkey,
+    /// Unified instruction constraint — pins the forward program, its
+    /// instruction selector, and indexed accounts. Absorbs the old
+    /// `target_program` + `data_checks` fields and the scrapped
+    /// `ForwardAccountsPda` design.
+    /// `instruction_constraint.program_id == Pubkey::default()` is the
+    /// "forward disabled" sentinel.
+    pub instruction_constraint: InstructionConstraint,
 
     /// == user_payment.token_mint. Validated at execute time against the
     /// user_token_account mint.
     pub input_mint: Pubkey,
 
     /// Recipient delivery mint. May equal input_mint only when forward is
-    /// disabled (same-mint topup path).
+    /// disabled (same-mint topup path). `Pubkey::default()` + forward
+    /// enabled = **act mode** (ADR-0026).
     pub output_mint: Pubkey,
-
-    /// Minimum acceptable **net** output the recipient must receive,
-    /// measured AFTER gateway and protocol fees have been deducted from
-    /// the forward program's gross output. Matches DeFi convention
-    /// (Uniswap/Jupiter `amountOutMin`). `None` or `Some(0)` disables.
-    pub min_output_amount: Option<u64>,
 
     /// Bit 0 = FORWARD_FLAG_NATIVE_OUTPUT (see native-output.md).
     pub forward_flags: u8,
-
-    /// Number of entries in `data_checks` that are active. Must be in
-    /// 1..=MAX_BYTE_RANGE_CHECKS when forward is enabled; must be 0 when
-    /// disabled. At least one check MUST pin offset 0 (the discriminator).
-    pub num_data_checks: u8,
-
-    pub data_checks: [ByteRangeCheck; MAX_BYTE_RANGE_CHECKS],
 }
 
 impl ForwardConfig {
-    pub const SIZE: usize = 32 + 32 + 32 + 9 + 1 + 1 + (1 + 1 + 8) * 4; // = 146
+    pub const SIZE: usize = InstructionConstraint::SIZE + // instruction_constraint
+        32 + // input_mint
+        32 + // output_mint
+        1;   // forward_flags = 205 bytes
 }
 ```
 
 Source: `programs/tributary/src/state/composable_policy.rs`.
+
+## InstructionConstraint — unified forward guard
+
+Replaces the v1.0 flat `target_program` + `ByteRangeCheck[]` model. Wraps the forward-program target, its instruction-selector byte-range checks, and its positional account pins into one struct. At create time `program_id == Pubkey::default()` ≡ forward disabled.
+
+```rust
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq)]
+pub struct InstructionConstraint {
+    /// CPI target. `Pubkey::default()` is the forward-disabled sentinel.
+    pub program_id: Pubkey,
+    pub num_data_checks: u8,
+    pub data_checks: [ByteRangeCheck; 4],
+    pub num_pinned_accounts: u8,
+    /// Indexed pins: `pinned_accounts[i]` constrains the account at
+    /// `remaining_accounts[forward_start + pinned_accounts[i].index]` to
+    /// equal `pinned_accounts[i].pubkey`.
+    pub pinned_accounts: [PinnedAccount; 2],
+}
+
+impl InstructionConstraint {
+    pub const SIZE: usize = 140; // = 32 + 1 + (1+1+8)*4 + 1 + (1+32)*2
+}
+```
+
+## PinnedAccount — indexed forward-account pin
+
+Replaces the old positional `[Pubkey; 4]` array. Each pin independently declares which `remaining_accounts` slot it constrains, so account insertions in the forward program's account list do not shift every pin.
+
+```rust
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq, Default)]
+pub struct PinnedAccount {
+    pub index: u8,
+    pub pubkey: Pubkey,
+}
+```
 
 ## ByteRangeCheck — pinning the forward instruction
 
@@ -9397,78 +10585,74 @@ pub struct ByteRangeCheck {
 
 impl ByteRangeCheck {
     pub fn validate(&self, instruction_data: &[u8]) -> bool {
-        // Defense-in-depth: `expected` is a fixed [u8; 8], so a length > 8
-        // would panic on the slice below. Reject rather than panic.
         if self.length > 8 { return false; }
         if self.offset as usize + self.length as usize > instruction_data.len() {
             return false;
         }
         let start = self.offset as usize;
         let end   = start + self.length as usize;
-        &instruction_data[start..end] == &self.expected[..self.length as usize]
+        instruction_data[start..end] == self.expected[..self.length as usize]
     }
 }
 ```
+
+SDK representation
+
+In the Rust program `expected` is `[u8; 8]`. In the TypeScript SDK (resolved from the Anchor IDL) the same field is typed as `Buffer`. The first `length` bytes are compared; trailing bytes are ignored in both representations.
 
 ### Create-time rules
 
 `validate_forward_config` and the create handler enforce:
 
-| Rule                                                                        | Error                             |
-| --------------------------------------------------------------------------- | --------------------------------- |
-| `target_program == Pubkey::default()` ⟹ `num_data_checks == 0`              | `InsufficientByteRangeChecks`     |
-| `target_program == Pubkey::default()` ⟹ `input_mint == output_mint`         | `ForwardDisabledRequiresSameMint` |
-| `target_program` in `ALLOWED_FORWARD_PROGRAMS`                              | `InvalidForwardProgram`           |
-| forward enabled ⟹ `1 <= num_data_checks <= MAX_BYTE_RANGE_CHECKS`           | `InsufficientByteRangeChecks`     |
-| for each active check: `offset + length <= 1024`                            | `ByteRangeCheckFailed`            |
-| for each active check: `length <= 8`                                        | `ByteRangeCheckFailed`            |
-| at least one check with `offset == 0 && length > 0`                         | `DiscriminatorCheckRequired`      |
-| `forward_flags & FORWARD_FLAG_NATIVE_OUTPUT` ⟹ `output_mint == NATIVE_MINT` | `NativeOutputRequiresWsol`        |
+| Rule                                                                              | Error                             |
+| --------------------------------------------------------------------------------- | --------------------------------- |
+| `instruction_constraint.program_id == Pubkey::default()` ⟹ `num_data_checks == 0` | `InsufficientByteRangeChecks`     |
+| forward disabled ⟹ `input_mint == output_mint`                                    | `ForwardDisabledRequiresSameMint` |
+| `instruction_constraint.program_id` in `ALLOWED_FORWARD_PROGRAMS`                 | `InvalidForwardProgram`           |
+| forward enabled ⟹ `1 <= instruction_constraint.num_data_checks <= 4`              | `InsufficientByteRangeChecks`     |
+| forward enabled ⟹ `instruction_constraint.num_pinned_accounts <= 2`               | `InsufficientPinnedAccounts`      |
+| no duplicate indices among active `pinned_accounts`                               | `DuplicatePinnedAccountIndex`     |
+| for each active check: `offset + length <= 1024`                                  | `ByteRangeCheckFailed`            |
+| for each active check: `length <= 8`                                              | `ByteRangeCheckFailed`            |
+| at least one check with `offset == 0 && length > 0`                               | `DiscriminatorCheckRequired`      |
+| `forward_flags & FORWARD_FLAG_NATIVE_OUTPUT` ⟹ `output_mint == NATIVE_MINT`       | `NativeOutputRequiresWsol`        |
 
 ### Execute-time re-validation
 
-Even though create-time validation rejects malformed checks, the handler re-runs `validate_byte_ranges` with `num_checks` sourced from on-chain state (H-04 defense-in-depth: a directly-serialized malformed account must not trigger an indexed panic). The loop re-checks `n <= checks.len()` before indexing.
+Even though create-time validation rejects malformed configs, the handler re-runs both checks with values sourced from on-chain state:
 
-## min_output_amount — net (post-fee) semantics
+1. **Byte-range check**: `validate_byte_ranges` re-checks `n <= MAX_BYTE_RANGE_CHECKS` and `n <= checks.len()` before indexing (H-04 defense-in-depth — a directly-serialised malformed account must not trigger an indexed panic).
+1. **Pinned-account check**: the handler calls `instruction_constraint.pins_match(remaining_accounts, forward_start)` to verify that every active pin's `remaining_accounts[forward_start + pin.index]` equals `pin.pubkey`.
 
-`min_output_amount` is checked **after** fees are deducted from the forward program's gross output:
+## Output floor — post-validation replaces `min_output_amount`
 
-```rust
-let fee_breakdown = shared::fees::calculate_fees(
-    output_amount,                               // gross forward output
-    gateway.gateway_fee_bps,
-    gateway.custom_protocol_fee_bps,
-    config.protocol_fee_bps,
-    gateway.is_custom_protocol_fee_enabled(),
-    gateway.is_amount_net(),
-)?;
-let sweep_amount = output_amount - gateway_fee - protocol_fee;
+`min_output_amount` was removed from `ForwardConfig` in v2.1. The semantic replacement is **post-validation**: a `ValidationSpec::ProgramCall` CPI (Lighthouse) that runs **after** the forward step and before settlement. The owner writes a Lighthouse assertion that enforces the minimum output amount — for example `"recipient_token_account.amount >= 1_000_000"` after the forward CPI has deposited tokens there.
 
-if let Some(min_output) = min_output_amount {
-    if min_output > 0 {
-        require!(sweep_amount >= min_output, InsufficientOutputAmount);
-    }
-}
-```
+This generalises the v1.0 `min_output_amount` concept: the assertion can check any on-chain state, not just a number-of-tokens threshold. See [validation-hook.md](https://docs.tributary.so/protocol-reference/composable-policy/validation-hook/index.md) for the full post-validation mechanics and assertion-building reference.
 
-This matches the DeFi convention (Uniswap / Jupiter `amountOutMin`): the caller reasons about the **net** number of output tokens that will land in the recipient's account. Set to `None` or `Some(0)` to disable the check entirely.
+Deliver-transform output-floor guard
 
-Rationale: `reports/M5-min-output-amount-checked-before-fees.md` documented that an earlier implementation compared against the gross output, which let a high-fee gateway silently eat into the recipient's expected delivery.
+In deliver-transform mode the program still asserts `output_amount > 0` — Tributary confirms the forward program **ran**. The **amount** floor (`amount >= N`) is pure post-validation; the `> 0` guard is an existence assertion, not a pricing assertion.
 
 ## Forward CPI mechanics
 
 `run_forward_cpi` builds the forward instruction from the caller-supplied `remaining_accounts`:
 
 ```text
-remaining_accounts layout (forward half, after validation accounts):
-┌──────────────────────────────────────────────────────────────────────┐
-│ Meteora DLMM pool accounts, token_program, event authority, etc.     │
-│ Forwarded verbatim — including executable accounts (H-04 comment in  │
-│ run_forward_cpi explains why executables are NOT stripped).          │
-└──────────────────────────────────────────────────────────────────────┘
+remaining_accounts layout:
+┌────────────────────────────────────────────────────────────────────────┐
+│ validation targets (pre)      — consumed by pre-validation CPI        │
+├────────────────────────────────────────────────────────────────────────┤
+│ forward-program accounts      — forwarded to Meteora DLMM etc.        │
+│ pinned_accounts check:                                                │
+│   remaining_mid[fwd_base + pin.index] == pin.pubkey for each pin      │
+│ (Base index fwd_base = after pre-validation targets.)                 │
+├────────────────────────────────────────────────────────────────────────┤
+│ validation targets (post)     — consumed by post-validation CPI       │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
-The CPI is invoked with `invoke_signed` using only the ComposablePolicy PDA seeds:
+Forward accounts are forwarded verbatim — including executable accounts (see the H-04 comment in `run_forward_cpi` explaining why executables are NOT stripped). The CPI is invoked with `invoke_signed` using only the ComposablePolicy PDA seeds:
 
 ```rust
 let instruction = Instruction {
@@ -9485,11 +10669,11 @@ See [security-model.md](https://docs.tributary.so/protocol-reference/composable-
 
 ## Disabling forward
 
-Set `target_program = Pubkey::default()` at create time. The handler detects this sentinel and:
+Set `instruction_constraint.program_id = Pubkey::default()` at create time (or pass `InstructionConstraint::default()`). The handler detects this sentinel and:
 
-- Skips the byte-range check (no selector to pin).
+- Skips the byte-range check and pinned-account check.
 - Skips `run_forward_cpi` entirely.
-- Reads the funded balance from `intermediate_input_ata` directly (for the same-mint topup path, input and output intermediates collapse into one account).
+- Uses the same-mint topup path: input and output intermediates collapse into one account; the face balance is swept directly to the recipient.
 
 This is the "auto topup" pattern — pull USDC, deliver USDC, no swap. See [allowlists-and-sentinels.md](https://docs.tributary.so/protocol-reference/composable-policy/allowlists-and-sentinels/index.md).
 
@@ -9554,7 +10738,11 @@ recipient_token_account (recipient's system account, native SOL)
 
 Source: `process_output_and_sweep` in `execute_composable.rs`.
 
-Fees are still taken in **WSOL** via `transfer_checked` into the gateway and protocol fee accounts *before* the `closeAccount` fires. The `sweep_amount` returned for accounting is the WSOL value unwrapped; the rent bonus shipped by `closeAccount` is excluded from `composable_policy.total_output`.
+Fees are input-side (Phase 1b)
+
+Despite the output-focused flow above, fees are **not** taken from the output path. Per ADR-0026, composable fees are input-side — skimmed from the gross pull (USDC/`input_mint`) in Phase 1b, **before** the forward swap or native-output unwrap runs. The protocol and gateway fee accounts hold `input_mint` tokens (USDC in this example), not WSOL. After skim, `intermediate_input` holds exactly `face`, which is what the forward consumes. The output side only delivers the post-swap principal to the recipient.
+
+The `sweep_amount` returned for accounting is the face amount that made it through the forward (fees already deducted upstream); the rent bonus shipped by `closeAccount` is excluded from `composable_policy.total_output`.
 
 ## Recipient validation
 
@@ -9596,93 +10784,123 @@ Similarly, the final intermediate-close loop skips re-closing the output interme
 
 # ComposablePolicy — Overview
 
-A `ComposablePolicy` is a **programmable pull-payment policy** that reuses the same `PolicyType` schedule model as `PaymentPolicy` (see [vs-payment-policy.md](https://docs.tributary.so/protocol-reference/composable-policy/vs-payment-policy/index.md)) but inserts two **opt-in hooks** into the execution path:
+A `ComposablePolicy` is a **programmable pull-payment policy** that reuses the same `PolicyType` schedule model as `PaymentPolicy` (see [vs-payment-policy.md](https://docs.tributary.so/protocol-reference/composable-policy/vs-payment-policy/index.md)) but inserts **three opt-in hooks** into the execution path:
 
-1. **Validation** — a read-only assertion CPI (Lighthouse) that can veto the transaction if on-chain state does not satisfy a stored predicate.
+1. **Pre-validation** — a read-only assertion CPI (Lighthouse) that runs after the pull but before the forward, vetoing the tx if on-chain state doesn't satisfy a stored predicate.
 1. **Forward** — a token-transform CPI (Meteora DLMM) that swaps the pulled input token into an output token before settlement.
+1. **Post-validation** — a read-only assertion CPI (Lighthouse) that runs after the forward but before settlement, acting as the owner's floor on output (replacing the removed `min_output_amount`).
 
 A `ComposablePolicy` with both hooks disabled behaves like a `PaymentPolicy` but lives in its own PDA namespace and routes the pull through an intermediate ATA owned by the `ComposablePolicy` PDA.
 
-## The 3-Phase Execution Flow
+## The 7-Phase Execution Flow
 
-`execute_composable` is a single transaction handler (`programs/tributary/src/instructions/composable/execute_composable.rs`) that runs four logical phases — `PULL`, `VALIDATE` (optional), `FORWARD` (optional), and `SETTLE`. The intermediate ATAs are created lazily and closed at the end so rent returns to the fee payer.
+`execute_composable` is a single transaction handler (`programs/tributary/src/instructions/composable/execute_composable.rs`) that runs seven phases — Byte-range checks, `PULL`, `SKIM` (input-side fees), `PRE-VALIDATE` (optional), `FORWARD` (optional), `POST-VALIDATE` (optional), and `SETTLE`. The intermediate ATAs are created lazily and closed at the end so rent returns to the fee payer. **NET-on-pull is hardcoded for composable** (ADR-0026): the gross pull = face + fee, fees are skimmed from the input mint *before* the forward runs.
 
 ```text
 execute_composable(policy, instruction_data, forward_amount)
   │
-  ├─── Phase 0: GUARD ──────────────────────────────────────────────────┐
+  ├─── Step 1: BYTE-RANGE CHECKS ───────────────────────────────────────┐
   │     • composable_policy.status == Active                            │
   │     • !config.emergency_pause                                       │
   │     • gateway.is_active && gateway == composable_policy.gateway     │
   │     • fee_payer ∈ {gateway.signer, user_payment.owner, recipient}   │
+  │       (or gateway.is_permissionless() — ADR-0016 cold-relayer gate) │
   │     • validate_mint_compatible(input_mint)  AND  (output_mint)      │
   │       (re-checked at execute time — Token-2022 extensions mutate)   │
   │     • validate_byte_ranges(instruction_data, data_checks)           │
-  │       (skipped when forward is disabled — no selector to pin)       │
+  │       (skipped when forward disabled — no selector to pin)          │
   │     • intermediate_input_ata  == ATA(ComposablePolicy PDA, mint)    │
   │     • intermediate_output_ata == ATA(ComposablePolicy PDA, out_mint)│
-  │     • validate_policy_execution(policy_type, now, forward_amount)   │
-  │       → returns schedule_amount (Subscription/Milestone/PayAsYouGo) │
-  │     • user_token_account.delegated_amount >= input_amount           │
+  │       (only in deliver-transform mode)                              │
+  │     • resolve face_amount from PolicyType schedule                  │
+  │       (PayAsYouGo: caller-supplied forward_amount as face)          │
+  │     • compute gross_pull = face + fee (NET-on-pull hardcoded)       │
+  │     • validate PayAsYouGo caps on GROSS (ADR-0026)                  │
+  │     • user_token_account.delegated_amount >= gross_pull             │
   │     • recipient_token_account matches output_mint+recipient         │
-  │       (or, in NATIVE_OUTPUT mode, key == composable_policy.recipient)│
+  │       (skipped in act mode; NATIVE_OUTPUT checks SOL key)           │
+  │     • Cold-relayer OR-gate: post_validation OR has_route_pin        │
   └──────────────────────────────────────────────────────────────────────┘
   │
-  ├─── Phase 1: PULL ───────────────────────────────────────────────────┐
-  │     Resolve pull delegate (UserPayment PDA v1 OR legacy             │
-  │     PaymentsDelegate PDA v0). Signer = resolved PDA.                │
-  │     transfer_checked:                                              │
-  │       user_token_account → intermediate_input_ata                   │
-  │     (ComposablePolicy PDA owns the intermediate — NOT the           │
-  │      UserPayment PDA; this is the security-critical decoupling.)    │
-  └──────────────────────────────────────────────────────────────────────┘
+  ├─── Phase 1: PULL (user → intermediate_input) ──────────────────────┐
+  │     Resolve pull delegate (UserPayment PDA v1 OR legacy            │
+  │     PaymentsDelegate PDA v0). Signer = resolved PDA.               │
+  │     transfer_checked: gross_pull                                   │
+  │       user_token_account → intermediate_input_ata                  │
+  │     (ComposablePolicy PDA owns the intermediate — NOT the          │
+  │      UserPayment PDA; this is the security-critical decoupling.)   │
+  └─────────────────────────────────────────────────────────────────────┘
   │
-  ├─── Phase 2: VALIDATE  (optional) ──────────────────────────────────┐
-  │     Only when validation_config.validation_program != Pubkey::default()│
-  │     remaining_accounts[0]   = ValidationPda (stores assertion data)  │
-  │     remaining_accounts[1..N] = Lighthouse read-accounts (≤ 10)       │
-  │     CPI into Lighthouse uses PLAIN `invoke` — NO signer seeds.       │
-  │     Read-only: the validation program cannot move funds.             │
-  │     Failure of the assertion aborts the transaction.                 │
-  └───────────────────────────────────────────────────────────────────────┘
+  ├─── Phase 1b: SKIM FEES (input-side, ADR-0026) ─────────────────────┐
+  │     Fees are split from intermediate_input BEFORE forward runs.    │
+  │     After skim, intermediate_input holds exactly `face`.           │
+  │     • calculate_fees(face, gateway_bps, protocol_share,            │
+  │       scheduler_share, referral_allocation, NET-on-pull=true)      │
+  │     • protocol_cut  → protocol_fee_account  (input_mint)           │
+  │     • gateway_cut   → gateway_fee_account   (input_mint)           │
+  │     • scheduler_cut → scheduler ATA (input_mint, permissionless)   │
+  │     • referral allocation handled via gateway residual carve-out   │
+  └─────────────────────────────────────────────────────────────────────┘
   │
-  ├─── Phase 3: FORWARD  (optional) ───────────────────────────────────┐
-  │     Only when forward_config.target_program != Pubkey::default().   │
-  │     remaining_accounts[N..] = forward program accounts (Meteora     │
-  │     DLMM pool + token program + event authority, …).                │
-  │     CPI into Meteora DLMM via `invoke_signed` with ComposablePolicy │
-  │     PDA seeds. ComposablePolicy is the ONLY signer forwarded; every │
-  │     other remaining_account is forced is_signer=false.              │
-  │     Swaps intermediate_input_ata → intermediate_output_ata.         │
-  └──────────────────────────────────────────────────────────────────────┘
+  ├─── Phase 2: PRE-VALIDATION (optional) ─────────────────────────────┐
+  │     Only when pre_validation == ProgramCall{program_id}.           │
+  │     CPI into Lighthouse via plain `invoke` — NO signer seeds.      │
+  │     pre_validation_pda (seed: composable_validation_pre)           │
+  │       contains assertion data + pinned target accounts.            │
+  │     remaining accounts pin-checked against pre_validation_pda.     │
+  │     Read-only: the validation program cannot move funds.           │
+  │     Failure of the assertion aborts the transaction.               │
+  └─────────────────────────────────────────────────────────────────────┘
   │
-  └─── Phase 4: SETTLE ────────────────────────────────────────────────┐
-        process_output_and_sweep(intermediate_output):                  │
-        1. read gross output_amount from intermediate_output_ata        │
-        2. fee_breakdown = shared::fees::calculate_fees(output_amount)  │
-           (single source of truth shared with execute_payment)         │
-        3. sweep_amount = output_amount − gateway_fee − protocol_fee    │
-        4. if min_output_amount.is_some():                              │
-              require!(sweep_amount >= min_output_amount)               │
-              (NET post-fee check — DeFi convention)                    │
-        5. transfer_checked(gateway_fee   → gateway_fee_account)        │
-           transfer_checked(protocol_fee → protocol_fee_account)        │
-           transfer_checked(sweep_amount → recipient_token_account)     │
-           — OR, when NATIVE_OUTPUT: closeAccount(WSOL → recipient SOL) │
-        6. require!(intermediate_input  balance == 0)                   │
-           require!(intermediate_output balance == 0)  (unless native)  │
-        7. advance_policy(policy_type, now, input_amount)               │
-           (shared calendar-month math — same as PaymentPolicy)         │
-        8. close both intermediate ATAs → rent to fee_payer             │
-        └─────────────────────────────────────────────────────────────┘
+  ├─── Phase 3: FORWARD (optional) ────────────────────────────────────┐
+  │     Only when instruction_constraint.program_id != Pubkey::default()│
+  │     Indexed pin-check: for each PinnedAccount{index, pubkey},      │
+  │       remaining_mid[forward_start + index] == pin.pubkey           │
+  │     CPI via `invoke_signed` with ComposablePolicy PDA seeds:       │
+  │       • ComposablePolicy PDA is the ONLY signer forwarded          │
+  │       • all other remaining_account → is_signer=false              │
+  │     Swaps intermediate_input (face) → intermediate_output.         │
+  └─────────────────────────────────────────────────────────────────────┘
+  │
+  ├─── Phase 4: POST-VALIDATION (optional) ────────────────────────────┐
+  │     Only when post_validation == ProgramCall{program_id}.          │
+  │     CPI into Lighthouse via plain `invoke` — NO signer seeds.      │
+  │     post_validation_pda (seed: composable_validation_post)         │
+  │       contains assertion data + pinned target accounts.            │
+  │     Owner's floor on output (deliver) or settlement (act).         │
+  └─────────────────────────────────────────────────────────────────────┘
+  │
+  └─── Phase 5: SETTLE (shape-dependent, ADR-0026) ────────────────────┐
+        Three shapes — fees already skimmed in Phase 1b, only          │
+        principal is moved here.                                       │
+                                                                       │
+        deliver-no-transform:                                          │
+          sweep intermediate_input (face) → recipient_token_account    │
+                                                                       │
+        deliver-transform:                                             │
+          sweep intermediate_output → recipient_token_account          │
+            (>0 guard KEPT — output exists, floor is owner's job)      │
+          return input residue (under-consumed face) → user            │
+                                                                       │
+        act mode:                                                      │
+          forward consumed input for non-token settlement              │
+          return input residue → user (no deliver sweep, no >0 guard)  │
+                                                                       │
+        1. verify both intermediates empty                             │
+        2. advance_policy(policy_type, now, advance_amount)            │
+           (shared calendar-month math — same as PaymentPolicy)        │
+        3. update total_input (gross), total_output (swept), count     │
+        4. close both intermediate ATAs → rent to fee_payer            │
+        └────────────────────────────────────────────────────────────┘
 ```
 
 ## PDA Layout
 
-| PDA                | Seeds                                               | Owner             | Purpose                                                                   |
-| ------------------ | --------------------------------------------------- | ----------------- | ------------------------------------------------------------------------- |
-| `ComposablePolicy` | `["composable_policy", user_payment, policy_id_le]` | Tributary program | The policy state + **owner of both intermediate ATAs**                    |
-| `ValidationPda`    | `["composable_validation", composable_policy]`      | Tributary program | Stores ≤512 bytes of Lighthouse assertion data (separate from the policy) |
+| PDA                 | Seeds                                               | Owner             | Purpose                                                     |
+| ------------------- | --------------------------------------------------- | ----------------- | ----------------------------------------------------------- |
+| `ComposablePolicy`  | `["composable_policy", user_payment, policy_id_le]` | Tributary program | The policy state + **owner of both intermediate ATAs**      |
+| `PreValidationPda`  | `["composable_validation_pre", composable_policy]`  | Tributary program | Stores ≤512 bytes of pre-forward Lighthouse assertion data  |
+| `PostValidationPda` | `["composable_validation_post", composable_policy]` | Tributary program | Stores ≤512 bytes of post-forward Lighthouse assertion data |
 
 `policy_id_le` is the `u32` `composable_policy.policy_id` serialized as little-endian bytes. The `policy_id` is sourced from `user_payment.created_composable_count` (NOT `created_policies_count`).
 
@@ -9722,20 +10940,31 @@ pub struct ComposablePolicy {
     pub bump: u8,
     pub user_payment: Pubkey,
     pub gateway: Pubkey,
-    pub status: PolicyStatus,                 // Active | Paused | Completed
+    pub status: PolicyStatus,                   // Active | Paused | Completed
     pub rent_payer: Pubkey,
-    pub policy_type: PolicyType,              // same enum as PaymentPolicy (128 B)
-    pub forward_config: ForwardConfig,        // see forward-hook.md
-    pub validation_config: ValidationConfig,  // see validation-hook.md
-    pub memo: [u8; 64],
+    pub policy_type: PolicyType,                // same enum as PaymentPolicy (128 B)
+    pub forward_config: ForwardConfig,          // see forward-hook.md
+    pub pre_validation: ValidationSpec,         // pre-forward hook (Disabled | ProgramCall | Inline)
+    pub post_validation: ValidationSpec,        // post-forward hook
+    pub memo: [u8; 32],
     pub recipient: Pubkey,
-    pub total_input: u64,                     // lifetime input pulled
-    pub total_output: u64,                    // lifetime net swept to recipient
+    pub total_input: u64,                       // lifetime gross pulled from user
+    pub total_output: u64,                      // lifetime net swept to recipient
     pub payment_count: u32,
     pub policy_id: u32,
     pub created_at: i64,
     pub updated_at: i64,
-    pub padding: [u8; 32],
+    pub padding: [u8; 192],
+}
+```
+
+`ValidationSpec` enum:
+
+```rust
+pub enum ValidationSpec {
+    Disabled,
+    ProgramCall { program_id: Pubkey },   // CPI to Lighthouse (allowlisted)
+    Inline { reserved: u8 },              // reserved, errors at create
 }
 ```
 
@@ -9743,12 +10972,12 @@ Source: `programs/tributary/src/state/composable_policy.rs`.
 
 ## Instructions
 
-| Instruction                | Description                                                            |
-| -------------------------- | ---------------------------------------------------------------------- |
-| `create_composable_policy` | Create the `ComposablePolicy` (+ optional `ValidationPda`) account(s). |
-| `execute_composable`       | Run the 3-phase flow above. Permissionless — any gateway signer.       |
-| `change_composable_status` | Toggle `Active` ↔ `Paused`.                                            |
-| `delete_composable_policy` | Close the policy (+ `ValidationPda`); refund rent to `rent_payer`.     |
+| Instruction                | Description                                                                                     |
+| -------------------------- | ----------------------------------------------------------------------------------------------- |
+| `create_composable_policy` | Create the `ComposablePolicy` (+ optional `PreValidationPda` & `PostValidationPda`) account(s). |
+| `execute_composable`       | Run the execution flow above. Permissionless — any gateway signer.                              |
+| `change_composable_status` | Toggle `Active` ↔ `Paused`.                                                                     |
+| `delete_composable_policy` | Close the policy (+ both validation PDAs); refund rent to `rent_payer`.                         |
 
 ## Related pages
 
@@ -9921,54 +11150,67 @@ This is purely a pull-path concern. **All** downstream CPIs (forward, sweep, clo
 
 The **validation hook** is an opt-in read-only assertion CPI that runs **between** the pull (Phase 1) and the forward (Phase 3) phases of `execute_composable`. It lets a policy encode an on-chain predicate — "the recipient's hot wallet USDC balance is below 50 USDC" — that **must hold** before the rest of the execution proceeds. If the assertion fails, the entire transaction aborts and the pull is rolled back.
 
+ComposablePolicy supports **two** independent validation slots: **pre** (runs before forward, after skim) and **post** (runs after forward, before settlement). Each is independently opt-in.
+
 The hook is implemented by the **Lighthouse** on-chain assertion checker (`L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95`), the only entry in `ALLOWED_VALIDATION_PROGRAMS`.
 
-## ValidationConfig (on-policy)
+## ValidationSpec (on-policy)
 
-Stored inline on the `ComposablePolicy` account:
+Stored inline on the `ComposablePolicy` account (two instances: `pre_validation` and `post_validation`):
 
 ```rust
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq)]
-pub struct ValidationConfig {
-    /// The CPI target. `SystemProgram` (or `Pubkey::default()`) is the
-    /// "validation disabled" sentinel — see allowlists-and-sentinels.md.
-    pub validation_program: Pubkey,
-
-    /// Number of Lighthouse read-accounts declared by the assertion.
-    /// Capped at 10 by create_composable_policy.
-    pub num_validation_accounts: u8,
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq, Default)]
+pub enum ValidationSpec {
+    #[default]
+    Disabled,
+    ProgramCall {
+        program_id: Pubkey,
+    },
+    Inline {
+        reserved: u8,
+    },  // not implemented — errors at create
 }
 
-impl ValidationConfig {
-    pub const SIZE: usize = 32 + 1; // = 33 bytes
+impl ValidationSpec {
+    pub const SIZE: usize = 1 + 32;  // discriminant + max variant (ProgramCall)
+
+    pub fn is_program_call(&self) -> bool { ... }
+    pub fn program_id(&self) -> Pubkey { ... }
 }
 ```
 
-The assertion **data** is NOT stored here — it lives in the separate `ValidationPda` account (below).
+`Disabled` → no CPI, no `ValidationPda` allocated. `ProgramCall { program_id }` → the program must be in `ALLOWED_VALIDATION_PROGRAMS`. `Inline` is reserved for a future compressed assertion format; it is rejected at create.
+
+Source: `programs/tributary/src/state/composable_policy.rs`.
 
 ## ValidationPda — separate account, ≤ 512 bytes
 
-The assertion payload is stored in its own PDA account, derived from the `ComposablePolicy` key:
+The assertion payload for each active slot lives in its own PDA:
 
-| PDA             | Seeds                                          | Max size                        |
-| --------------- | ---------------------------------------------- | ------------------------------- |
-| `ValidationPda` | `["composable_validation", composable_policy]` | 8 (disc) + 2 (`data_len`) + 512 |
+| PDA                 | Seeds                                               | Max size                     |
+| ------------------- | --------------------------------------------------- | ---------------------------- |
+| `PreValidationPda`  | `["composable_validation_pre", composable_policy]`  | 8 (disc) + 76 (header) + 512 |
+| `PostValidationPda` | `["composable_validation_post", composable_policy]` | 8 (disc) + 76 (header) + 512 |
 
 ```rust
 pub const MAX_VALIDATION_DATA_SIZE: usize = 512;
+pub const MAX_PINNED_ACCOUNTS: usize = 2;
 
 #[account]
 pub struct ValidationPda {
+    pub bump: u8,
+    pub num_pinned_accounts: u8,
+    pub pinned_accounts: [Pubkey; MAX_PINNED_ACCOUNTS],
     pub data_len: u16,
     pub data: [u8; MAX_VALIDATION_DATA_SIZE],
 }
 
 impl ValidationPda {
-    pub const SIZE: usize = 8 + 2 + MAX_VALIDATION_DATA_SIZE;
-    pub fn space_for(data_len: usize) -> usize {
-        let raw = 8 + 2 + data_len;
-        (raw + 7) & !7           // 8-byte align for rent efficiency
-    }
+    pub const SIZE: usize = 8 + 1 + 1 + 64 + 2 + MAX_VALIDATION_DATA_SIZE; // = 588
+
+    pub fn get_data(&self) -> &[u8] { ... }
+    pub fn pinned(&self) -> &[Pubkey] { ... }
+    pub fn is_fresh(info: &AccountInfo) -> bool { ... }
 }
 ```
 
@@ -9976,50 +11218,85 @@ Source: `programs/tributary/src/state/validation_pda.rs`.
 
 ### Account layout (on-chain bytes)
 
-| Offset  | Length     | Field                | Notes                                             |
-| ------- | ---------- | -------------------- | ------------------------------------------------- |
-| `0..8`  | 8          | Anchor discriminator | `ValidationPda::DISCRIMINATOR`                    |
-| `8..10` | 2          | `data_len`           | `u16` LE; bounded by `MAX_VALIDATION_DATA_SIZE`   |
-| `10..`  | `data_len` | assertion `data`     | Opaque bytes passed verbatim as the CPI `ix.data` |
+| Offset   | Length     | Field                 | Notes                                             |
+| -------- | ---------- | --------------------- | ------------------------------------------------- |
+| `0..8`   | 8          | Anchor discriminator  | `ValidationPda::DISCRIMINATOR`                    |
+| `8..9`   | 1          | `bump`                | Canonical PDA bump                                |
+| `9..10`  | 1          | `num_pinned_accounts` | Assertion arity ∈ {0, 1, 2}                       |
+| `10..74` | 64         | `pinned_accounts`     | 2 × 32-byte Pubkeys                               |
+| `74..76` | 2          | `data_len`            | `u16` LE; bounded by `MAX_VALIDATION_DATA_SIZE`   |
+| `76..`   | `data_len` | assertion `data`      | Opaque bytes passed verbatim as the CPI `ix.data` |
 
-The remaining bytes up to `8 + 2 + 512` are zero-padded; the on-chain account is always full-sized, but only `data[10..10+data_len]` is meaningful.
+The remaining bytes up to 588 are zero-padded.
 
 ## Create-time flow
 
-`create_composable_policy` performs the following when validation is requested:
+`create_composable_policy` handles pre and post validation independently:
 
-1. **Allowlist check** — `validation_program` must equal Lighthouse, else `InvalidValidationProgram`. Passing `SystemProgram` selects the disabled path (no `ValidationPda` is allocated).
-1. **Data bounds** — `!validation_data.is_empty()` and `validation_data.len() <= MAX_VALIDATION_DATA_SIZE`, else `ValidationDataRequired` / `ValidationDataTooLarge`.
-1. **Account bound** — `num_validation_accounts <= 10`.
-1. **PDA derivation** — the caller-supplied `validation_pda` account must equal `find_program_address(["composable_validation", composable_policy])`.
-1. **Freshness guard** — `ValidationPda::is_fresh(&info)` requires `lamports == 0` and `owner == system_program`. This is the defense-in-depth re-init / type-cosplay check (M-02).
-1. **Manual init** — `system_instruction::create_account` signed by the fee payer, then the discriminator + `data_len` + `data` are written directly via `try_borrow_mut_data`.
+1. **Allowlist check** — `spec.program_id()` must equal Lighthouse, else `InvalidValidationProgram`. Passing `SystemProgram` selects `Disabled` (no `ValidationPda` allocated).
+1. **ValidationInit guards** — when `spec` is `ProgramCall`:
+1. `validation_data` must be non-empty, capped at `MAX_VALIDATION_DATA_SIZE`.
+1. `num_pinned_accounts` ≤ `MAX_PINNED_ACCOUNTS` (2).
+1. `pinned_accounts` must have concrete, non-default pubkeys.
+1. **PDA derivation** — for each `ProgramCall` slot, the caller-supplied `{pre,post}_validation_pda` must match `find_program_address(["composable_validation_pre", composable_policy])` or `find_program_address(["composable_validation_post", composable_policy])` respectively.
+1. **Freshness guard** — each `ValidationPda::is_fresh(info)` requires `lamports == 0` and `owner == system_program`. Defense-in-depth against re-init / type-cosplay (M-02).
+1. **Manual init** — `system_instruction::create_account` signed by the fee payer, then discriminator + fields written via `try_borrow_mut_data`.
+
+Each slot is independently creatable — a policy may have only pre-validation, only post-validation, both, or neither.
 
 ## Execute-time flow
 
-At the top of Phase 2, the handler does:
+`ValidationPda` accounts enter as **typed accounts** in `accountsStrict`, not in `remaining_accounts`. The `remaining_accounts` carry only the **Lighthouse read-target accounts** (pinned by the owner at create time).
 
-```rust
-let val_pda_key = Pubkey::find_program_address(
-    &[VALIDATION_PDA_SEED, policy_key.as_ref()],
-    ctx.program_id,
-);
-require!(remaining[0].key() == val_pda_key.0, ValidationPdaMismatch);
-```
-
-It then reads `data_len` from offset `8..10` and slices `data[10..10+data_len]` out of the `ValidationPda` account. The slice is passed verbatim as the `Instruction.data` for the Lighthouse CPI. The next `num_validation_accounts` `remaining_accounts` are forwarded as Lighthouse's read-accounts.
+Layout of `remaining_accounts`:
 
 ```text
-remaining_accounts layout (validation half):
-┌─────────────────────────┬───────────────────────────────┐
-│  remaining_accounts[0]  │  ValidationPda                │
-├─────────────────────────┼───────────────────────────────┤
-│  [1..1+N]               │  Lighthouse read-accounts (N) │
-└─────────────────────────┴───────────────────────────────┘
-                              N = validation_config.num_validation_accounts (≤ 10)
+┌───────────────────────┬────────────────────────┬───────────────────────┬────────────────┐
+│ pre-val targets (N)   │ forward accounts       │ post-val targets (M) │ scheduler ATA? │
+└───────────────────────┴────────────────────────┴───────────────────────┴────────────────┘
+  N = pre-num-pinned          ^                    M = post-num-pinned
+  (≤ 2)                    forward_accounts_start   (≤ 2)
 ```
 
-If validation is disabled (`validation_program == Pubkey::default()`), the handler skips Phase 2 entirely and consumes zero `remaining_accounts`. The `forward_accounts_start` index returned by the validation helper is `0`.
+### Step-by-step
+
+1. **Scheduler strip** — if the caller is not the gateway signer and `scheduler_share_bps > 0`, the last entry is peeled off as the scheduler fee ATA.
+1. **Post-validation target strip** — if `post_validation` is `ProgramCall`, the last `num_pinned` accounts are peeled off for Phase 4. The remaining slice (`remaining_mid`) contains `[pre-val targets, forward accounts]`.
+1. **Phase 2: Pre-validation** — `run_validation_cpi` reads the `pre_validation_pda` from `accountsStrict`, verifies the PDA seed matches, deserialises the `ValidationPda`, pin-checks `remaining_mid[0..N]` against `pinned_accounts`, then invokes the validation program (Lighthouse) via plain `invoke` with those N accounts. Returns `N` as `forward_accounts_start`.
+1. **Phase 3: Forward** — accounts starting at `remaining_mid[forward_start]` are forwarded to the forward program.
+1. **Phase 4: Post-validation** — `run_validation_cpi` runs the same logic against `post_validation_pda` and the previously stripped `post_val_accounts`.
+
+```rust
+// Phase 2 — pre-validation
+let forward_accounts_start = if pre_validation.is_program_call() {
+    let pre_pda_info = ctx.accounts.pre_validation_pda.to_account_info();
+    run_validation_cpi(
+        remaining_mid,           // [pre-val targets, forward accounts]
+        &pre_pda_info,
+        &policy_key,
+        ctx.program_id,
+        &pre_program_info,
+        VALIDATION_PDA_PRE_SEED,
+    )?
+} else {
+    0
+};
+
+// Phase 4 — post-validation
+if post_validation.is_program_call() {
+    let post_pda_info = ctx.accounts.post_validation_pda.to_account_info();
+    run_validation_cpi(
+        &post_val_accounts,      // already stripped before Phase 2
+        &post_pda_info,
+        &policy_key,
+        ctx.program_id,
+        &post_program_info,
+        VALIDATION_PDA_POST_SEED,
+    )?;
+}
+```
+
+Source: `programs/tributary/src/instructions/composable/execute_composable.rs` (around lines 1232–1295).
 
 ## Read-only / no-signer CPI (C-1 remediation)
 
@@ -10034,20 +11311,24 @@ This is the security-critical fix from `reports/C-1-validation-cpi-signer-leak.m
 Two properties make the plain-`invoke` fix safe:
 
 1. Lighthouse is an assertion checker — it is read-only by design.
-1. The validation CPI runs **before** Phase 3 funds the intermediate ATAs, so there is literally nothing in the intermediates for a validation program to move even if it tried.
+1. The validation CPI has no PDA signing authority. Even though Phase 1b (Skim) funded the intermediate input ATA with `face` before pre-validation runs, the validation program cannot move those tokens — only the `ComposablePolicy` PDA (used with `invoke_signed` in forward/sweep phases) has authority over the intermediates.
 
 `build_validation_account_metas` hard-codes every forwarded account to `is_signer: false, is_writable: false`, so even if the caller re-passes `fee_payer` (a `Signer`) as a remaining account, Lighthouse cannot inherit that authority.
 
 ## Disabling validation
 
-Pass `SystemProgram` as the `validation_program` argument at create time. The handler detects this sentinel, leaves `validation_config` at its `Default` (`Pubkey::default()`, 0), and skips `ValidationPda` allocation entirely. See [allowlists-and-sentinels.md](https://docs.tributary.so/protocol-reference/composable-policy/allowlists-and-sentinels/index.md) for the full sentinel convention.
+Pass `{ disabled: {} }` as the `preValidation` / `postValidation` parameter at create time. The handler detects the `Disabled` variant, leaves the slot at its `Default`, and skips `ValidationPda` allocation entirely.
 
 ## SDK usage
 
 Use the `lighthouse` fluent facade from `@tributary-so/sdk` to build the `{ data, numAccounts, accounts }` triple — never hand-roll the serialization.
 
 ```typescript
-import { lighthouse, LIGHTHOUSE_PROGRAM_ID } from "@tributary-so/sdk";
+import {
+  Tributary,
+  lighthouse,
+  LIGHTHOUSE_PROGRAM_ID,
+} from "@tributary-so/sdk";
 
 // Assert hotWallet USDC balance < 50 USDC before topping up
 const guard = lighthouse
@@ -10056,11 +11337,30 @@ const guard = lighthouse
   .build();
 
 // guard.data         → Buffer (≤ 512 bytes, stored in ValidationPda)
-// guard.numAccounts  → 1        (numValidationAccounts)
+// guard.numAccounts  → 1        (numValidationAccounts / numPinnedAccounts)
 // guard.accounts     → [hotWalletUsdcAta]  (Lighthouse read-account slice)
-```
 
-At execute time, the caller assembles Tributary's full `remaining_accounts` list as `[ValidationPda, ...guard.accounts, ...forwardAccounts]`. The facade owns **only** the Lighthouse target_account(s); Tributary prepends the `ValidationPda` itself.
+// Create composable policy with dual validation (pre only, post disabled):
+const ix = await sdk.getCreateComposablePolicyInstruction(
+  tokenMint,
+  recipient,
+  gateway,
+  policyType,
+  memo,
+  forwardConfig,
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
+  guard.accounts, // prePinnedAccounts — Lighthouse targets
+  guard.data, // preValidationData — assertion bytes
+  { disabled: {} }, // postValidation — disabled
+  [],
+  Buffer.alloc(0)
+);
+
+// At execute time the caller assembles remaining_accounts as:
+// [prePinnedAccounts, ...forwardAccounts, postPinnedAccounts, schedulerAta?]
+// The facade owns ONLY the Lighthouse target_account(s); the SDK
+// provides the full list in the correct order at execute.
+```
 
 # ComposablePolicy vs. PaymentPolicy
 
@@ -10068,23 +11368,23 @@ Tributary exposes two families of pull-payment policies that share the same `Pol
 
 ## Decision matrix
 
-| Axis                       | PaymentPolicy                                                                         | ComposablePolicy                                                                                          |
-| -------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| **Custody model**          | Non-custodial. User approves delegate; gateway pulls directly.                        | Non-custodial. Same delegate approval; pull routes through an intermediate ATA.                           |
-| **Execution**              | Single CPI: `transfer` from user → recipient + fees.                                  | 3-phase: `PULL` → `VALIDATE` (opt) → `FORWARD` (opt) → `SETTLE`.                                          |
-| **Supported hooks**        | None.                                                                                 | Validation (Lighthouse) + Forward (Meteora DLMM), each independently disableable.                         |
-| **Intermediate accounts**  | None. Funds move directly user_token → recipient_token.                               | Two ATAs owned by the ComposablePolicy PDA; created lazily, closed at end of every execute.               |
-| **PDA seeds**              | `["payment_policy", user_payment, policy_id]`                                         | `["composable_policy", user_payment, policy_id]`                                                          |
-| **ID counter**             | `user_payment.created_policies_count`                                                 | `user_payment.created_composable_count`                                                                   |
-| **CU cost**                | Lower — one Token CPI, no allocation.                                                 | Higher — ATA create + optional CPI(s) + fee math + two ATA closes.                                        |
-| **Rent churn per execute** | None.                                                                                 | Yes — intermediates are created and closed each call; rent returns to fee_payer but costs CU.             |
-| **Fee math**               | `shared::fees::calculate_fees`                                                        | Same — `shared::fees::calculate_fees`. Single source of truth (M7).                                       |
-| **Schedule math**          | `shared::schedule::{validate_policy_execution, advance_policy}`                       | Same functions, same calendar-month arithmetic (M-04).                                                    |
-| **Permissionless execute** | Yes — any gateway signer, the user, or the recipient.                                 | Yes — same `fee_payer ∈ {gateway.signer, user_payment.owner, recipient}` constraint.                      |
-| **Use cases**              | Simple recurring billing, milestone escrows, pay-as-you-go with no conditional logic. | Programmable conditional payments: "topup if balance low", "pull USDC deliver WSOL", native-SOL delivery. |
-| **Forward / swap**         | Not supported.                                                                        | Opt-in via `ForwardConfig.target_program` (Meteora DLMM).                                                 |
-| **Native SOL delivery**    | Not supported.                                                                        | Opt-in via `FORWARD_FLAG_NATIVE_OUTPUT` (WSOL → SOL unwrap).                                              |
-| **External CPI**           | None.                                                                                 | Lighthouse (read-only assertion) + Meteora DLMM (swap). Both hard-allowlisted.                            |
+| Axis                       | PaymentPolicy                                                                         | ComposablePolicy                                                                                                                            |
+| -------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Custody model**          | Non-custodial. User approves delegate; gateway pulls directly.                        | Non-custodial. Same delegate approval; pull routes through an intermediate ATA.                                                             |
+| **Execution**              | Single CPI: `transfer` from user → recipient + fees.                                  | 5-phase: `PULL` (gross) → `SKIM` (input-side fees) → `PRE-VALIDATE` (opt) → `FORWARD` (opt) → `POST-VALIDATE` (opt) → `SETTLE`.             |
+| **Supported hooks**        | None.                                                                                 | Validation (Lighthouse) + Forward (Meteora DLMM), each independently disableable.                                                           |
+| **Intermediate accounts**  | None. Funds move directly user_token → recipient_token.                               | Two ATAs owned by the ComposablePolicy PDA; created lazily, closed at end of every execute.                                                 |
+| **PDA seeds**              | `["payment_policy", user_payment, policy_id]`                                         | `["composable_policy", user_payment, policy_id]`                                                                                            |
+| **ID counter**             | `user_payment.created_policies_count`                                                 | `user_payment.created_composable_count`                                                                                                     |
+| **CU cost**                | Lower — one Token CPI, no allocation.                                                 | Higher — ATA create + optional CPI(s) + fee math + two ATA closes.                                                                          |
+| **Rent churn per execute** | None.                                                                                 | Yes — intermediates are created and closed each call; rent returns to fee_payer but costs CU.                                               |
+| **Fee math**               | `shared::fees::calculate_fees`                                                        | Same — `shared::fees::calculate_fees`. Fee path is **input-side** (skimmed from the gross pull in Phase 1b, not from the output; ADR-0026). |
+| **Schedule math**          | `shared::schedule::{validate_policy_execution, advance_policy}`                       | Same functions, same calendar-month arithmetic (M-04).                                                                                      |
+| **Permissionless execute** | Yes — any gateway signer, the user, or the recipient.                                 | Yes — same `fee_payer ∈ {gateway.signer, user_payment.owner, recipient}` constraint.                                                        |
+| **Use cases**              | Simple recurring billing, milestone escrows, pay-as-you-go with no conditional logic. | Programmable conditional payments: "topup if balance low", "pull USDC deliver WSOL", native-SOL delivery.                                   |
+| **Forward / swap**         | Not supported.                                                                        | Opt-in via `ForwardConfig.target_program` (Meteora DLMM).                                                                                   |
+| **Native SOL delivery**    | Not supported.                                                                        | Opt-in via `FORWARD_FLAG_NATIVE_OUTPUT` (WSOL → SOL unwrap).                                                                                |
+| **External CPI**           | None.                                                                                 | Lighthouse (read-only assertion) + Meteora DLMM (swap). Both hard-allowlisted.                                                              |
 
 ## When to use PaymentPolicy
 

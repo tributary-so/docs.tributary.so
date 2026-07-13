@@ -7,19 +7,21 @@ A **ComposablePolicy** is a pull payment that runs two optional hooks **between*
 
 Both hooks are **opt-in via sentinel values**. A composable policy with both disabled behaves like a `PaymentPolicy` but lives in its own PDA namespace and routes through an intermediate ATA hop. Both families reuse the same `PolicyType` enum (`Subscription` / `Milestone` / `PayAsYouGo`), the same `UserPayment` account, and the same fee-distribution logic.
 
-## The lifecycle: pull → validate → forward → settle
+## The lifecycle: pull → skim → pre-validate → forward → post-validate → settle
 
 ```
 graph TD
     Pull["1. PULL<br/>UserPayment PDA signs:<br/>user_token_account → intermediate_input_ata"]
-    Val["2. VALIDATE (optional)<br/>CPI into Lighthouse with stored<br/>assertion data + read-accounts.<br/>Fails the tx if assertion doesn't hold."]
-    Fwd["3. FORWARD (optional)<br/>CPI into Meteora DLMM:<br/>swap intermediate_input_ata → intermediate_output_ata.<br/>ByteRangeChecks pin the swap selector."]
-    Settle["4. SETTLE<br/>Sweep intermediate_output → recipient +<br/>protocol fee + gateway fee.<br/>min_output_amount enforced on NET (post-fee)."]
+    Skim["2. SKIM (input-side)<br/>Protocol + gateway + scheduler fees<br/>deducted from intermediate_input_ata.<br/>Remaining = face amount for forward."]
+    PreVal["3. PRE-VALIDATE (optional)<br/>CPI into Lighthouse with stored<br/>assertion data + read-accounts.<br/>Fails the tx if assertion doesn't hold."]
+    Fwd["4. FORWARD (optional)<br/>CPI into Meteora DLMM:<br/>swap intermediate_input_ata → intermediate_output_ata.<br/>ByteRangeChecks pin the swap selector."]
+    PostVal["5. POST-VALIDATE (optional)<br/>CPI into Lighthouse with stored<br/>assertion data + read-accounts.<br/>Guards minimum output after forward."]
+    Settle["6. SETTLE<br/>Sweep intermediate_output → recipient.<br/>Fees already skimmed in phase 2 —<br/>settle moves only principal."]
 
-    Pull --> Val --> Fwd --> Settle
+    Pull --> Skim --> PreVal --> Fwd --> PostVal --> Settle
 
     classDef phase fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    class Pull,Val,Fwd,Settle phase
+    class Pull,Skim,PreVal,Fwd,PostVal,Settle phase
 ```
 
 Key invariants enforced on-chain:
@@ -35,10 +37,10 @@ Key invariants enforced on-chain:
 
 | Hook you want to disable | Sentinel value                                        |
 | ------------------------ | ----------------------------------------------------- |
-| No validation            | `validation_program = SystemProgram.programId`        |
+| No validation            | `ValidationSpec::Disabled` (SDK: `{ disabled: {} }`)  |
 | No forward               | `forward_config.target_program = PublicKey.default()` |
 
-The SDK accepts `validationProgram = PublicKey.default()` and rewrites it to `SystemProgram.programId` internally (see `getCreateComposablePolicyInstruction`). When forward is disabled, `num_data_checks` must be `0` and `input_mint` must equal `output_mint` (no conversion step — it's a same-mint pull → sweep).
+The SDK accepts `{ disabled: {} }` as the `ValidationSpec` for both `preValidation` and `postValidation`. When forward is disabled, `instruction_constraint.data_checks` should be empty and `input_mint` must equal `output_mint` (no conversion step — it's a same-mint pull → sweep).
 
 ## When to choose ComposablePolicy vs PaymentPolicy
 
@@ -53,7 +55,7 @@ The SDK accepts `validationProgram = PublicKey.default()` and rewrites it to `Sy
 
 ## Where to next
 
-- [SDK surface](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `getCreateComposablePolicyInstruction`, `executeComposable`, `ForwardConfig`, `ValidationConfig`.
+- [SDK surface](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `getCreateComposablePolicyInstruction`, `executeComposable`, `ForwardConfig`, `ValidationSpec`.
 - [Lighthouse facade](https://docs.tributary.so/integration-guide/programmable-pull-payments/lighthouse-facade/index.md) — build assertions with `lighthouse.tokenAccount(ata).amount(threshold, "<").build()`.
 - Examples: [Auto-topup guard](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/auto-topup-guard/index.md) · [Swap & deliver](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/swap-and-deliver/index.md) · [Native SOL topup](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/native-sol-topup/index.md).
 - Deep technical reference → [Protocol Reference → Composable Policy](https://docs.tributary.so/protocol-reference/composable-policy/overview/index.md).

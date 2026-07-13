@@ -9,6 +9,10 @@
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
+         <loc>https://docs.tributary.so/migration/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
          <loc>https://docs.tributary.so/use-cases/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
@@ -37,6 +41,10 @@
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
+         <loc>https://docs.tributary.so/integration-guide/programmable-pull-payments/forward-cpi-guide/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
          <loc>https://docs.tributary.so/integration-guide/programmable-pull-payments/lighthouse-facade/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
@@ -58,6 +66,18 @@
     </url>
     <url>
          <loc>https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/swap-and-deliver/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/ai-agent-budget/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/auto-dca/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.tributary.so/integration-guide/programmable-pull-payments/quickstarts/auto-topup/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
@@ -150,6 +170,10 @@
     </url>
     <url>
          <loc>https://docs.tributary.so/protocol-reference/composable-policy/allowlists-and-sentinels/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.tributary.so/protocol-reference/composable-policy/api-reference/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>

@@ -6,7 +6,8 @@ This is the swap-and-deliver flow plus one flag bit: `ForwardConfig.forwardFlags
 
 ```
 graph LR
-    Cold["coldWallet<br/>(user, USDC)"] -->|"pull USDC"| In["intermediate USDC ATA"]
+    Cold["coldWallet<br/>(user, USDC)"] -->|"pull USDC (gross)"| In["intermediate USDC ATA"]
+    In -->|"skim fees (USDC, input-side)"| Fees["fee ATAs<br/>(protocol + gateway)"]
     In -->|"Meteora DLMM swap"| Out["intermediate WSOL ATA<br/>(owned by ComposablePolicy PDA)"]
     Out -->|"closeAccount<br/>(FORWARD_FLAG_NATIVE_OUTPUT)"| Hot["hotWallet<br/>(recipient, SYSTEM wallet)<br/>receives native SOL"]
 
@@ -14,8 +15,7 @@ graph LR
     classDef pda fill:#e3f2fd,stroke:#1565c0
     classDef native fill:#fce4ec,stroke:#880e4f
     class Cold,Hot user
-    class In,Out pda
-    class Hot native
+    class In,Out,Fees pda
 ```
 
 ## The `FORWARD_FLAG_NATIVE_OUTPUT` bit
@@ -55,6 +55,8 @@ import DLMM from "@meteora-ag/dlmm";
 import {
   Tributary,
   lighthouse,
+  getPreValidationPda,
+  getPostValidationPda,
   LIGHTHOUSE_PROGRAM_ID,
 } from "@tributary-so/sdk";
 
@@ -123,18 +125,24 @@ const discriminator = Array.from(
 
 ```typescript
 const forwardConfig = {
-  targetProgram: METEORA_DLMM_PUBKEY,
   inputMint: USDC_MINT,
   outputMint: NATIVE_MINT, // REQUIRED — NATIVE_OUTPUT requires WSOL output
-  minOutputAmount: null,
   forwardFlags: FORWARD_FLAG_NATIVE_OUTPUT, // ← bit 0 set
-  numDataChecks: 1,
-  dataChecks: [
-    { offset: 0, length: 8, expected: discriminator },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-    { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
-  ],
+  instructionConstraint: {
+    programId: METEORA_DLMM_PUBKEY,
+    numDataChecks: 1,
+    dataChecks: [
+      { offset: 0, length: 8, expected: discriminator },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+      { offset: 0, length: 0, expected: [0, 0, 0, 0, 0, 0, 0, 0] },
+    ],
+    numPinnedAccounts: 0,
+    pinnedAccounts: [
+      { index: 0, pubkey: PublicKey.default },
+      { index: 0, pubkey: PublicKey.default },
+    ],
+  },
 };
 
 const createIx = await sdk.getCreateComposablePolicyInstruction(
@@ -144,9 +152,10 @@ const createIx = await sdk.getCreateComposablePolicyInstruction(
   policyType,
   "Native SOL topup",
   forwardConfig,
-  LIGHTHOUSE_PROGRAM_ID,
-  guard.numAccounts,
-  guard.data
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
+  [hotWallet.publicKey], // prePinnedAccounts
+  guard.data // preValidationData
+  // postValidation: disabled (default)
 );
 ```
 
@@ -168,11 +177,18 @@ const forwardAccounts = swapIx.keys.map((k) => ({
   isWritable: true,
 }));
 
-const remainingAccounts = [
-  { pubkey: validationPDA, isSigner: false, isWritable: false },
-  ...guard.accounts,
-  ...forwardAccounts,
-];
+// ValidationPda is a named account post-ADR-0016; remaining_accounts is
+// the bare [target, ...forward] slice (no leading ValidationPda entry).
+const { address: preValidationPda } = getPreValidationPda(
+  composablePolicyPDA,
+  program.programId
+);
+const { address: postValidationPda } = getPostValidationPda(
+  composablePolicyPDA,
+  program.programId
+);
+
+const remainingAccounts = [...guard.accounts, ...forwardAccounts];
 
 const ix = await program.methods
   .executeComposable(Buffer.from(swapIx.data), new anchor.BN(SWAP_INPUT_AMOUNT))
@@ -183,7 +199,10 @@ const ix = await program.methods
     userPayment: userPaymentPDA,
     gateway: gatewayPDA,
     config: configPDA,
-    validationProgram: LIGHTHOUSE_PUBKEY,
+    preValidationProgram: LIGHTHOUSE_PROGRAM_ID,
+    postValidationProgram: SystemProgram.programId,
+    preValidationPda,
+    postValidationPda,
     userTokenAccount: coldWalletUsdcAta,
     mint: USDC_MINT,
     outputMint: NATIVE_MINT,
@@ -198,8 +217,8 @@ const ix = await program.methods
       true
     ),
     recipientTokenAccount: hotWallet.publicKey, // ← SYSTEM WALLET, not ATA
-    gatewayFeeAccount: feeRecipientWsolAta, // fees are still WSOL
-    protocolFeeAccount: adminWsolAta,
+    gatewayFeeAccount: feeRecipientUsdcAta, // input-side (USDC, ADR-0026)
+    protocolFeeAccount: adminUsdcAta,
     tokenProgram: TOKEN_PROGRAM_ID,
     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     systemProgram: SystemProgram.programId,
@@ -208,9 +227,9 @@ const ix = await program.methods
   .instruction();
 ```
 
-Fees are still WSOL
+Fees are input-side (USDC, ADR-0026)
 
-`gateway_fee_account` and `protocol_fee_account` are still WSOL ATAs — the fee slice of the output is delivered via `transfer_checked`, only the recipient's slice is unwrapped via `closeAccount`. Recipient WSOL ATA is not required.
+Composable fees are always skimmed from the intermediate input (USDC) before the forward swap runs, not from the output. `gatewayFeeAccount` and `protocolFeeAccount` are USDC ATAs, not WSOL.
 
 ## When to use native SOL vs WSOL delivery
 
