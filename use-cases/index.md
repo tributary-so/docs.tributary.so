@@ -244,7 +244,7 @@ ______________________________________________________________________
 
 ## Next Steps
 
-- [Subscription Payments](https://docs.tributary.so/policies/subscription/index.md) - Detailed subscription docs
-- [Milestone Payments](https://docs.tributary.so/policies/milestone/index.md) - Milestone implementation
-- [Pay-as-you-go](https://docs.tributary.so/policies/payasyougo/index.md) - Usage-based billing
-- [Integration Options](https://docs.tributary.so/integration/index.md) - Get started
+- [Subscription Payments](https://docs.tributary.so/protocol-reference/payment-policy/subscription/index.md) - Detailed subscription docs
+- [Milestone Payments](https://docs.tributary.so/protocol-reference/payment-policy/milestone/index.md) - Milestone implementation
+- [Pay-as-you-go](https://docs.tributary.so/protocol-reference/payment-policy/payasyougo/index.md) - Usage-based billing
+- [Integration Options](https://docs.tributary.so/integration-guide/index.md) - Get started
