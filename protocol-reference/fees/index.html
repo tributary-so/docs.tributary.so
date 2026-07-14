@@ -1806,10 +1806,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#how-the-fee-decomposes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the fee decomposes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#fee-distribution" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fee Distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-1-is-derived-not-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "1%" is derived, not fixed
       
     </span>
   </a>
@@ -2931,10 +2953,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#how-the-fee-decomposes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the fee decomposes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#fee-distribution" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fee Distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-1-is-derived-not-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "1%" is derived, not fixed
       
     </span>
   </a>
@@ -3131,12 +3175,13 @@
 <p>Tributary has two cost dimensions: <strong>payment fees</strong> (deducted from each transfer) and <strong>rent</strong> (Solana's on-chain storage cost for accounts).</p>
 <hr />
 <h2 id="payment-fees">Payment Fees<a class="headerlink" href="#payment-fees" title="Permanent link">&para;</a></h2>
-<p>Every payment executed through Tributary splits the gross amount between the recipient, the gateway provider, and the protocol treasury.</p>
+<p>Every payment executed through Tributary uses a <strong>unified gateway fee model</strong> (ADR-0017): the gateway declares <strong>one total fee</strong> (<code>gateway_fee_bps</code>), and the protocol decomposes it into four carve-outs. The protocol's cut is <strong>20% of the gateway fee by default</strong> — not a flat percentage of the payment.</p>
+<h3 id="how-the-fee-decomposes">How the fee decomposes<a class="headerlink" href="#how-the-fee-decomposes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Fee Layer</th>
-<th>Default</th>
+<th>Carve-out</th>
+<th>Default share of gateway fee</th>
 <th>Range</th>
 <th>Who Controls</th>
 </tr>
@@ -3144,34 +3189,79 @@
 <tbody>
 <tr>
 <td>Protocol fee</td>
-<td>100 bps (1%)</td>
-<td>Fixed at program initialization</td>
+<td>20% (<code>protocol_share_bps = 2000</code>)</td>
+<td>Fixed at program initialization; overridable per-gateway</td>
 <td>Protocol admin</td>
 </tr>
 <tr>
-<td>Gateway fee</td>
+<td>Scheduler fee</td>
 <td>Set per gateway</td>
 <td>0–10,000 bps</td>
 <td>Gateway authority</td>
 </tr>
 <tr>
-<td>Custom protocol fee</td>
-<td>Optional per gateway</td>
-<td>0–10,000 bps</td>
-<td>Protocol admin (overrides global)</td>
+<td>Referral pool</td>
+<td>Set per gateway</td>
+<td>0–2,500 bps (0–25%)</td>
+<td>Gateway authority</td>
+</tr>
+<tr>
+<td>Gateway residual</td>
+<td>Remainder</td>
+<td><code>total − protocol − scheduler − referral</code></td>
+<td>Gateway authority</td>
+</tr>
+<tr>
+<td><strong>Gateway fee (total)</strong></td>
+<td><strong>One number, gateway-set</strong></td>
+<td><strong>0–10,000 bps (0–100%)</strong></td>
+<td><strong>Gateway authority</strong></td>
 </tr>
 </tbody>
 </table>
+<p>The four carve-out shares must sum to ≤ 10,000 bps (enforced at every gateway-config write site).</p>
 <h3 id="fee-distribution">Fee Distribution<a class="headerlink" href="#fee-distribution" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>$100.00 Payment
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── $1.00 → Protocol Treasury (1% protocol fee)
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── $2.50 → Payment Gateway (2.5% gateway fee, provider-configurable)
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│           └── of which referral rewards are allocated if enabled
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└── $96.50 → Recipient
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>$100.00 Payment, 5% gateway fee (500 bps), 10% scheduler, 10% referral
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Total fee pool: $5.00 (5% of $100)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── $1.00 → Protocol Treasury (20% of $5.00 fee pool)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├── $0.50 → Scheduler (10% of $5.00 fee pool — pays the execute signer)
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── $0.50 → Referral pool (10% of $5.00 fee pool, if enabled)
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── $3.00 → Gateway residual (remaining 60% of $5.00 fee pool)
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Recipient receives: $95.00
 </span></code></pre></div>
-<p>Fees are calculated as <code>(amount * bps) / 10000</code>, rounding down. Dust from rounding goes to the protocol treasury.</p>
+Fees are calculated as <code>(amount * bps) / 10000</code>, truncating toward zero. Dust from rounding goes to the protocol treasury.</p>
+<h3 id="the-1-is-derived-not-fixed">The "1%" is derived, not fixed<a class="headerlink" href="#the-1-is-derived-not-fixed" title="Permanent link">&para;</a></h3>
+<p>At the <strong>default 20% protocol share</strong> and a <strong>typical 5% gateway fee</strong>, the protocol's effective take is <strong>1% of the payment amount</strong> (<code>500 bps × 20% = 100 bps = 1%</code>). But the protocol's absolute take scales with the gateway fee:</p>
+<table>
+<thead>
+<tr>
+<th>Gateway fee</th>
+<th>Protocol share (default 20%)</th>
+<th>Effective protocol take</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.5%</td>
+<td>20%</td>
+<td>0.5% of payment</td>
+</tr>
+<tr>
+<td>5%</td>
+<td>20%</td>
+<td>1% of payment</td>
+</tr>
+<tr>
+<td>10%</td>
+<td>20%</td>
+<td>2% of payment</td>
+</tr>
+</tbody>
+</table>
 <h3 id="custom-protocol-fee">Custom Protocol Fee<a class="headerlink" href="#custom-protocol-fee" title="Permanent link">&para;</a></h3>
-<p>The protocol admin can override the global protocol fee on a per-gateway basis. This is useful for special arrangements (e.g., zero protocol fee for strategic partners). When enabled, the custom fee replaces the global 100 bps default — it does not stack.</p>
+<p>The protocol admin can override the global protocol share on a per-gateway basis via <code>custom_protocol_share_bps</code> (requires <code>FEATURE_CUSTOM_PROTOCOL_FEE</code> bit set on the gateway). This is useful for special arrangements (e.g., zero protocol fee for strategic partners). When enabled, the custom share replaces the global <code>protocol_share_bps</code> for that gateway — it does not stack.</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Enable 0% protocol fee for a gateway (admin only)</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">await</span><span class="w"> </span><span class="nx">sdk</span><span class="p">.</span><span class="nx">updateGatewayProtocolFee</span><span class="p">(</span><span class="nx">gatewayAuthority</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
 </span></code></pre></div>

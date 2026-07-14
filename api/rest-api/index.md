@@ -840,7 +840,7 @@ Issue a short-lived JWT
 
 Description
 
-Validates that the caller has an active subscription policy (or a recent payment transaction signature) and issues a JWT bound to the subscription. Rate-limited to 200 requests per minute per wallet.
+Validates that the caller has an active payment policy (any of the 5 PolicyType variants: Subscription, Milestone, PayAsYouGo, OneTime, UpTo) OR a recent payment transaction signature, and issues a JWT bound to the caller's wallet. The token carries a `policies[]` array of discriminated `PolicyClaim` objects (authorization proof) and a `lastPayments[]` array of recent `PaymentRecord` objects (payment proof). Consumers decide which aspect to require. Rate-limited to 200 requests per minute per wallet.
 
 **Request body**
 
@@ -1581,6 +1581,182 @@ Schema of the response body
 }
 ```
 
+## GatewayAuth
+
+______________________________________________________________________
+
+### POST /v1/gateway/{gateway}/auth/challenge
+
+Request a sign-in challenge
+
+**Input parameters**
+
+| Parameter | In   | Type   | Default | Nullable | Description |
+| --------- | ---- | ------ | ------- | -------- | ----------- |
+| `gateway` | path | string |         | No       |             |
+
+**Responses**
+
+```json
+{
+    "nonce": "string",
+    "gateway": "string",
+    "expiresAt": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "nonce",
+        "gateway",
+        "expiresAt"
+    ],
+    "properties": {
+        "nonce": {
+            "type": "string"
+        },
+        "gateway": {
+            "type": "string"
+        },
+        "expiresAt": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### POST /v1/gateway/{gateway}/auth/verify
+
+Verify wallet signature and issue a gateway JWT
+
+**Input parameters**
+
+| Parameter | In   | Type   | Default | Nullable | Description |
+| --------- | ---- | ------ | ------- | -------- | ----------- |
+| `gateway` | path | string |         | No       |             |
+
+**Request body**
+
+```json
+{
+    "signer": "string",
+    "signature": [
+        0
+    ]
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the request body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "signer",
+        "signature"
+    ],
+    "properties": {
+        "signer": {
+            "type": "string",
+            "description": "Base58 wallet pubkey"
+        },
+        "signature": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            },
+            "description": "64-byte ed25519 signature over the nonce bytes"
+        }
+    }
+}
+```
+
+**Responses**
+
+```json
+{
+    "token": "string",
+    "expiresIn": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string"
+        },
+        "expiresIn": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+## GatewayMerchant
+
+______________________________________________________________________
+
+### GET /v1/gateway/{gateway}/merchant/policies
+
+List policies under a gateway
+
+**Input parameters**
+
+| Parameter    | In     | Type    | Default | Nullable | Description |
+| ------------ | ------ | ------- | ------- | -------- | ----------- |
+| `bearerAuth` | header | string  | N/A     | No       |             |
+| `gateway`    | path   | string  |         | No       |             |
+| `limit`      | query  | integer | 100     | No       |             |
+| `offset`     | query  | integer | 0       | No       |             |
+
+**Responses**
+
+```json
+{
+    "items": [
+        {}
+    ],
+    "total": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "items": {
+            "type": "array",
+            "items": {
+                "type": "object"
+            }
+        },
+        "total": {
+            "type": "integer"
+        }
+    }
+}
+```
+
 ## Events
 
 ______________________________________________________________________
@@ -2273,6 +2449,257 @@ Schema of the response body
 }
 ```
 
+## Assets
+
+______________________________________________________________________
+
+### GET /v1/assets/search
+
+Search the tokenized-asset catalog
+
+Description
+
+Server-side proxy to tokens.xyz `/assets/search`. Injects the upstream `x-api-key`; the browser never sees it. Returns a slim projection filtered to assets that carry a usable Solana SPL mint (no mint = no token account = no Tributary payment). On upstream error, returns `200` with `results: []` (empty state, not error state). Redis-cached per-query for 60s. Rate-limited to 120 requests/min/IP.
+
+**Input parameters**
+
+| Parameter | In    | Type    | Default | Nullable | Description                               |
+| --------- | ----- | ------- | ------- | -------- | ----------------------------------------- |
+| `limit`   | query | integer | 20      | No       | Max results.                              |
+| `q`       | query | string  |         | No       | Search query (symbol, name, or asset id). |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": {
+        "query": "string",
+        "results": [
+            null
+        ]
+    },
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/AssetSearchResult"
+                    }
+                }
+            }
+        },
+        "timestamp": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/assets/resolve
+
+Resolve a mint to asset metadata
+
+Description
+
+Server-side proxy to tokens.xyz `/assets/resolve`. Injects the upstream `x-api-key`. On upstream failure, falls back to the baked-in `MINT_OVERRIDES` map (USDC, SOL, USDT, mSOL, devnet USDC) so account balances never render as truncated mints. Redis-cached per-mint for 10min. Rate-limited to 120/min/IP.
+
+**Input parameters**
+
+| Parameter | In    | Type   | Default | Nullable | Description         |
+| --------- | ----- | ------ | ------- | -------- | ------------------- |
+| `mint`    | query | string |         | No       | Solana base58 mint. |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": null,
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "$ref": "#/components/schemas/ResolveResult"
+        },
+        "timestamp": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
 ## Admin
 
 ______________________________________________________________________
@@ -2436,17 +2863,19 @@ ______________________________________________________________________
 
 ## Tags
 
-| Name          | Description                           |
-| ------------- | ------------------------------------- |
-| Health        | Service health probes                 |
-| Skill         | Lando skill markdown generation       |
-| Subscriptions | Recurring subscription lookups        |
-| OneTime       | One-time payment lookups              |
-| Events        | On-chain event queries                |
-| Webhooks      | Webhook endpoint management           |
-| Tokens        | JWT issuance for active subscriptions |
-| JWKS          | JWT key set publishing                |
-| Admin         | Administrative key rotation           |
+| Name          | Description                                                                              |
+| ------------- | ---------------------------------------------------------------------------------------- |
+| Health        | Service health probes                                                                    |
+| Skill         | Lando skill markdown generation                                                          |
+| Subscriptions | Recurring subscription lookups                                                           |
+| OneTime       | One-time payment lookups                                                                 |
+| Events        | On-chain event queries                                                                   |
+| Webhooks      | Webhook endpoint management                                                              |
+| Tokens        | JWT issuance for active payment policies (all 5 PolicyType variants) and direct payments |
+| JWKS          | JWT key set publishing                                                                   |
+| Admin         | Administrative key rotation                                                              |
+| Gateway       | Gateway merchant layer (auth + analytics)                                                |
+| Assets        | Tokenized-asset catalog proxy (tokens.xyz). Type-ahead search + mint resolver.           |
 
 ______________________________________________________________________
 
