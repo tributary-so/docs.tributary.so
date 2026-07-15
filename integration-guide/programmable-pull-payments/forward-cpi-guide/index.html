@@ -1460,6 +1460,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#building-forward-instructions-forwardbuilder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building forward instructions (ForwardBuilder)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building forward instructions (ForwardBuilder)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-the-builder-returns-pubkey-iswritable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the builder returns { pubkey, isWritable }[]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#checklist-before-you-ship" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3018,6 +3046,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#building-forward-instructions-forwardbuilder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building forward instructions (ForwardBuilder)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building forward instructions (ForwardBuilder)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-the-builder-returns-pubkey-iswritable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the builder returns { pubkey, isWritable }[]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#checklist-before-you-ship" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3092,7 +3148,7 @@ instruction type.</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">DLMM</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@meteora-ag/dlmm&quot;</span><span class="p">;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">METEORA_DLMM_PUBKEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PublicKey</span><span class="p">(</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="s2">&quot;LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo&quot;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="s2">&quot;LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo&quot;</span><span class="p">,</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">);</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">// Build the swap ix once with a dummy user — you only need the data layout</span>
@@ -3189,7 +3245,7 @@ the forward accounts. The forward accounts come from the swap instruction's
 </span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="nx">composablePolicyPDA</span><span class="p">,</span>
 </span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="nx">Buffer</span><span class="p">.</span><span class="kr">from</span><span class="p">(</span><span class="nx">swapIx</span><span class="p">.</span><span class="nx">data</span><span class="p">),</span><span class="w"> </span><span class="c1">// the raw instruction data (selector must match)</span>
 </span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">anchor</span><span class="p">.</span><span class="nx">BN</span><span class="p">(</span><span class="nx">amount</span><span class="p">),</span><span class="w"> </span><span class="c1">// pull amount (null for subscription)</span>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="nx">remainingAccounts</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="nx">remainingAccounts</span><span class="p">,</span>
 </span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="p">);</span>
 </span></code></pre></div>
 <div class="admonition warning">
@@ -3215,12 +3271,77 @@ in their system account — no WSOL ATA needed. See the
 (<code>programId = PublicKey.default()</code>), the policy is <strong>deliver-no-transform</strong>:
 the pull goes straight to the recipient with no forward CPI. See the
 <a href="../quickstarts/ai-agent-budget/">AI agent budget quickstart</a>.</p>
+<h2 id="building-forward-instructions-forwardbuilder">Building forward instructions (ForwardBuilder)<a class="headerlink" href="#building-forward-instructions-forwardbuilder" title="Permanent link">&para;</a></h2>
+<p>The manual <code>swapIx.keys.map(...)</code> block above works, but it duplicates logic that
+the scheduler and CLI also need (validation-target resolution, account assembly,
+PayAsYouGo face→gross math). To kill that duplication, <code>@tributary-so/sdk</code> exports
+the shared primitives and a <code>ForwardBuilder</code> interface; concrete implementations
+(Meteora DLMM first) live in the opt-in <code>@tributary-so/forward-builders</code> package.</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createMeteoraDlmmForward</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/forward-builders&quot;</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">isForwardEnabled</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nx">resolveValidationTargets</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nx">assembleComposableRemainingAccounts</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nx">resolveDefaultForwardAmount</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/sdk&quot;</span><span class="p">;</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1">// 1. Resolve the face amount (handles PayAsYouGo gross→face; null for fixed-amount variants)</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">face</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">resolveDefaultForwardAmount</span><span class="p">(</span><span class="nx">policy</span><span class="p">,</span><span class="w"> </span><span class="nx">gateway</span><span class="p">);</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1">// 2. Build the forward instruction (or skip if forward is disabled)</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="kd">const</span><span class="w"> </span><span class="nx">fwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">isForwardEnabled</span><span class="p">(</span><span class="nx">policy</span><span class="p">)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">createMeteoraDlmmForward</span><span class="p">({</span><span class="w"> </span><span class="nx">pool</span><span class="p">,</span><span class="w"> </span><span class="nx">slippageBps</span><span class="o">:</span><span class="w"> </span><span class="kt">100</span><span class="w"> </span><span class="p">}).</span><span class="nx">build</span><span class="p">({</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">      </span><span class="nx">connection</span><span class="p">,</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">      </span><span class="nx">policy</span><span class="p">,</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">      </span><span class="nx">composablePolicyPda</span><span class="o">:</span><span class="w"> </span><span class="kt">composablePolicyPDA</span><span class="p">,</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">      </span><span class="nx">face</span><span class="p">,</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="p">})</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">instructionData</span><span class="o">:</span><span class="w"> </span><span class="kt">Buffer.alloc</span><span class="p">(</span><span class="mf">0</span><span class="p">),</span><span class="w"> </span><span class="nx">forwardAccounts</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1">// 3. Assemble remaining_accounts in ADR-0016 order: [pre, forward, post]</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="kd">const</span><span class="w"> </span><span class="nx">remaining</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">assembleComposableRemainingAccounts</span><span class="p">({</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="nx">preTargets</span><span class="o">:</span><span class="w"> </span><span class="kt">await</span><span class="w"> </span><span class="nx">resolveValidationTargets</span><span class="p">(</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">    </span><span class="nx">connection</span><span class="p">,</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">    </span><span class="nx">composablePolicyPDA</span><span class="p">,</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">    </span><span class="nx">policy</span><span class="p">.</span><span class="nx">preValidation</span><span class="p">,</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">    </span><span class="nx">validationProgramId</span><span class="p">,</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">    </span><span class="s2">&quot;pre&quot;</span><span class="p">,</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span><span class="p">),</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span><span class="nx">forwardAccounts</span><span class="o">:</span><span class="w"> </span><span class="kt">fwd.forwardAccounts</span><span class="p">,</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">  </span><span class="nx">postTargets</span><span class="o">:</span><span class="w"> </span><span class="kt">await</span><span class="w"> </span><span class="nx">resolveValidationTargets</span><span class="p">(</span>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">    </span><span class="nx">connection</span><span class="p">,</span>
+</span><span id="__span-5-34"><a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">    </span><span class="nx">composablePolicyPDA</span><span class="p">,</span>
+</span><span id="__span-5-35"><a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">    </span><span class="nx">policy</span><span class="p">.</span><span class="nx">postValidation</span><span class="p">,</span>
+</span><span id="__span-5-36"><a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">    </span><span class="nx">validationProgramId</span><span class="p">,</span>
+</span><span id="__span-5-37"><a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">    </span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+</span><span id="__span-5-38"><a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">  </span><span class="p">),</span>
+</span><span id="__span-5-39"><a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="p">});</span>
+</span><span id="__span-5-40"><a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>
+</span><span id="__span-5-41"><a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="kd">const</span><span class="w"> </span><span class="nx">execIxs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">sdk</span><span class="p">.</span><span class="nx">executeComposable</span><span class="p">(</span>
+</span><span id="__span-5-42"><a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="w">  </span><span class="nx">composablePolicyPDA</span><span class="p">,</span>
+</span><span id="__span-5-43"><a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="w">  </span><span class="nx">fwd</span><span class="p">.</span><span class="nx">instructionData</span><span class="p">,</span>
+</span><span id="__span-5-44"><a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="w">  </span><span class="nx">face</span><span class="p">,</span>
+</span><span id="__span-5-45"><a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="w">  </span><span class="nx">remaining</span><span class="p">,</span>
+</span><span id="__span-5-46"><a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="p">);</span>
+</span></code></pre></div>
+<h3 id="why-the-builder-returns-pubkey-iswritable">Why the builder returns <code>{ pubkey, isWritable }[]</code><a class="headerlink" href="#why-the-builder-returns-pubkey-iswritable" title="Permanent link">&para;</a></h3>
+<p>The builder does <strong>not</strong> return <code>isSigner</code>. The assembler
+(<code>assembleComposableRemainingAccounts</code>) stamps <code>isSigner: false</code> on every account.
+This is the ADR-0008 privilege boundary enforced at the type level: a builder
+cannot leak signer authority because the <code>ForwardAccountMeta</code> type has no field
+to carry it. Per-account <code>isWritable</code> comes from the forward program's own account
+list (e.g. DLMM's <code>swapIx.keys</code>), not a blanket <code>true</code>.</p>
+<p>See <a href="../../../adr/0030-composable-execution-primitives.md">ADR-0030</a> for the
+full rationale (primitives-not-orchestrator, sibling-package structure, assembler
+owns ADR-0008).</p>
 <h2 id="checklist-before-you-ship">Checklist before you ship<a class="headerlink" href="#checklist-before-you-ship" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] <code>programId</code> is in <code>ALLOWED_FORWARD_PROGRAMS</code></li>
 <li>[ ] At least one <code>ByteRangeCheck</code> pins offset 0 (the discriminator)</li>
 <li>[ ] <code>outputMint</code> matches your intended settlement shape</li>
-<li>[ ] Forward accounts at execute time are marked <code>isWritable: true</code></li>
+<li>[ ] Forward accounts at execute time use per-account <code>isWritable</code> from the
+      forward program (or use a <code>ForwardBuilder</code> from <code>@tributary-so/forward-builders</code>,
+      which handles this for you)</li>
 <li>[ ] Swap-level slippage (<code>minOutAmount</code> in the swap ix) is set — or use
       <a href="../lighthouse-facade/">post-validation</a> as an output floor</li>
 </ul>
