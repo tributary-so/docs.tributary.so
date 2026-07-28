@@ -2524,6 +2524,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#7-settlement-output-guards-what-the-on-chain-0-covers-and-what-it-doesnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Settlement output guards — what the on-chain &gt;0 covers, and what it doesn't
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Settlement output guards — what the on-chain &gt;0 covers, and what it doesn&#39;t">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-0-guard-closes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the &gt;0 guard closes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-0-guard-does-not-close-the-magnitude-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the &gt;0 guard does NOT close (the magnitude gap)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#act-mode-no-on-chain-backstop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Act mode — no on-chain backstop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-no-on-chain-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why no on-chain enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2995,6 +3056,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#7-settlement-output-guards-what-the-on-chain-0-covers-and-what-it-doesnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Settlement output guards — what the on-chain &gt;0 covers, and what it doesn't
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Settlement output guards — what the on-chain &gt;0 covers, and what it doesn&#39;t">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-0-guard-closes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the &gt;0 guard closes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-0-guard-does-not-close-the-magnitude-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the &gt;0 guard does NOT close (the magnitude gap)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#act-mode-no-on-chain-backstop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Act mode — no on-chain backstop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-no-on-chain-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why no on-chain enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3193,6 +3315,101 @@ pull delegate has no effect on the security model of the hooks.</p>
 <p><code>ProgramConfig.emergency_pause</code> is a global kill switch enforced at the top
 of every <code>execute_composable</code> (and <code>execute_payment</code>) call. See
 <a href="../allowlists-and-sentinels/">allowlists-and-sentinels.md</a> for details.</p>
+<h2 id="7-settlement-output-guards-what-the-on-chain-0-covers-and-what-it-doesnt">7. Settlement output guards — what the on-chain <code>&gt;0</code> covers, and what it doesn't<a class="headerlink" href="#7-settlement-output-guards-what-the-on-chain-0-covers-and-what-it-doesnt" title="Permanent link">&para;</a></h2>
+<p>The composable execution pipeline (ADR-0026) has three settlement shapes.
+Each has a different on-chain backstop against a malicious or compromised
+gateway that controls the forward CPI's <code>remaining_accounts</code> and (within
+the pinned <code>InstructionConstraint</code>) the instruction data.</p>
+<table>
+<thead>
+<tr>
+<th>Shape</th>
+<th>On-chain guard</th>
+<th>Gateway vector</th>
+<th><code>post_validation</code> role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>deliver-no-transform</strong> (forward disabled, <code>output_mint == input_mint</code>)</td>
+<td>n/a — forward never runs; intermediate holds deterministic <code>face</code> after fee skim</td>
+<td>none</td>
+<td>not needed</td>
+</tr>
+<tr>
+<td><strong>deliver-transform</strong> (forward enabled, distinct <code>output_mint</code>)</td>
+<td><code>output_amount &gt; 0</code> at <code>sweep_output_to_recipient</code> (<code>execute_composable.rs:523</code>)</td>
+<td><strong>magnitude (dust)</strong> — gateway sets swap <code>minimum_amount_out = 0</code>; recipient gets 1 unit; guard passes</td>
+<td>optional; owner-economic magnitude floor</td>
+</tr>
+<tr>
+<td><strong>act mode</strong> (sentinel <code>output_mint</code>)</td>
+<td><strong>none</strong> — no intermediate_output ATA; forward consumes input for non-token settlement</td>
+<td><strong>full</strong> — forward delivers nothing observable to Tributary</td>
+<td>the only backstop, but target is use-case-specific (external account)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-the-0-guard-closes">What the <code>&gt;0</code> guard closes<a class="headerlink" href="#what-the-0-guard-closes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>No output at all.</strong> If the forward produces zero output (empty swap,
+  wrong route), the guard reverts the transaction. The user loses only gas.</li>
+<li><strong>Wrong destination.</strong> The intermediate_output ATA is re-derived from
+  the policy's declared <code>output_mint</code> at execute time
+  (<code>execute_composable.rs:949</code>). ATA derivation is deterministic
+  (owner + token_program + mint). If the gateway misroutes the forward's
+  own destination slot (e.g. Raydium CPMM <code>swap_base_input</code> account index
+  11, which is not pinned), the swap credits a different account, Tributary
+  reads 0 in its own intermediate, the guard fails, tx reverts. Fails
+  closed.</li>
+</ul>
+<h3 id="what-the-0-guard-does-not-close-the-magnitude-gap">What the <code>&gt;0</code> guard does NOT close (the magnitude gap)<a class="headerlink" href="#what-the-0-guard-does-not-close-the-magnitude-gap" title="Permanent link">&para;</a></h3>
+<p>The guard is an <strong>existence</strong> assertion, not a <strong>magnitude</strong> assertion.
+A gateway can set the swap's <code>minimum_amount_out</code> to 0 in the instruction
+data (the <code>InstructionConstraint</code> pins the discriminator at offset 0 and
+the pool, not the amount fields). The swap returns dust (1 unit); the
+guard passes; the recipient receives 1 unit of output for a <code>face</code>-sized
+input pull. This generalizes the <code>min_output_amount</code> field removed in
+v2.1.</p>
+<p><strong>Owner opt-in magnitude floor</strong> (deliver-transform): add a Lighthouse
+<code>post_validation</code> assertion on the intermediate_output ATA:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">lighthouse</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@tributary-so/sdk&quot;</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1">// ownerFloor = the minimum acceptable output amount, or 0 for existence</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1">// parity with the on-chain guard (defense-in-depth).</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">lighthouse</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="p">.</span><span class="nx">tokenAccount</span><span class="p">(</span><span class="nx">intermediateOutputAta</span><span class="p">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="p">.</span><span class="nx">amount</span><span class="p">(</span><span class="nx">ownerFloor</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&gt;=&quot;</span><span class="p">)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="p">.</span><span class="nx">build</span><span class="p">();</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">// guard.data        → Buffer stored in the post ValidationPda</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1">// guard.numAccounts → 1</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1">// guard.accounts    → [intermediateOutputAta]</span>
+</span></code></pre></div>
+<p>The post ValidationPda seed is
+<code>["composable_validation_post", composablePolicy]</code>.</p>
+<h3 id="act-mode-no-on-chain-backstop">Act mode — no on-chain backstop<a class="headerlink" href="#act-mode-no-on-chain-backstop" title="Permanent link">&para;</a></h3>
+<p>Act mode skips intermediate_output ATA creation, the deliver sweep, AND
+the <code>&gt;0</code> guard. The forward consumes input for a non-token settlement
+(e.g. a Velocity subaccount deposit). Tributary cannot observe the
+delivery on-chain — there is no intermediate_output ATA to read.</p>
+<p>The owner's <code>post_validation</code> is genuinely the only floor here, AND the
+target account is use-case-specific (the external settlement account),
+not a Tributary-controlled intermediate. The SDK emits a builder-time
+warning when an act-mode policy is created without a <code>post_validation</code>
+ProgramCall — see the <a href="../../../integration-guide/programmable-pull-payments/sdk/">SDK reference</a>.</p>
+<h3 id="why-no-on-chain-enforcement">Why no on-chain enforcement<a class="headerlink" href="#why-no-on-chain-enforcement" title="Permanent link">&para;</a></h3>
+<p>Enforcing <code>post_validation = ProgramCall</code> on-chain is rejected (ADR-0031):</p>
+<ul>
+<li><strong>Act mode is unenforceable</strong> — the target account is external and
+  use-case-specific; the program cannot know which account to assert
+  against.</li>
+<li><strong>Deliver-transform existence is already covered</strong> — the catastrophic
+  vectors revert. The residual magnitude gap is owner-economic.</li>
+<li><strong>Flexibility</strong> — legitimate use cases accept any non-zero output
+  (volatile pools, trusted gateways).</li>
+</ul>
+<p>See <a href="../../../adr/0031-settlement-output-post-validation-posture.md">ADR-0031</a>
+for the full decision and rejected alternatives.</p>
 
 
 
