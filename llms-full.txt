@@ -594,19 +594,20 @@ ______________________________________________________________________
 
 ## Tags
 
-| Name          | Description                                                                              |
-| ------------- | ---------------------------------------------------------------------------------------- |
-| Health        | Service health probes                                                                    |
-| Skill         | Lando skill markdown generation                                                          |
-| Subscriptions | Recurring subscription lookups                                                           |
-| OneTime       | One-time payment lookups                                                                 |
-| Events        | On-chain event queries                                                                   |
-| Webhooks      | Webhook endpoint management                                                              |
-| Tokens        | JWT issuance for active payment policies (all 5 PolicyType variants) and direct payments |
-| JWKS          | JWT key set publishing                                                                   |
-| Admin         | Administrative key rotation                                                              |
-| Gateway       | Gateway merchant layer (auth + analytics)                                                |
-| Assets        | Tokenized-asset catalog proxy (tokens.xyz). Type-ahead search + mint resolver.           |
+| Name          | Description                                                                                     |
+| ------------- | ----------------------------------------------------------------------------------------------- |
+| Health        | Service health probes                                                                           |
+| Skill         | Lando skill markdown generation                                                                 |
+| Subscriptions | Recurring subscription lookups                                                                  |
+| OneTime       | One-time payment lookups                                                                        |
+| Events        | On-chain event queries                                                                          |
+| Webhooks      | Webhook endpoint management                                                                     |
+| Tokens        | JWT issuance for active payment policies (all 5 PolicyType variants) and direct payments        |
+| JWKS          | JWT key set publishing                                                                          |
+| Admin         | Administrative key rotation                                                                     |
+| Gateway       | Gateway merchant layer (auth + analytics)                                                       |
+| Assets        | Tokenized-asset catalog proxy (tokens.xyz). Type-ahead search + mint resolver.                  |
+| Pools         | Free-text liquidity-pool search over the cached index (Raydium, Whirlpool, Meteora live proxy). |
 
 ______________________________________________________________________
 
