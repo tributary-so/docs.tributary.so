@@ -2364,6 +2364,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#output_mint-three-settlement-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        output_mint — three settlement shapes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#execute-time-re-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2891,6 +2902,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#output_mint-three-settlement-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        output_mint — three settlement shapes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#execute-time-re-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2965,8 +2987,10 @@ validation hook (Phase 2) and <strong>before</strong> settlement (Phase 4). It l
 policy pull one token from the user and deliver a different token to the
 recipient — e.g. pull USDC, swap to WSOL via Meteora DLMM, then settle in
 WSOL (or native SOL — see <a href="../native-output/">native-output.md</a>).</p>
-<p>The only forward target currently allowlisted is <strong>Meteora DLMM</strong>
-(<code>LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo</code>).</p>
+<p>The currently allowlisted forward targets are <strong>Meteora DLMM</strong>, <strong>Raydium
+CPMM</strong>, <strong>Raydium CLMM</strong>, and <strong>Orca Whirlpool</strong> (see
+<a href="../allowlists-and-sentinels/">allowlists-and-sentinels.md</a> and ADR-0032 for
+the Raydium CPMM addition).</p>
 <h2 id="forwardconfig-on-policy">ForwardConfig (on-policy)<a class="headerlink" href="#forwardconfig-on-policy" title="Permanent link">&para;</a></h2>
 <p>Stored inline on the <code>ComposablePolicy</code> account:</p>
 <div class="language-rust highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq)]</span>
@@ -3096,8 +3120,12 @@ both representations.</p>
 <td><code>InsufficientPinnedAccounts</code></td>
 </tr>
 <tr>
+<td><strong>forward enabled ⟹ <code>has_effective_pins()</code> (≥ 1 non-default pin)</strong></td>
+<td><code>DegenerateForwardPins</code></td>
+</tr>
+<tr>
 <td>no duplicate indices among active <code>pinned_accounts</code></td>
-<td><code>DuplicatePinnedAccountIndex</code></td>
+<td><code>DuplicatePinIndex</code></td>
 </tr>
 <tr>
 <td>for each active check: <code>offset + length &lt;= 1024</code></td>
@@ -3114,6 +3142,45 @@ both representations.</p>
 <tr>
 <td><code>forward_flags &amp; FORWARD_FLAG_NATIVE_OUTPUT</code> ⟹ <code>output_mint == NATIVE_MINT</code></td>
 <td><code>NativeOutputRequiresWsol</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>degenerate-pin guard</strong> rejects a forward-enabled constraint with
+zero effective pins. Without it, a gateway could swap in an arbitrary
+remaining-account at the forward slot — the pin set is what binds the
+forward CPI to a specific account layout (see CF-001,
+<a href="../security-model/">security-model.md</a>).</p>
+<h3 id="output_mint-three-settlement-shapes"><code>output_mint</code> — three settlement shapes<a class="headerlink" href="#output_mint-three-settlement-shapes" title="Permanent link">&para;</a></h3>
+<p>The combination of <code>output_mint</code> and whether forward is enabled selects
+one of three settlement shapes (ADR-0026, see also
+<a href="../overview/">overview.md</a> Phase 5):</p>
+<table>
+<thead>
+<tr>
+<th><code>output_mint</code></th>
+<th>Forward</th>
+<th>Shape</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>== input_mint</code></td>
+<td>disabled</td>
+<td><strong>deliver-no-transform</strong></td>
+<td>Intermediate input swept directly to recipient. No swap.</td>
+</tr>
+<tr>
+<td>concrete mint <code>!= input</code></td>
+<td>enabled</td>
+<td><strong>deliver-transform</strong></td>
+<td>Forward swaps input → output; output swept; <code>&gt;0</code> guard KEPT.</td>
+</tr>
+<tr>
+<td><code>Pubkey::default()</code></td>
+<td>enabled</td>
+<td><strong>act mode</strong></td>
+<td>Forward consumes input for non-fungible settlement. No output ATA, no deliver sweep, no <code>&gt;0</code> guard.</td>
 </tr>
 </tbody>
 </table>

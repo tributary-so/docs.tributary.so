@@ -2929,7 +2929,17 @@ unrelated token account — the guard makes the invariant explicit.</p>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   ↑ receives sweep_amount lamports (the WSOL value)
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>   ↑ PLUS the closed ATA&#39;s rent lamports (side-effect bonus)
 </span></code></pre></div>
-<p>Source: <code>process_output_and_sweep</code> in <code>execute_composable.rs</code>.</p>
+<p>Source: <code>sweep_output_to_recipient</code> in <code>execute_composable.rs</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Distinct from act mode</p>
+</div>
+<p>This native-output path requires <code>output_mint == NATIVE_MINT</code> and
+<code>FORWARD_FLAG_NATIVE_OUTPUT</code> set, with a real WSOL intermediate ATA and
+a deliver sweep. It is <strong>different from act mode</strong>
+(<code>output_mint == Pubkey::default()</code> + forward enabled, ADR-0026), where
+the forward consumes the input for non-fungible settlement and there is
+no output ATA, no deliver sweep, and no <code>&gt;0</code> guard. See
+<a href="../overview/">overview.md</a> Phase 5.</p>
 <div class="admonition note">
 <p class="admonition-title">Fees are input-side (Phase 1b)</p>
 </div>

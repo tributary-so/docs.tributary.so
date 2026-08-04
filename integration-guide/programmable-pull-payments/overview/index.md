@@ -3,7 +3,7 @@
 A **ComposablePolicy** is a pull payment that runs two optional hooks **between** the pull and the settlement:
 
 1. **Validation** — a read-only on-chain assertion (via Lighthouse) that can veto the transaction if a condition isn't met.
-1. **Forward** — a token-transform step (via Meteora DLMM) that swaps the pulled input token into a different output token before delivery.
+1. **Forward** — a token-transform step (via Meteora DLMM, Raydium CPMM/CLMM, or Orca Whirlpool) that swaps the pulled input token into a different output token before delivery.
 
 Both hooks are **opt-in via sentinel values**. A composable policy with both disabled behaves like a `PaymentPolicy` but lives in its own PDA namespace and routes through an intermediate ATA hop. Both families reuse the same `PolicyType` enum (`Subscription` / `Milestone` / `PayAsYouGo`), the same `UserPayment` account, and the same fee-distribution logic.
 
@@ -29,16 +29,26 @@ Key invariants enforced on-chain:
 - **Intermediate ATAs are owned by the `ComposablePolicy` PDA**, not the `UserPayment` PDA. This decouples the intermediate signing authority from the user-source delegate — a forward program can only ever move transient intermediate balances, never the user's source funds.
 - **Signer sanitization**: validation and forward CPI builders do NOT forward `is_signer` from `remaining_accounts`. The fee payer (a Signer) cannot be re-passed to grant Lighthouse / DLMM unintended signer authority.
 - **Allowlists** (`programs/tributary/src/constants.rs`):
-- `ALLOWED_FORWARD_PROGRAMS` → Meteora DLMM (`LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo`)
+- `ALLOWED_FORWARD_PROGRAMS` → Meteora DLMM, Raydium CPMM, Raydium CLMM, Orca Whirlpool (4 entries)
 - `ALLOWED_VALIDATION_PROGRAMS` → Lighthouse (`L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95`)
 - **Emergency pause** (`ProgramConfig.emergency_pause`) blocks `execute_composable` just like `execute_payment`.
 
+## Settlement shapes — `output_mint` controls delivery
+
+| Shape                    | `output_mint`            | Forward  | Behaviour                                                           |
+| ------------------------ | ------------------------ | -------- | ------------------------------------------------------------------- |
+| **deliver-no-transform** | `== input_mint`          | disabled | Same-mint topup. Sweep `intermediate_input` → recipient.            |
+| **deliver-transform**    | concrete mint `!= input` | enabled  | Swap input → output, sweep output → recipient (`>0` guard kept).    |
+| **act mode**             | `Pubkey::default()`      | enabled  | Forward consumes input for non-fungible settlement (no output ATA). |
+
+See [forward-cpi-guide.md](https://docs.tributary.so/integration-guide/programmable-pull-payments/forward-cpi-guide/index.md) and ADR-0026 for details.
+
 ## The sentinel convention
 
-| Hook you want to disable | Sentinel value                                        |
-| ------------------------ | ----------------------------------------------------- |
-| No validation            | `ValidationSpec::Disabled` (SDK: `{ disabled: {} }`)  |
-| No forward               | `forward_config.target_program = PublicKey.default()` |
+| Hook you want to disable | Sentinel value                                                                                     |
+| ------------------------ | -------------------------------------------------------------------------------------------------- |
+| No validation            | `ValidationSpec::Disabled` (SDK: `{ disabled: {} }`)                                               |
+| No forward               | `forward_config.instruction_constraint.program_id == PublicKey.default` (static getter, no parens) |
 
 The SDK accepts `{ disabled: {} }` as the `ValidationSpec` for both `preValidation` and `postValidation`. When forward is disabled, `instruction_constraint.data_checks` should be empty and `input_mint` must equal `output_mint` (no conversion step — it's a same-mint pull → sweep).
 
@@ -55,7 +65,7 @@ The SDK accepts `{ disabled: {} }` as the `ValidationSpec` for both `preValidati
 
 ## Where to next
 
-- [SDK surface](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `getCreateComposablePolicyInstruction`, `executeComposable`, `ForwardConfig`, `ValidationSpec`.
+- [SDK surface](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `getCreateComposablePolicyInstruction`, `executeComposable`, `changeComposableStatus`, `ForwardConfig`, `ValidationSpec`.
 - [Lighthouse facade](https://docs.tributary.so/integration-guide/programmable-pull-payments/lighthouse-facade/index.md) — build assertions with `lighthouse.tokenAccount(ata).amount(threshold, "<").build()`.
 - Examples: [Auto-topup guard](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/auto-topup-guard/index.md) · [Swap & deliver](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/swap-and-deliver/index.md) · [Native SOL topup](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/native-sol-topup/index.md).
 - Deep technical reference → [Protocol Reference → Composable Policy](https://docs.tributary.so/protocol-reference/composable-policy/overview/index.md).

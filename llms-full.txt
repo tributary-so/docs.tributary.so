@@ -563,6 +563,3825 @@ ______________________________________________________________________
 | Production        | <https://api.tributary.so> |
 | Local development | <http://localhost:3002>    |
 
+## Webhooks
+
+______________________________________________________________________
+
+### POST /v1/webhooks
+
+Register a webhook
+
+Description
+
+Creates a new webhook subscription for a gateway.
+
+**Request body**
+
+```json
+{
+    "gateway_pubkey": "string",
+    "endpoint_url": "string",
+    "active": true
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the request body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "gateway_pubkey",
+        "endpoint_url"
+    ],
+    "properties": {
+        "gateway_pubkey": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 44,
+            "description": "Gateway authority public key."
+        },
+        "endpoint_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "HTTPS (or HTTP) URL Tributary will POST events to."
+        },
+        "active": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether the webhook is active immediately."
+        }
+    }
+}
+```
+
+**Responses**
+
+```json
+{
+    "id": 1,
+    "gateway_pubkey": "string",
+    "endpoint_url": "string",
+    "active": true,
+    "created_at": "2022-04-13T15:42:05.901Z",
+    "updated_at": "2022-04-13T15:42:05.901Z"
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "id",
+        "gateway_pubkey",
+        "endpoint_url",
+        "active"
+    ],
+    "properties": {
+        "id": {
+            "type": "integer",
+            "example": 1
+        },
+        "gateway_pubkey": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 44,
+            "description": "Gateway authority public key."
+        },
+        "endpoint_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Webhook target URL."
+        },
+        "active": {
+            "type": "boolean",
+            "example": true
+        },
+        "created_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "date-time"
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/webhooks
+
+List webhooks
+
+Description
+
+Returns all webhooks, optionally filtered to active only and paginated.
+
+**Input parameters**
+
+| Parameter     | In    | Type    | Default | Nullable | Description                               |
+| ------------- | ----- | ------- | ------- | -------- | ----------------------------------------- |
+| `active_only` | query | boolean | False   | No       | When `true`, return only active webhooks. |
+| `limit`       | query | integer |         | No       |                                           |
+| `offset`      | query | integer |         | No       |                                           |
+
+**Responses**
+
+```json
+[
+    {
+        "id": 1,
+        "gateway_pubkey": "string",
+        "endpoint_url": "string",
+        "active": true,
+        "created_at": "2022-04-13T15:42:05.901Z",
+        "updated_at": "2022-04-13T15:42:05.901Z"
+    }
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "$ref": "#/components/schemas/Webhook"
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/webhooks/gateway/{gatewayPubkey}
+
+List webhooks for a gateway
+
+Description
+
+Returns all webhooks registered for the given gateway.
+
+**Input parameters**
+
+| Parameter       | In    | Type    | Default | Nullable | Description |
+| --------------- | ----- | ------- | ------- | -------- | ----------- |
+| `active_only`   | query | boolean | False   | No       |             |
+| `gatewayPubkey` | path  | string  |         | No       |             |
+
+**Responses**
+
+```json
+[
+    {
+        "id": 1,
+        "gateway_pubkey": "string",
+        "endpoint_url": "string",
+        "active": true,
+        "created_at": "2022-04-13T15:42:05.901Z",
+        "updated_at": "2022-04-13T15:42:05.901Z"
+    }
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "$ref": "#/components/schemas/Webhook"
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### DELETE /v1/webhooks/gateway/{gatewayPubkey}
+
+Delete all webhooks for a gateway
+
+**Input parameters**
+
+| Parameter       | In   | Type   | Default | Nullable | Description |
+| --------------- | ---- | ------ | ------- | -------- | ----------- |
+| `gatewayPubkey` | path | string |         | No       |             |
+
+**Responses**
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/webhooks/{id}
+
+Get a webhook by ID
+
+**Input parameters**
+
+| Parameter | In   | Type    | Default | Nullable | Description |
+| --------- | ---- | ------- | ------- | -------- | ----------- |
+| `id`      | path | integer |         | No       |             |
+
+**Responses**
+
+```json
+{
+    "id": 1,
+    "gateway_pubkey": "string",
+    "endpoint_url": "string",
+    "active": true,
+    "created_at": "2022-04-13T15:42:05.901Z",
+    "updated_at": "2022-04-13T15:42:05.901Z"
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "id",
+        "gateway_pubkey",
+        "endpoint_url",
+        "active"
+    ],
+    "properties": {
+        "id": {
+            "type": "integer",
+            "example": 1
+        },
+        "gateway_pubkey": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 44,
+            "description": "Gateway authority public key."
+        },
+        "endpoint_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Webhook target URL."
+        },
+        "active": {
+            "type": "boolean",
+            "example": true
+        },
+        "created_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "date-time"
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### PUT /v1/webhooks/{id}
+
+Toggle a webhook's active flag
+
+**Input parameters**
+
+| Parameter | In   | Type    | Default | Nullable | Description |
+| --------- | ---- | ------- | ------- | -------- | ----------- |
+| `id`      | path | integer |         | No       |             |
+
+**Request body**
+
+```json
+{
+    "active": true
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the request body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "active"
+    ],
+    "properties": {
+        "active": {
+            "type": "boolean"
+        }
+    }
+}
+```
+
+**Responses**
+
+```json
+{
+    "id": 1,
+    "gateway_pubkey": "string",
+    "endpoint_url": "string",
+    "active": true,
+    "created_at": "2022-04-13T15:42:05.901Z",
+    "updated_at": "2022-04-13T15:42:05.901Z"
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "id",
+        "gateway_pubkey",
+        "endpoint_url",
+        "active"
+    ],
+    "properties": {
+        "id": {
+            "type": "integer",
+            "example": 1
+        },
+        "gateway_pubkey": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 44,
+            "description": "Gateway authority public key."
+        },
+        "endpoint_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Webhook target URL."
+        },
+        "active": {
+            "type": "boolean",
+            "example": true
+        },
+        "created_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "date-time"
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### DELETE /v1/webhooks/{id}
+
+Delete a webhook
+
+**Input parameters**
+
+| Parameter | In   | Type    | Default | Nullable | Description |
+| --------- | ---- | ------- | ------- | -------- | ----------- |
+| `id`      | path | integer |         | No       |             |
+
+**Responses**
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+## Tokens
+
+______________________________________________________________________
+
+### POST /v1/tokens/issue
+
+Issue a short-lived JWT
+
+Description
+
+Validates that the caller has an active payment policy (any of the 5 PolicyType variants: Subscription, Milestone, PayAsYouGo, OneTime, UpTo) OR a recent payment transaction signature, and issues a JWT bound to the caller's wallet. The token carries a `policies[]` array of discriminated `PolicyClaim` objects (authorization proof) and a `lastPayments[]` array of recent `PaymentRecord` objects (payment proof). Consumers decide which aspect to require. Rate-limited to 200 requests per minute per wallet.
+
+**Request body**
+
+```json
+{
+    "walletPublicKey": "string",
+    "tokenMint": "string",
+    "policyAddress": "string",
+    "recipient": "string",
+    "transactionSignature": "string",
+    "trackingId": "string"
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the request body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "walletPublicKey": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 44,
+            "description": "Caller wallet public key (required unless `transactionSignature` is supplied)."
+        },
+        "tokenMint": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 44,
+            "description": "SPL token mint of the subscription."
+        },
+        "policyAddress": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 44,
+            "description": "Specific payment policy address."
+        },
+        "recipient": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 44,
+            "description": "Recipient wallet public key."
+        },
+        "transactionSignature": {
+            "type": "string",
+            "pattern": "^[1-9A-HJ-NP-Za-km-z]{87,88}$",
+            "description": "Base58 transaction signature of a recent payment."
+        },
+        "trackingId": {
+            "type": "string",
+            "description": "Checkout tracking ID."
+        }
+    }
+}
+```
+
+**Responses**
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "description": "Token bundle (shape defined by the token issuer service)."
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+## Subscriptions
+
+______________________________________________________________________
+
+### GET /v1/subscriptions
+
+Look up subscription details
+
+Description
+
+Returns matching subscription policy records. Provide at least one filter (up to three combined). If `walletPublicKey` is given, `tokenMint` is also required.
+
+**Input parameters**
+
+| Parameter          | In    | Type   | Default | Nullable | Description                                    |
+| ------------------ | ----- | ------ | ------- | -------- | ---------------------------------------------- |
+| `gatewayPublicKey` | query | string |         | No       | Gateway authority public key.                  |
+| `recipient`        | query | string |         | No       | Recipient wallet public key.                   |
+| `tokenMint`        | query | string |         | No       | SPL token mint. Defaults to USDC when omitted. |
+| `trackingId`       | query | string |         | No       | Tracking ID assigned at checkout.              |
+| `userPublicKey`    | query | string |         | No       | User (owner) wallet public key.                |
+| `walletPublicKey`  | query | string |         | No       | User wallet public key (requires `tokenMint`). |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": [
+        {}
+    ],
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "success",
+        "data",
+        "timestamp"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "Subscription policy record (gateway, recipient, schedule, status)."
+            }
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch ms."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+## Skill
+
+______________________________________________________________________
+
+### GET /v1/skill/{encoded}
+
+Generate Lando skill markdown
+
+Description
+
+Decodes a base64-encoded checkout session, fetches mint decimals on-chain, converts the human-readable amount to its integer representation, and renders a `text/markdown` skill document the Lando agent uses to drive the subscription checkout.
+
+**Input parameters**
+
+| Parameter | In   | Type   | Default | Nullable | Description                                                                  |
+| --------- | ---- | ------ | ------- | -------- | ---------------------------------------------------------------------------- |
+| `encoded` | path | string |         | No       | Base64-encoded subscription parameters produced by `CheckoutSessionManager`. |
+
+**Responses**
+
+```json
+"string"
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "string"
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+## Pools
+
+______________________________________________________________________
+
+### GET /v1/pools/search
+
+Free-text search for liquidity pools
+
+Description
+
+Searches the cached pool index (Raydium, Whirlpool, and the Meteora live proxy) by token symbol/name/mint. Returns ranked REAL pools (stars DESC, tvl DESC) with token identity, fees, and tier-1 trust flags. Used by the Mill to resolve a template's `lane` to a concrete pool address. On error, returns `200` with `results: []` (ADR-0028 D3: empty, not 500). Redis-cached per (q, venue, limit). Rate-limited to 120 requests/min/IP.
+
+**Input parameters**
+
+| Parameter | In    | Type    | Default | Nullable | Description                                       |
+| --------- | ----- | ------- | ------- | -------- | ------------------------------------------------- |
+| `limit`   | query | integer | 20      | No       | Max results.                                      |
+| `q`       | query | string  |         | No       | Free-text query (symbol, name, or mint).          |
+| `venue`   | query | string  |         | No       | Restrict to one venue. Omit to search all venues. |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": {
+        "query": "string",
+        "venue": "string",
+        "results": [
+            {
+                "address": "string",
+                "venue": "meteora",
+                "tokenX": {
+                    "mint": "string",
+                    "symbol": "string",
+                    "decimals": 0,
+                    "logoUri": "string",
+                    "tier": "string"
+                },
+                "tokenY": {
+                    "mint": "string",
+                    "symbol": "string",
+                    "decimals": 0,
+                    "logoUri": "string",
+                    "tier": "string"
+                },
+                "tvl": 10.12,
+                "feeRate": 10.12,
+                "stars": 0,
+                "tier1": true,
+                "extras": {}
+            }
+        ]
+    },
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string"
+                },
+                "venue": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "address": {
+                                "type": "string",
+                                "description": "Pool base58 address."
+                            },
+                            "venue": {
+                                "type": "string",
+                                "enum": [
+                                    "meteora",
+                                    "raydium",
+                                    "whirlpool"
+                                ]
+                            },
+                            "tokenX": {
+                                "type": "object",
+                                "properties": {
+                                    "mint": {
+                                        "type": "string"
+                                    },
+                                    "symbol": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "decimals": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "logoUri": {
+                                        "type": "string",
+                                        "format": "uri",
+                                        "nullable": true
+                                    },
+                                    "tier": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "description": "tokens.xyz trust tier."
+                                    }
+                                }
+                            },
+                            "tokenY": {
+                                "type": "object",
+                                "properties": {
+                                    "mint": {
+                                        "type": "string"
+                                    },
+                                    "symbol": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "decimals": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "logoUri": {
+                                        "type": "string",
+                                        "format": "uri",
+                                        "nullable": true
+                                    },
+                                    "tier": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                }
+                            },
+                            "tvl": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "USD TVL."
+                            },
+                            "feeRate": {
+                                "type": "number",
+                                "nullable": true
+                            },
+                            "stars": {
+                                "type": "integer",
+                                "description": "Trust ranking (0-5)."
+                            },
+                            "tier1": {
+                                "type": "boolean",
+                                "description": "tokens.xyz tier-1 flag."
+                            },
+                            "extras": {
+                                "type": "object",
+                                "description": "Venue-specific payload."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "timestamp": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+## PaymentPolicies
+
+______________________________________________________________________
+
+### GET /v1/payment-policies
+
+List payment policies
+
+Description
+
+Returns matching PaymentPolicy records. Provide at least one filter (up to three combined). If `walletPublicKey` is given, `tokenMint` is also required. Response shape mirrors `/v1/subscriptions`.
+
+**Input parameters**
+
+| Parameter          | In    | Type   | Default | Nullable | Description                                    |
+| ------------------ | ----- | ------ | ------- | -------- | ---------------------------------------------- |
+| `gatewayPublicKey` | query | string |         | No       | Gateway authority public key.                  |
+| `recipient`        | query | string |         | No       | Recipient wallet public key.                   |
+| `tokenMint`        | query | string |         | No       | SPL token mint. Defaults to USDC when omitted. |
+| `trackingId`       | query | string |         | No       | Tracking ID assigned at checkout (memo).       |
+| `userPublicKey`    | query | string |         | No       | User payment PDA public key.                   |
+| `walletPublicKey`  | query | string |         | No       | User wallet public key (requires `tokenMint`). |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": [
+        {}
+    ],
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "success",
+        "data",
+        "timestamp"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "Payment policy record (variant, schedule, gateway, recipient, status)."
+            }
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch ms."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/payment-policies/{address}
+
+Get a single payment policy
+
+Description
+
+Fetches a PaymentPolicy account directly from RPC by its on-chain address (PDA).
+
+**Input parameters**
+
+| Parameter | In   | Type   | Default | Nullable | Description                          |
+| --------- | ---- | ------ | ------- | -------- | ------------------------------------ |
+| `address` | path | string |         | No       | PaymentPolicy account address (PDA). |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": {},
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "success",
+        "data",
+        "timestamp"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "object",
+            "description": "Normalized payment policy record."
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch ms."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/payment-policies/{address}/executions
+
+Payment execution history for a policy
+
+Description
+
+Returns PaymentRecord events emitted for the given PaymentPolicy, newest first. Paginated via `limit` (default 100) and `offset` (default 0).
+
+**Input parameters**
+
+| Parameter | In    | Type    | Default | Nullable | Description                          |
+| --------- | ----- | ------- | ------- | -------- | ------------------------------------ |
+| `address` | path  | string  |         | No       | PaymentPolicy account address (PDA). |
+| `limit`   | query | integer | 100     | No       | Maximum records to return.           |
+| `offset`  | query | integer | 0       | No       | Number of records to skip.           |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": [
+        {}
+    ],
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "success",
+        "data",
+        "timestamp"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "A PaymentRecord event (signature, slot, timestamp, amount, gateway)."
+            }
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch ms."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+## OneTime
+
+______________________________________________________________________
+
+### GET /v1/onetime/{trackingId}
+
+Look up one-time payment
+
+Description
+
+Returns one-time payment records for a tracking ID. Optionally filter by recipient and paginate with `limit` / `offset`.
+
+**Input parameters**
+
+| Parameter    | In    | Type    | Default | Nullable | Description                            |
+| ------------ | ----- | ------- | ------- | -------- | -------------------------------------- |
+| `limit`      | query | integer | 100     | No       | Maximum records to return.             |
+| `offset`     | query | integer | 0       | No       | Number of records to skip.             |
+| `recipient`  | query | string  |         | No       | Filter by recipient wallet public key. |
+| `trackingId` | path  | string  |         | No       | Tracking ID assigned at checkout.      |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": null,
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "success",
+        "data",
+        "timestamp"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "oneOf": [
+                {
+                    "type": "object",
+                    "description": "Single record (when exactly one matches)."
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    },
+                    "description": "Multiple records."
+                }
+            ]
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch ms."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+## JWKS
+
+______________________________________________________________________
+
+### GET /v1/jwks
+
+JWKS (mounted under /.well-known too)
+
+Description
+
+Returns the JSON Web Key Set used to verify JWTs issued by `/v1/tokens/issue`. Cached publicly for 1 hour. Also served at `/.well-known/jwks.json` for OIDC-style discovery.
+
+**Responses**
+
+```json
+{
+    "keys": [
+        {}
+    ]
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "keys"
+    ],
+    "properties": {
+        "keys": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "JWK (RFC 7517) — kid, kty, alg, use, crv, x, y."
+            }
+        }
+    }
+}
+```
+
+**Response headers**
+
+| Name            | Description | Schema |
+| --------------- | ----------- | ------ |
+| `Cache-Control` |             | string |
+
+## Health
+
+______________________________________________________________________
+
+### GET /v1/health
+
+Health check
+
+Description
+
+Returns service liveness, name, and version.
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": {
+        "status": "ok",
+        "service": "tributary-api",
+        "version": "1.9.0"
+    },
+    "timestamp": 1719300000000
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "success",
+        "data",
+        "timestamp"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "status",
+                "service",
+                "version"
+            ],
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "ok"
+                },
+                "service": {
+                    "type": "string",
+                    "example": "tributary-api"
+                },
+                "version": {
+                    "type": "string",
+                    "example": "1.9.0"
+                }
+            }
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds.",
+            "example": 1719300000000
+        }
+    }
+}
+```
+
+## GatewayAuth
+
+______________________________________________________________________
+
+### POST /v1/gateway/{gateway}/auth/challenge
+
+Request a sign-in challenge
+
+**Input parameters**
+
+| Parameter | In   | Type   | Default | Nullable | Description |
+| --------- | ---- | ------ | ------- | -------- | ----------- |
+| `gateway` | path | string |         | No       |             |
+
+**Responses**
+
+```json
+{
+    "nonce": "string",
+    "gateway": "string",
+    "expiresAt": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "nonce",
+        "gateway",
+        "expiresAt"
+    ],
+    "properties": {
+        "nonce": {
+            "type": "string"
+        },
+        "gateway": {
+            "type": "string"
+        },
+        "expiresAt": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### POST /v1/gateway/{gateway}/auth/verify
+
+Verify wallet signature and issue a gateway JWT
+
+**Input parameters**
+
+| Parameter | In   | Type   | Default | Nullable | Description |
+| --------- | ---- | ------ | ------- | -------- | ----------- |
+| `gateway` | path | string |         | No       |             |
+
+**Request body**
+
+```json
+{
+    "signer": "string",
+    "signature": [
+        0
+    ]
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the request body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "signer",
+        "signature"
+    ],
+    "properties": {
+        "signer": {
+            "type": "string",
+            "description": "Base58 wallet pubkey"
+        },
+        "signature": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            },
+            "description": "64-byte ed25519 signature over the nonce bytes"
+        }
+    }
+}
+```
+
+**Responses**
+
+```json
+{
+    "token": "string",
+    "expiresIn": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string"
+        },
+        "expiresIn": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+## GatewayMerchant
+
+______________________________________________________________________
+
+### GET /v1/gateway/{gateway}/merchant/policies
+
+List policies under a gateway
+
+**Input parameters**
+
+| Parameter    | In     | Type    | Default | Nullable | Description |
+| ------------ | ------ | ------- | ------- | -------- | ----------- |
+| `bearerAuth` | header | string  | N/A     | No       |             |
+| `gateway`    | path   | string  |         | No       |             |
+| `limit`      | query  | integer | 100     | No       |             |
+| `offset`     | query  | integer | 0       | No       |             |
+
+**Responses**
+
+```json
+{
+    "items": [
+        {}
+    ],
+    "total": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "items": {
+            "type": "array",
+            "items": {
+                "type": "object"
+            }
+        },
+        "total": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+## Events
+
+______________________________________________________________________
+
+### GET /v1/events
+
+Query on-chain events
+
+Description
+
+Polymorphic event lookup. Exactly one filter mode is applied per request, evaluated in this priority order: `signature` → `slot` → `trackingId` → `eventName` → `startTime`/`endTime`. If none match, a generic `searchEvents` is run.
+
+**Input parameters**
+
+| Parameter    | In    | Type    | Default | Nullable | Description                                                   |
+| ------------ | ----- | ------- | ------- | -------- | ------------------------------------------------------------- |
+| `endTime`    | query | string  |         | No       |                                                               |
+| `eventName`  | query | string  |         | No       | Event name filter.                                            |
+| `limit`      | query | integer | 100     | No       |                                                               |
+| `maxSlot`    | query | integer |         | No       |                                                               |
+| `minSlot`    | query | integer |         | No       |                                                               |
+| `offset`     | query | integer | 0       | No       |                                                               |
+| `signature`  | query | string  |         | No       | Transaction signature (returns a single event or 404).        |
+| `slot`       | query | integer |         | No       | Solana slot number.                                           |
+| `startTime`  | query | string  |         | No       |                                                               |
+| `trackingId` | query | string  |         | No       | Encoded memo tracking ID (matched via 64-byte memo encoding). |
+
+**Responses**
+
+Schema of the response body
+
+```json
+{
+    "oneOf": [
+        {
+            "type": "object",
+            "description": "Single event (when `signature` is supplied)."
+        },
+        {
+            "type": "array",
+            "items": {
+                "type": "object"
+            },
+            "description": "Event list."
+        }
+    ]
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/count
+
+Count events
+
+Description
+
+Returns a count of events optionally filtered by name and/or time range.
+
+**Input parameters**
+
+| Parameter   | In    | Type   | Default | Nullable | Description |
+| ----------- | ----- | ------ | ------- | -------- | ----------- |
+| `endTime`   | query | string |         | No       |             |
+| `eventName` | query | string |         | No       |             |
+| `startTime` | query | string |         | No       |             |
+
+**Responses**
+
+```json
+{
+    "count": 42
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "count"
+    ],
+    "properties": {
+        "count": {
+            "type": "integer",
+            "example": 42
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/names
+
+All known event names
+
+Description
+
+Returns the distinct set of event names indexed in the database.
+
+**Responses**
+
+```json
+[
+    "string"
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "string"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/names/tributary
+
+Tributary event names
+
+Description
+
+Returns the canonical set of event names emitted by the Tributary program.
+
+**Responses**
+
+```json
+[
+    "string"
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "string"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/payments
+
+Payment records
+
+Description
+
+Returns `PaymentRecord` events optionally filtered by gateway and/or policy.
+
+**Input parameters**
+
+| Parameter       | In    | Type    | Default | Nullable | Description |
+| --------------- | ----- | ------- | ------- | -------- | ----------- |
+| `gateway`       | query | string  |         | No       |             |
+| `limit`         | query | integer | 100     | No       |             |
+| `offset`        | query | integer | 0       | No       |             |
+| `paymentPolicy` | query | string  |         | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/payments/stats
+
+Payment statistics
+
+Description
+
+Aggregated payment statistics (count, volume) optionally filtered by gateway and/or time range.
+
+**Input parameters**
+
+| Parameter   | In    | Type   | Default | Nullable | Description |
+| ----------- | ----- | ------ | ------- | -------- | ----------- |
+| `endTime`   | query | string |         | No       |             |
+| `gateway`   | query | string |         | No       |             |
+| `startTime` | query | string |         | No       |             |
+
+**Responses**
+
+Schema of the response body
+
+```json
+{
+    "type": "object"
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/policies/created
+
+PolicyCreated events
+
+Description
+
+Returns `PaymentPolicyCreated` events.
+
+**Input parameters**
+
+| Parameter     | In    | Type    | Default | Nullable | Description |
+| ------------- | ----- | ------- | ------- | -------- | ----------- |
+| `gateway`     | query | string  |         | No       |             |
+| `limit`       | query | integer | 100     | No       |             |
+| `offset`      | query | integer | 0       | No       |             |
+| `recipient`   | query | string  |         | No       |             |
+| `userPayment` | query | string  |         | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/policies/deleted
+
+PolicyDeleted events
+
+**Input parameters**
+
+| Parameter       | In    | Type    | Default | Nullable | Description |
+| --------------- | ----- | ------- | ------- | -------- | ----------- |
+| `limit`         | query | integer | 100     | No       |             |
+| `offset`        | query | integer | 0       | No       |             |
+| `owner`         | query | string  |         | No       |             |
+| `paymentPolicy` | query | string  |         | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/policies/status-changed
+
+PolicyStatusChanged events
+
+**Input parameters**
+
+| Parameter       | In    | Type    | Default | Nullable | Description |
+| --------------- | ----- | ------- | ------- | -------- | ----------- |
+| `limit`         | query | integer | 100     | No       |             |
+| `offset`        | query | integer | 0       | No       |             |
+| `paymentPolicy` | query | string  |         | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/gateways/created
+
+GatewayCreated events
+
+**Input parameters**
+
+| Parameter   | In    | Type    | Default | Nullable | Description |
+| ----------- | ----- | ------- | ------- | -------- | ----------- |
+| `authority` | query | string  |         | No       |             |
+| `limit`     | query | integer | 100     | No       |             |
+| `offset`    | query | integer | 0       | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/gateways/deleted
+
+GatewayDeleted events
+
+**Input parameters**
+
+| Parameter   | In    | Type    | Default | Nullable | Description |
+| ----------- | ----- | ------- | ------- | -------- | ----------- |
+| `authority` | query | string  |         | No       |             |
+| `gateway`   | query | string  |         | No       |             |
+| `limit`     | query | integer | 100     | No       |             |
+| `offset`    | query | integer | 0       | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/gateways/fee-bps-changed
+
+GatewayFeeBpsChanged events
+
+**Input parameters**
+
+| Parameter | In    | Type    | Default | Nullable | Description |
+| --------- | ----- | ------- | ------- | -------- | ----------- |
+| `gateway` | query | string  |         | No       |             |
+| `limit`   | query | integer | 100     | No       |             |
+| `offset`  | query | integer | 0       | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/gateways/fee-recipient-changed
+
+GatewayFeeRecipientChanged events
+
+**Input parameters**
+
+| Parameter | In    | Type    | Default | Nullable | Description |
+| --------- | ----- | ------- | ------- | -------- | ----------- |
+| `gateway` | query | string  |         | No       |             |
+| `limit`   | query | integer | 100     | No       |             |
+| `offset`  | query | integer | 0       | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/gateways/signer-changed
+
+GatewaySignerChanged events
+
+**Input parameters**
+
+| Parameter | In    | Type    | Default | Nullable | Description |
+| --------- | ----- | ------- | ------- | -------- | ----------- |
+| `gateway` | query | string  |         | No       |             |
+| `limit`   | query | integer | 100     | No       |             |
+| `offset`  | query | integer | 0       | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/referrals/rewards
+
+ReferralRewardDistributed events
+
+**Input parameters**
+
+| Parameter       | In    | Type    | Default | Nullable | Description |
+| --------------- | ----- | ------- | ------- | -------- | ----------- |
+| `gateway`       | query | string  |         | No       |             |
+| `limit`         | query | integer | 100     | No       |             |
+| `offset`        | query | integer | 0       | No       |             |
+| `paymentPolicy` | query | string  |         | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/user-payments/created
+
+UserPaymentCreated events
+
+**Input parameters**
+
+| Parameter   | In    | Type    | Default | Nullable | Description |
+| ----------- | ----- | ------- | ------- | -------- | ----------- |
+| `limit`     | query | integer | 100     | No       |             |
+| `offset`    | query | integer | 0       | No       |             |
+| `owner`     | query | string  |         | No       |             |
+| `tokenMint` | query | string  |         | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/program/config-created
+
+ProgramConfigCreated events
+
+**Input parameters**
+
+| Parameter | In    | Type    | Default | Nullable | Description |
+| --------- | ----- | ------- | ------- | -------- | ----------- |
+| `admin`   | query | string  |         | No       |             |
+| `limit`   | query | integer | 100     | No       |             |
+| `offset`  | query | integer | 0       | No       |             |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/events/typed/{eventName}
+
+Typed event lookup
+
+Description
+
+Returns strongly-typed events for the given Tributary event name.
+
+**Input parameters**
+
+| Parameter   | In    | Type    | Default | Nullable | Description                                              |
+| ----------- | ----- | ------- | ------- | -------- | -------------------------------------------------------- |
+| `eventName` | path  | string  |         | No       | Tributary event name (see `/v1/events/names/tributary`). |
+| `limit`     | query | integer | 100     | No       |                                                          |
+| `offset`    | query | integer | 0       | No       |                                                          |
+
+**Responses**
+
+```json
+[
+    {}
+]
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "array",
+    "items": {
+        "type": "object"
+    }
+}
+```
+
+## ComposablePolicies
+
+______________________________________________________________________
+
+### GET /v1/composable-policies
+
+List composable policies
+
+Description
+
+Returns matching ComposablePolicy records. Provide at least one filter (up to three combined). If `walletPublicKey` is given, `tokenMint` is also required.
+
+**Input parameters**
+
+| Parameter          | In    | Type   | Default | Nullable | Description                                    |
+| ------------------ | ----- | ------ | ------- | -------- | ---------------------------------------------- |
+| `gatewayPublicKey` | query | string |         | No       | Gateway authority public key.                  |
+| `recipient`        | query | string |         | No       | Recipient wallet public key.                   |
+| `tokenMint`        | query | string |         | No       | SPL token mint. Defaults to USDC when omitted. |
+| `trackingId`       | query | string |         | No       | Tracking ID (32-byte memo).                    |
+| `userPublicKey`    | query | string |         | No       | User payment PDA public key.                   |
+| `walletPublicKey`  | query | string |         | No       | User wallet public key (requires `tokenMint`). |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": [
+        {}
+    ],
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "success",
+        "data",
+        "timestamp"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "Normalized composable policy record."
+            }
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch ms."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/composable-policies/{address}
+
+Get a single composable policy
+
+Description
+
+Fetches a ComposablePolicy account directly from RPC by its on-chain address (PDA).
+
+**Input parameters**
+
+| Parameter | In   | Type   | Default | Nullable | Description                             |
+| --------- | ---- | ------ | ------- | -------- | --------------------------------------- |
+| `address` | path | string |         | No       | ComposablePolicy account address (PDA). |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": {},
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "success",
+        "data",
+        "timestamp"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "object",
+            "description": "Normalized composable policy record."
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch ms."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/composable-policies/{address}/executions
+
+Composable execution history for a policy
+
+Description
+
+Returns ComposableExecuted events emitted for the given ComposablePolicy, newest first. Paginated via `limit` (default 100) and `offset` (default 0).
+
+**Input parameters**
+
+| Parameter | In    | Type    | Default | Nullable | Description                             |
+| --------- | ----- | ------- | ------- | -------- | --------------------------------------- |
+| `address` | path  | string  |         | No       | ComposablePolicy account address (PDA). |
+| `limit`   | query | integer | 100     | No       | Maximum records to return.              |
+| `offset`  | query | integer | 0       | No       | Number of records to skip.              |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": [
+        {}
+    ],
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "success",
+        "data",
+        "timestamp"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "A ComposableExecuted event (signature, slot, timestamp, input/output amounts, fees)."
+            }
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch ms."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+## Assets
+
+______________________________________________________________________
+
+### GET /v1/assets/search
+
+Search the tokenized-asset catalog
+
+Description
+
+Server-side proxy to tokens.xyz `/assets/search`. Injects the upstream `x-api-key`; the browser never sees it. Returns a slim projection filtered to assets that carry a usable Solana SPL mint (no mint = no token account = no Tributary payment). On upstream error, returns `200` with `results: []` (empty state, not error state). Redis-cached per-query for 60s. Rate-limited to 120 requests/min/IP.
+
+**Input parameters**
+
+| Parameter | In    | Type    | Default | Nullable | Description                               |
+| --------- | ----- | ------- | ------- | -------- | ----------------------------------------- |
+| `limit`   | query | integer | 20      | No       | Max results.                              |
+| `q`       | query | string  |         | No       | Search query (symbol, name, or asset id). |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": {
+        "query": "string",
+        "results": [
+            null
+        ]
+    },
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/AssetSearchResult"
+                    }
+                }
+            }
+        },
+        "timestamp": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+______________________________________________________________________
+
+### GET /v1/assets/resolve
+
+Resolve a mint to asset metadata
+
+Description
+
+Server-side proxy to tokens.xyz `/assets/resolve`. Injects the upstream `x-api-key`. On upstream failure, falls back to the baked-in `MINT_OVERRIDES` map (USDC, SOL, USDT, mSOL, devnet USDC) so account balances never render as truncated mints. Redis-cached per-mint for 10min. Rate-limited to 120/min/IP.
+
+**Input parameters**
+
+| Parameter | In    | Type   | Default | Nullable | Description         |
+| --------- | ----- | ------ | ------- | -------- | ------------------- |
+| `mint`    | query | string |         | No       | Solana base58 mint. |
+
+**Responses**
+
+```json
+{
+    "success": true,
+    "data": {
+        "mint": "string",
+        "assetId": "string",
+        "symbol": "string",
+        "name": "string",
+        "decimals": 0,
+        "imageUrl": "string",
+        "category": "string",
+        "tier": "string"
+    },
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": true
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "mint",
+                "assetId",
+                "symbol",
+                "name",
+                "decimals",
+                "imageUrl",
+                "category"
+            ],
+            "properties": {
+                "mint": {
+                    "type": "string",
+                    "description": "Solana base58 mint."
+                },
+                "assetId": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "symbol": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Token symbol, or null when no source (tokens.xyz/venue/on-chain) provides one; clients render a fallback."
+                },
+                "name": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "decimals": {
+                    "type": "integer",
+                    "nullable": true
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "format": "uri",
+                    "nullable": true
+                },
+                "category": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "tier": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "tokens.xyz trust tier."
+                }
+            }
+        },
+        "timestamp": {
+            "type": "integer"
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+## Admin
+
+______________________________________________________________________
+
+### POST /v1/admin/keys/rotate
+
+Rotate the JWT signing key
+
+Description
+
+Generates a new signing key, promotes it as active, and keeps the previous key in the JWKS for a grace period so in-flight tokens continue to validate. Requires the `x-admin-key` header.
+
+**Input parameters**
+
+| Parameter     | In     | Type   | Default | Nullable | Description                                          |
+| ------------- | ------ | ------ | ------- | -------- | ---------------------------------------------------- |
+| `AdminApiKey` | header | string | N/A     | No       | Admin API key (ADMIN_API_KEY env var on the server). |
+
+**Responses**
+
+```json
+{
+    "message": "Key rotated successfully",
+    "newKid": "string",
+    "oldKid": "string",
+    "gracePeriodEndsAt": "2022-04-13T15:42:05.901Z"
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "message",
+        "newKid",
+        "oldKid",
+        "gracePeriodEndsAt"
+    ],
+    "properties": {
+        "message": {
+            "type": "string",
+            "example": "Key rotated successfully"
+        },
+        "newKid": {
+            "type": "string",
+            "description": "New active key ID."
+        },
+        "oldKid": {
+            "type": "string",
+            "description": "Previous key ID (still in JWKS during grace)."
+        },
+        "gracePeriodEndsAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp after which the old key is retired."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
+```json
+{
+    "success": false,
+    "error": "string",
+    "timestamp": 0
+}
+```
+
+⚠️ *This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.*
+
+Schema of the response body
+
+```json
+{
+    "type": "object",
+    "required": [
+        "error"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean",
+            "example": false
+        },
+        "error": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds."
+        }
+    }
+}
+```
+
 ______________________________________________________________________
 
 ## Schemas
@@ -1181,7 +5000,7 @@ ForwardConfig
 └── forwardFlags: u8                  ← bit0 = native SOL unwrap
 ```
 
-Currently `ALLOWED_FORWARD_PROGRAMS` contains only **Meteora DLMM** (`LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo`).
+Currently `ALLOWED_FORWARD_PROGRAMS` contains **Meteora DLMM**, **Raydium CPMM**, **Raydium CLMM**, and **Orca Whirlpool** (see ADR-0032 and `programs/tributary/src/constants.rs`).
 
 ## Step 1: Extract the discriminator
 
@@ -1191,7 +5010,7 @@ Every Anchor/SPL instruction starts with an 8-byte discriminator (the first 8 by
 import DLMM from "@meteora-ag/dlmm";
 
 const METEORA_DLMM_PUBKEY = new PublicKey(
-  "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+  "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
 );
 
 // Build the swap ix once with a dummy user — you only need the data layout
@@ -1217,7 +5036,10 @@ const forwardConfig = {
       { offset: 0, length: 0, expected: Buffer.alloc(8) }, // unused
     ],
     numPinnedAccounts: 0,
-    pinnedAccounts: [],
+    pinnedAccounts: [
+      { index: 0, pubkey: PublicKey.default },
+      { index: 0, pubkey: PublicKey.default },
+    ], // fixed-size [PinnedAccount; 2] — must have 2 entries even when unused
   },
   inputMint: USDC_MINT,
   outputMint: NATIVE_MINT,
@@ -1225,20 +5047,28 @@ const forwardConfig = {
 };
 ```
 
-### PinnedAccounts (optional)
+At least one pin required when forward is enabled
 
-If the forward instruction has accounts that must be a specific pubkey (e.g. the pool address), pin them by their **index** in the forward-account slice:
+A forward-enabled constraint with zero effective pins is rejected at create (`DegenerateForwardPins`). If you leave `numPinnedAccounts: 0`, you must also disable forward (`programId: PublicKey.default`). To enable forward without pinning a specific account, pin any required account (typically the pool) at its index — see below.
+
+### PinnedAccounts (required when forward is enabled)
+
+Pin specific pubkeys to specific slots in the forward-account slice. At least one pin must be active when `programId != PublicKey.default`:
 
 ```typescript
 // Suppose the DLMM pool is at index 2 in the swap instruction's accounts
 pinnedAccounts: [
   { index: 2, pubkey: DLMM_POOL },
-  // up to 2 pins total
+  { index: 0, pubkey: PublicKey.default }, // pad to [PinnedAccount; 2]
 ],
 numPinnedAccounts: 1,
 ```
 
 At execute time, Tributary checks `remaining_accounts[fwd_base + pin.index].pubkey == pin.pubkey` for each active pin. No duplicate indices allowed.
+
+### Cold-relayer safety net (ADR-0016)
+
+If the execute caller is not the gateway signer, the user, or the recipient (a "cold relayer" / pure scheduler), Tributary additionally requires **either** `post_validation` is `ProgramCall` **or** the forward constraint has at least one active pin (a "route pin"). This blocks the obvious "scheduler drains arbitrary output to its own ATA" attack. A bare PayAsYouGo policy with no validation and no pins is only executable by the trusted three.
 
 ## Step 3: The three settlement shapes
 
@@ -1273,7 +5103,7 @@ const execIxs = await sdk.executeComposable(
   composablePolicyPDA,
   Buffer.from(swapIx.data), // the raw instruction data (selector must match)
   new anchor.BN(amount), // pull amount (null for subscription)
-  remainingAccounts,
+  remainingAccounts
 );
 ```
 
@@ -1328,7 +5158,7 @@ const remaining = assembleComposableRemainingAccounts({
     composablePolicyPDA,
     policy.preValidation,
     validationProgramId,
-    "pre",
+    "pre"
   ),
   forwardAccounts: fwd.forwardAccounts,
   postTargets: await resolveValidationTargets(
@@ -1336,7 +5166,7 @@ const remaining = assembleComposableRemainingAccounts({
     composablePolicyPDA,
     policy.postValidation,
     validationProgramId,
-    "post",
+    "post"
   ),
 });
 
@@ -1344,7 +5174,7 @@ const execIxs = await sdk.executeComposable(
   composablePolicyPDA,
   fwd.instructionData,
   face,
-  remaining,
+  remaining
 );
 ```
 
@@ -1541,7 +5371,7 @@ const [execIx] = await sdk.executeComposable(
 A **ComposablePolicy** is a pull payment that runs two optional hooks **between** the pull and the settlement:
 
 1. **Validation** — a read-only on-chain assertion (via Lighthouse) that can veto the transaction if a condition isn't met.
-1. **Forward** — a token-transform step (via Meteora DLMM) that swaps the pulled input token into a different output token before delivery.
+1. **Forward** — a token-transform step (via Meteora DLMM, Raydium CPMM/CLMM, or Orca Whirlpool) that swaps the pulled input token into a different output token before delivery.
 
 Both hooks are **opt-in via sentinel values**. A composable policy with both disabled behaves like a `PaymentPolicy` but lives in its own PDA namespace and routes through an intermediate ATA hop. Both families reuse the same `PolicyType` enum (`Subscription` / `Milestone` / `PayAsYouGo`), the same `UserPayment` account, and the same fee-distribution logic.
 
@@ -1567,16 +5397,26 @@ Key invariants enforced on-chain:
 - **Intermediate ATAs are owned by the `ComposablePolicy` PDA**, not the `UserPayment` PDA. This decouples the intermediate signing authority from the user-source delegate — a forward program can only ever move transient intermediate balances, never the user's source funds.
 - **Signer sanitization**: validation and forward CPI builders do NOT forward `is_signer` from `remaining_accounts`. The fee payer (a Signer) cannot be re-passed to grant Lighthouse / DLMM unintended signer authority.
 - **Allowlists** (`programs/tributary/src/constants.rs`):
-- `ALLOWED_FORWARD_PROGRAMS` → Meteora DLMM (`LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo`)
+- `ALLOWED_FORWARD_PROGRAMS` → Meteora DLMM, Raydium CPMM, Raydium CLMM, Orca Whirlpool (4 entries)
 - `ALLOWED_VALIDATION_PROGRAMS` → Lighthouse (`L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95`)
 - **Emergency pause** (`ProgramConfig.emergency_pause`) blocks `execute_composable` just like `execute_payment`.
 
+## Settlement shapes — `output_mint` controls delivery
+
+| Shape                    | `output_mint`            | Forward  | Behaviour                                                           |
+| ------------------------ | ------------------------ | -------- | ------------------------------------------------------------------- |
+| **deliver-no-transform** | `== input_mint`          | disabled | Same-mint topup. Sweep `intermediate_input` → recipient.            |
+| **deliver-transform**    | concrete mint `!= input` | enabled  | Swap input → output, sweep output → recipient (`>0` guard kept).    |
+| **act mode**             | `Pubkey::default()`      | enabled  | Forward consumes input for non-fungible settlement (no output ATA). |
+
+See [forward-cpi-guide.md](https://docs.tributary.so/integration-guide/programmable-pull-payments/forward-cpi-guide/index.md) and ADR-0026 for details.
+
 ## The sentinel convention
 
-| Hook you want to disable | Sentinel value                                        |
-| ------------------------ | ----------------------------------------------------- |
-| No validation            | `ValidationSpec::Disabled` (SDK: `{ disabled: {} }`)  |
-| No forward               | `forward_config.target_program = PublicKey.default()` |
+| Hook you want to disable | Sentinel value                                                                                     |
+| ------------------------ | -------------------------------------------------------------------------------------------------- |
+| No validation            | `ValidationSpec::Disabled` (SDK: `{ disabled: {} }`)                                               |
+| No forward               | `forward_config.instruction_constraint.program_id == PublicKey.default` (static getter, no parens) |
 
 The SDK accepts `{ disabled: {} }` as the `ValidationSpec` for both `preValidation` and `postValidation`. When forward is disabled, `instruction_constraint.data_checks` should be empty and `input_mint` must equal `output_mint` (no conversion step — it's a same-mint pull → sweep).
 
@@ -1593,7 +5433,7 @@ The SDK accepts `{ disabled: {} }` as the `ValidationSpec` for both `preValidati
 
 ## Where to next
 
-- [SDK surface](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `getCreateComposablePolicyInstruction`, `executeComposable`, `ForwardConfig`, `ValidationSpec`.
+- [SDK surface](https://docs.tributary.so/integration-guide/programmable-pull-payments/sdk/index.md) — `getCreateComposablePolicyInstruction`, `executeComposable`, `changeComposableStatus`, `ForwardConfig`, `ValidationSpec`.
 - [Lighthouse facade](https://docs.tributary.so/integration-guide/programmable-pull-payments/lighthouse-facade/index.md) — build assertions with `lighthouse.tokenAccount(ata).amount(threshold, "<").build()`.
 - Examples: [Auto-topup guard](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/auto-topup-guard/index.md) · [Swap & deliver](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/swap-and-deliver/index.md) · [Native SOL topup](https://docs.tributary.so/integration-guide/programmable-pull-payments/examples/native-sol-topup/index.md).
 - Deep technical reference → [Protocol Reference → Composable Policy](https://docs.tributary.so/protocol-reference/composable-policy/overview/index.md).
@@ -2603,7 +6443,7 @@ Give an AI agent a capped USDC allowance. It can pull funds on-demand, but only 
 
 ```typescript
 import * as anchor from "@coral-xyz/anchor";
-import { PublicKey, Connection, Keypair } from "@solana/web3.js";
+import { PublicKey, Connection, Keypair, Transaction, sendAndConfirmTransaction } from "@solana/web3.js";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { Tributary, lighthouse, LIGHTHOUSE_PROGRAM_ID } from "@tributary-so/sdk";
 
@@ -2662,7 +6502,7 @@ const policyType = {
 // Forward disabled — same-mint (USDC → USDC), no swap
 const forwardConfig = {
   instructionConstraint: {
-    programId: PublicKey.default(), // sentinel: forward disabled
+    programId: PublicKey.default, // sentinel: forward disabled (static getter, no parens)
     numDataChecks: 0,
     dataChecks: Array(4).fill({
       offset: 0,
@@ -2670,10 +6510,13 @@ const forwardConfig = {
       expected: Buffer.alloc(8),
     }),
     numPinnedAccounts: 0,
-    pinnedAccounts: [],
+    pinnedAccounts: [
+      { index: 0, pubkey: PublicKey.default },
+      { index: 0, pubkey: PublicKey.default },
+    ], // fixed-size [PinnedAccount; 2] — must have 2 entries even when disabled
   },
   inputMint: USDC_MINT,
-  outputMint: USDC_MINT,
+  outputMint: USDC_MINT, // == inputMint ⇒ deliver-no-transform settlement
   forwardFlags: 0,
 };
 
@@ -2687,8 +6530,11 @@ const ixs = await sdk.createComposable(
   { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
   [agentUsdcAta], // prePinnedAccounts
   guard.data, // preValidationData
+  { disabled: {} }, // postValidation (disabled — pre-validation is enough here)
+  [], // postPinnedAccounts
+  Buffer.alloc(0), // postValidationData
   undefined, // feePayer (defaults to provider)
-  new anchor.BN(CAP_MONTHLY) // approvalAmount
+  new anchor.BN(CAP_MONTHLY) // approvalAmount (delegate approval cap)
 );
 
 // Send the transaction
@@ -2761,6 +6607,8 @@ import {
   Connection,
   Transaction,
   sendAndConfirmTransaction,
+  SystemProgram,
+  TransactionInstruction,
 } from "@solana/web3.js";
 import { getAssociatedTokenAddressSync, NATIVE_MINT } from "@solana/spl-token";
 import {
@@ -2846,11 +6694,11 @@ const WEEK_S = 7 * 24 * 3600;
 const policyType = {
   subscription: {
     amount: new anchor.BN(DCA_AMOUNT), // 100 USDC
-    paymentFrequency: new anchor.BN(WEEK_S),
+    paymentFrequency: { custom: new anchor.BN(WEEK_S) }, // weekly via custom seconds
     nextPaymentDue: new anchor.BN(Math.floor(Date.now() / 1000) + WEEK_S),
     maxRenewals: 52, // 1 year of weekly DCA
     autoRenew: true,
-    padding: new Array(72).fill(0),
+    padding: new Array(97).fill(0), // [u8; 97] per IDL
   },
 };
 
@@ -2865,7 +6713,10 @@ const forwardConfig = {
       { offset: 0, length: 0, expected: Buffer.alloc(8) },
     ],
     numPinnedAccounts: 0,
-    pinnedAccounts: [],
+    pinnedAccounts: [
+      { index: 0, pubkey: PublicKey.default },
+      { index: 0, pubkey: PublicKey.default },
+    ], // fixed-size [PinnedAccount; 2] — must have 2 entries
   },
   inputMint: USDC_MINT,
   outputMint: NATIVE_MINT, // WSOL delivery
@@ -2878,7 +6729,15 @@ const ixs = await sdk.createComposable(
   gatewayPDA,
   policyType,
   "Weekly DCA",
-  forwardConfig
+  forwardConfig,
+  { disabled: {} }, // preValidation (no pre-guard; post-validation checks output)
+  [], // prePinnedAccounts
+  Buffer.alloc(0), // preValidationData
+  { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // postValidation (price guard)
+  [outputSolAta], // postPinnedAccounts (read-accounts for post-validation)
+  postGuard.data, // postValidationData
+  undefined, // feePayer
+  undefined // approvalAmount (optional — subscription amount suffices)
 );
 
 await sendAndConfirmTransaction(connection, new Transaction().add(...ixs), [
@@ -2886,9 +6745,22 @@ await sendAndConfirmTransaction(connection, new Transaction().add(...ixs), [
 ]);
 ```
 
-No validation guard?
+Post-validation price guard
 
-This DCA runs unconditionally on schedule. To add a price guard (e.g. only buy SOL when price < $200), add a pre-validation Lighthouse assertion. See the [Lighthouse facade guide](https://docs.tributary.so/integration-guide/programmable-pull-payments/lighthouse-facade/index.md).
+This DCA adds a **post-validation** guard: after the swap but before settle, Lighthouse asserts the recipient's WSOL ATA received at least `MIN_OUTPUT_LAMPORTS`. This is the "floor on output" pattern from ADR-0031 — the on-chain `>0` guard stays, and `post_validation` generalizes it as the owner's enforced minimum.
+
+Build the guard the same way as a pre-validation guard, but pass it through `postValidation` / `postPinnedAccounts` / `postValidationData` (the 10th–12th `createComposable` args above):
+
+```typescript
+const MIN_OUTPUT_LAMPORTS = new anchor.BN(0); // floor: any non-zero amount
+
+const postGuard = lighthouse
+  .tokenAccount(outputSolAta) // WSOL ATA after the swap
+  .amount(MIN_OUTPUT_LAMPORTS, ">=")
+  .build();
+```
+
+If you don't want a price guard, set `postValidation: { disabled: {} }` and skip the `postPinnedAccounts` / `postValidationData` args — the DCA will run unconditionally on schedule.
 
 ## Step 3: Execute (permissionless)
 
@@ -2963,6 +6835,8 @@ import {
   Connection,
   Transaction,
   sendAndConfirmTransaction,
+  SystemProgram,
+  TransactionInstruction,
 } from "@solana/web3.js";
 import { getAssociatedTokenAddressSync, NATIVE_MINT } from "@solana/spl-token";
 import {
@@ -3071,7 +6945,10 @@ const forwardConfig = {
       { offset: 0, length: 0, expected: Buffer.alloc(8) },
     ],
     numPinnedAccounts: 0,
-    pinnedAccounts: [],
+    pinnedAccounts: [
+      { index: 0, pubkey: PublicKey.default },
+      { index: 0, pubkey: PublicKey.default },
+    ], // fixed-size [PinnedAccount; 2] — must have 2 entries
   },
   inputMint: USDC_MINT,
   outputMint: NATIVE_MINT, // WSOL delivery
@@ -3088,7 +6965,10 @@ const ixs = await sdk.createComposable(
   { programCall: { programId: LIGHTHOUSE_PROGRAM_ID } }, // preValidation
   [hotWalletUsdcAta], // prePinnedAccounts
   guard.data, // preValidationData
-  undefined,
+  { disabled: {} }, // postValidation (disabled — pre-validation gates the pull)
+  [], // postPinnedAccounts
+  Buffer.alloc(0), // postValidationData
+  undefined, // feePayer
   new anchor.BN(200_000_000) // approvalAmount
 );
 
@@ -7800,28 +11680,37 @@ ComposablePolicy ships with **two hard-coded program allowlists** and a pair of 
 Defined in `programs/tributary/src/constants.rs`:
 
 ```rust
-pub const ALLOWED_FORWARD_PROGRAMS: &[Pubkey] =
-    &[pubkey!("LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo")]; // Meteora DLMM
+pub const ALLOWED_FORWARD_PROGRAMS: &[Pubkey] = &[
+    pubkey!("LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"), // Meteora DLMM
+    pubkey!("CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C"), // Raydium CPMM
+    pubkey!("CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK"), // Raydium CLMM
+    pubkey!("whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc"), // Orca Whirlpool
+];
 
 pub const ALLOWED_VALIDATION_PROGRAMS: &[Pubkey] =
     &[pubkey!("L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95")]; // Lighthouse
 ```
 
-| Constant                      | Currently contains     | Used by                                    |
-| ----------------------------- | ---------------------- | ------------------------------------------ |
-| `ALLOWED_FORWARD_PROGRAMS`    | Meteora DLMM (1 entry) | `validate_forward_config`, execute handler |
-| `ALLOWED_VALIDATION_PROGRAMS` | Lighthouse (1 entry)   | `create_composable_policy`                 |
+| Constant                      | Currently contains                                                   | Used by                                    |
+| ----------------------------- | -------------------------------------------------------------------- | ------------------------------------------ |
+| `ALLOWED_FORWARD_PROGRAMS`    | Meteora DLMM, Raydium CPMM, Raydium CLMM, Orca Whirlpool (4 entries) | `validate_forward_config`, execute handler |
+| `ALLOWED_VALIDATION_PROGRAMS` | Lighthouse (1 entry)                                                 | `create_composable_policy`                 |
 
-Allowlisting exists because both hooks receive `invoke_signed`-style authority over the ComposablePolicy PDA's intermediate ATAs. An arbitrary program in either slot could move transient balances to attacker accounts. Hard-allowlisting caps the blast radius to two well-audited programs whose instruction semantics Tributary understands (and, in the forward case, pins via `ByteRangeCheck` discriminator checks — see [forward-hook.md](https://docs.tributary.so/protocol-reference/composable-policy/forward-hook/index.md)).
+Allowlisting exists because the **forward** hook receives `invoke_signed` authority over the ComposablePolicy PDA's intermediate ATAs — an arbitrary program in that slot could move transient balances to attacker accounts. Hard-allowlisting caps the blast radius to four well-audited DEX programs whose instruction semantics Tributary pins via `ByteRangeCheck` discriminator checks (see [forward-hook.md](https://docs.tributary.so/protocol-reference/composable-policy/forward-hook/index.md)).
+
+The **validation** hook is read-only and uses plain `invoke` with **no** signer seeds (C-1 fix, [security-model.md](https://docs.tributary.so/protocol-reference/composable-policy/security-model/index.md) §CPI signer sanitization) — so the validation allowlist is defense-in-depth rather than a privilege boundary. Lighthouse is the only entry.
 
 ## Sentinel conventions
 
-| Hook       | Disabled when…                                           | Sentinel            |
-| ---------- | -------------------------------------------------------- | ------------------- |
-| Forward    | `instruction_constraint.program_id == Pubkey::default()` | `Pubkey::default()` |
-| Validation | `ValidationSpec::Disabled`                               | enum variant        |
+| Hook / shape          | Disabled / activated when…                                                | Sentinel            |
+| --------------------- | ------------------------------------------------------------------------- | ------------------- |
+| Forward               | `instruction_constraint.program_id == Pubkey::default()`                  | `Pubkey::default()` |
+| Validation (pre/post) | `ValidationSpec::Disabled`                                                | enum variant        |
+| **Act mode**          | forward **enabled** AND `forward_config.output_mint == Pubkey::default()` | `Pubkey::default()` |
 
 The two hooks use **different** sentinel conventions. Forward uses a pubkey sentinel (`Pubkey::default()` on `instruction_constraint.program_id`) since program ID is the single gate. Validation uses an enum variant (`ValidationSpec::Disabled`) because the spec carries no pubkey — when disabled no assertion data is stored, no `ValidationPda` is allocated, and the caller passes `SystemProgram` as the program account.
+
+A third sentinel — `output_mint == Pubkey::default()` **with forward enabled** — selects **act mode** (ADR-0026): the forward CPI consumes the input for non-fungible settlement (e.g. a Velocity subaccount deposit). No output ATA is created, no deliver sweep runs, and the `>0` output guard is skipped. This is distinct from forward-disabled same-mint topup (`output_mint == input_mint`), which is deliver-no-transform.
 
 ### Forward-disabled invariants
 
@@ -7907,7 +11796,7 @@ Where `validate_spec_and_program` dispatches on the enum:
 And `validate_init` ensures:
 
 - When `Disabled`: `validation_data` must be empty (no assertion to store).
-- When `ProgramCall`: `validation_data` must be non-empty and ≤ 1024 bytes, pins must be non-default, indices unique, within bounds.
+- When `ProgramCall`: `validation_data` must be non-empty and ≤ 512 bytes (`MAX_VALIDATION_DATA_SIZE`), pins must be non-default, indices unique, within bounds.
 
 The handler also re-pins the named `input_mint` / `output_mint` accounts against the caller-supplied `forward_config` Pubkeys and runs the full Token-2022 extension allowlist on both (`validate_mint_compatible`). Without this, a policy could be created against a `TransferHook` / `PermanentDelegate` / `ConfidentialTransferMint` mint that breaks `transfer_checked` at execute time, or drains the PDA-owned intermediate ATA in the `PermanentDelegate` case (see `reports/L-02-mint-validation-call-sites-incomplete.md`).
 
@@ -7915,13 +11804,13 @@ The handler also re-pins the named `input_mint` / `output_mint` accounts against
 
 The execute handler re-checks several invariants that were already enforced at create time. The pattern is defense-in-depth: these values are sourced from on-chain state, so a directly-serialized malformed account (or a regression in create-time validation) must not be able to trigger a panic or privilege escalation.
 
-| Re-check                                                                                  | Source report |
-| ----------------------------------------------------------------------------------------- | ------------- |
-| `validate_mint_compatible(input_mint)` AND `(output_mint)` (Token-2022 extensions mutate) | L-02          |
-| `n <= checks.len()` before indexing `data_checks[i]`                                      | H-04          |
-| `ByteRangeCheck::validate` rejects `length > 8` rather than panicking                     | H-06          |
-| `pre_validation.program_id() == pre_program_info.key()` (+ same for post)                 | C-1           |
-| `forward_config.target_program` allowlist (transitively, via stored state)                | —             |
+| Re-check                                                                                      | Source report |
+| --------------------------------------------------------------------------------------------- | ------------- |
+| `validate_mint_compatible(input_mint)` AND `(output_mint)` (Token-2022 extensions mutate)     | L-02          |
+| `n <= checks.len()` before indexing `data_checks[i]`                                          | H-04          |
+| `ByteRangeCheck::validate` rejects `length > 8` rather than panicking                         | H-06          |
+| `pre_validation.program_id() == pre_program_info.key()` (+ same for post)                     | C-1           |
+| `forward_config.instruction_constraint.program_id` allowlist (transitively, via stored state) | —             |
 
 ## Emergency pause
 
@@ -8030,34 +11919,36 @@ ______________________________________________________________________
 
 ## `execute_composable`
 
-Executes the 7-phase flow: Pull → Skim → Pre-validate → Forward → Post-validate → Settle. Permissionless if the gateway has the `FEATURE_PERMISSIONLESS` flag.
+Executes the 7-phase flow: `Byte-range checks` → `Pull` → `Skim` → `Pre-validate` → `Forward` → `Post-validate` → `Settle`. Permissionless if the gateway has the `FEATURE_PERMISSIONLESS` flag; cold relayers (non-trusted callers) additionally require post_validation OR a route pin (ADR-0016).
 
 ### Accounts
 
-| Account                      | Type                                     | Signer | Notes                                                            |
-| ---------------------------- | ---------------------------------------- | ------ | ---------------------------------------------------------------- |
-| `fee_payer`                  | `Signer`                                 | ✅     | Gateway signer, owner, recipient, or any signer (permissionless) |
-| `payments_delegate`          | `UncheckedAccount`                       | PDA    | Legacy global delegate `["payments"]`                            |
-| `composable_policy`          | `Account<ComposablePolicy>`              | PDA    | Must be `Active`                                                 |
-| `user_payment`               | `Account<UserPayment>`                   | PDA    | Must be active                                                   |
-| `gateway`                    | `Account<PaymentGateway>`                | PDA    | Must match policy's gateway                                      |
-| `config`                     | `Account<ProgramConfig>`                 | PDA    | `!emergency_pause`                                               |
-| `pre_validation_program`     | `UncheckedAccount`                       | ❌     | Lighthouse or SystemProgram                                      |
-| `post_validation_program`    | `UncheckedAccount`                       | ❌     | Lighthouse or SystemProgram                                      |
-| `pre_validation_pda`         | `UncheckedAccount`                       | ❌     | Deserialised in handler if enabled                               |
-| `post_validation_pda`        | `UncheckedAccount`                       | ❌     | Deserialised in handler if enabled                               |
-| `user_token_account`         | `InterfaceAccount<TokenAccount>`         | ❌     | Delegate must be UserPayment or PaymentsDelegate PDA             |
-| `mint`                       | `InterfaceAccount<Mint>`                 | ❌     | `== forward_config.input_mint`                                   |
-| `output_mint`                | `UncheckedAccount`                       | ❌     | SPL Mint or SystemProgram (act mode)                             |
-| `intermediate_input_ata`     | `InterfaceAccount<TokenAccount>`         | ❌     | Owned by ComposablePolicy PDA                                    |
-| `intermediate_output_ata`    | `InterfaceAccount<TokenAccount>`         | ❌     | Owned by ComposablePolicy PDA (deliver-transform only)           |
-| `recipient_token_account`    | `InterfaceAccount<TokenAccount>`         | ❌     | Output-mint ATA of recipient                                     |
-| `gateway_fee_recipient_ata`  | `InterfaceAccount<TokenAccount>`         | ❌     | Input-mint ATA of gateway.fee_recipient                          |
-| `protocol_fee_recipient_ata` | `InterfaceAccount<TokenAccount>`         | ❌     | Input-mint ATA of config.fee_recipient                           |
-| `scheduler_ata`              | `Option<InterfaceAccount<TokenAccount>>` | ❌     | Input-mint ATA of caller (scheduler cut, if applicable)          |
-| `token_program`              | `Program<Token>`                         | ❌     |                                                                  |
-| `system_program`             | `Program<System>`                        | ❌     |                                                                  |
-| `remaining_accounts`         | `Vec<AccountInfo>`                       | ❌     | `[...preValTargets, ...forwardAccounts, ...postValTargets]`      |
+| Account                             | Type                                     | Signer | Notes                                                                            |
+| ----------------------------------- | ---------------------------------------- | ------ | -------------------------------------------------------------------------------- |
+| `fee_payer`                         | `Signer`                                 | ✅     | Gateway signer, owner, recipient, or any signer (permissionless)                 |
+| `payments_delegate`                 | `UncheckedAccount`                       | PDA    | Legacy global delegate `["payments"]` (v0) OR v1 UserPayment PDA                 |
+| `composable_policy`                 | `Account<ComposablePolicy>`              | PDA    | Must be `Active`                                                                 |
+| `user_payment`                      | `Account<UserPayment>`                   | PDA    | Must be active                                                                   |
+| `gateway`                           | `Account<PaymentGateway>`                | PDA    | Must match policy's gateway                                                      |
+| `config`                            | `Account<ProgramConfig>`                 | PDA    | `!emergency_pause`                                                               |
+| `pre_validation_program`            | `UncheckedAccount`                       | ❌     | Lighthouse or SystemProgram                                                      |
+| `post_validation_program`           | `UncheckedAccount`                       | ❌     | Lighthouse or SystemProgram                                                      |
+| `pre_validation_pda`                | `UncheckedAccount`                       | ❌     | Deserialised in handler if enabled                                               |
+| `post_validation_pda`               | `UncheckedAccount`                       | ❌     | Deserialised in handler if enabled                                               |
+| `user_token_account`                | `InterfaceAccount<TokenAccount>`         | ❌     | Delegate must be UserPayment or PaymentsDelegate PDA                             |
+| `mint`                              | `InterfaceAccount<Mint>`                 | ❌     | `== forward_config.input_mint`                                                   |
+| `output_mint`                       | `UncheckedAccount`                       | ❌     | SPL Mint or SystemProgram (act mode)                                             |
+| `intermediate_input_token_account`  | `InterfaceAccount<TokenAccount>`         | ❌     | Owned by ComposablePolicy PDA                                                    |
+| `intermediate_output_token_account` | `InterfaceAccount<TokenAccount>`         | ❌     | Owned by ComposablePolicy PDA (deliver-transform only)                           |
+| `recipient_token_account`           | `InterfaceAccount<TokenAccount>`         | ❌     | Output-mint ATA of recipient (system wallet in act/native mode)                  |
+| `gateway_fee_account`               | `InterfaceAccount<TokenAccount>`         | ❌     | Input-mint ATA of gateway.fee_recipient                                          |
+| `protocol_fee_account`              | `InterfaceAccount<TokenAccount>`         | ❌     | Input-mint ATA of config.fee_recipient                                           |
+| `scheduler_ata`                     | `Option<InterfaceAccount<TokenAccount>>` | ❌     | Input-mint ATA of caller (scheduler cut, if applicable)                          |
+| `forward_program`                   | `UncheckedAccount`                       | ❌     | The forward target program (CPI resolution); required even when forward disabled |
+| `token_program`                     | `Program<Token>`                         | ❌     |                                                                                  |
+| `associated_token_program`          | `Program<AssociatedToken>`               | ❌     | Required for lazy ATA creation                                                   |
+| `system_program`                    | `Program<System>`                        | ❌     |                                                                                  |
+| `remaining_accounts`                | `Vec<AccountInfo>`                       | ❌     | `[...preValTargets, ...forwardAccounts, ...postValTargets]`                      |
 
 ### Arguments
 
@@ -8168,7 +12059,7 @@ ______________________________________________________________________
 
 | Field      | Type      | Notes                                       |
 | ---------- | --------- | ------------------------------------------- |
-| `offset`   | `u16`     | Byte offset in instruction data             |
+| `offset`   | `u8`      | Byte offset in instruction data (0–255)     |
 | `length`   | `u8`      | 1–8                                         |
 | `expected` | `[u8; 8]` | Expected value at `[offset, offset+length)` |
 
@@ -8187,6 +12078,37 @@ ______________________________________________________________________
 | `ProgramCall` | `{ program_id: Pubkey }` | Must be in `ALLOWED_VALIDATION_PROGRAMS` |
 | `Inline`      | `{ reserved: u8 }`       | Not implemented; errors at create        |
 
+## PDA seeds
+
+| PDA                 | Seeds                                               | Notes                                                            |
+| ------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
+| `ComposablePolicy`  | `["composable_policy", user_payment, policy_id_le]` | `policy_id_le` = `u32` LE bytes from `created_composable_count`  |
+| `PreValidationPda`  | `["composable_validation_pre", composable_policy]`  | Stores ≤512 bytes of Lighthouse assertion data + pinned accounts |
+| `PostValidationPda` | `["composable_validation_post", composable_policy]` | Stores ≤512 bytes of Lighthouse assertion data + pinned accounts |
+
+## Fee path (composable — input-side, ADR-0026)
+
+Composable fees are **input-side**: the gross pull = `face + fee`, and the fee is skimmed from `intermediate_input_token_account` in Phase 1b **before** the forward runs. After skim, the intermediate holds exactly `face`. This is hardcoded for composable — the `FEATURE_NET_AMOUNT` gateway flag is ignored (it only governs PaymentPolicy fee basis).
+
+| Cut              | Routing                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------- |
+| Protocol         | `config.protocol_share_bps × total_fee` → `protocol_fee_account` (input-mint ATA)                 |
+| Scheduler        | `gateway.scheduler_share_bps × total_fee` → `scheduler_ata` (or merges into gateway if self-exec) |
+| Referral pool    | `gateway.referral_allocation_bps × total_fee` (tiered, `FEATURE_REFERRAL`)                        |
+| Gateway residual | remainder → `gateway_fee_account` (input-mint ATA)                                                |
+
+Constraint: `protocol_share + scheduler_share + referral_allocation ≤ 10000`.
+
+## Settlement shapes (ADR-0026)
+
+The combination of `output_mint` and forward-enabled selects one of three settlement behaviours in Phase 5 (fees already skimmed in 1b; only principal moves here):
+
+| Shape                    | Trigger                                             | Behaviour                                                                                                                 |
+| ------------------------ | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **deliver-no-transform** | `output_mint == input_mint`, forward disabled       | Sweep `intermediate_input` (face) → recipient_token_account.                                                              |
+| **deliver-transform**    | `output_mint != input_mint`, forward enabled        | Forward swaps input → output; sweep `intermediate_output` → recipient (`>0` guard KEPT); input residue → user.            |
+| **act mode**             | `output_mint == Pubkey::default()`, forward enabled | Forward consumes input for non-fungible settlement. No output ATA, no deliver sweep, no `>0` guard. Input residue → user. |
+
 ## Related
 
 - [Overview](https://docs.tributary.so/protocol-reference/composable-policy/overview/index.md) — 7-phase execution flow
@@ -8198,7 +12120,7 @@ ______________________________________________________________________
 
 The **forward hook** is an opt-in token-transform CPI that runs **after** the validation hook (Phase 2) and **before** settlement (Phase 4). It lets a policy pull one token from the user and deliver a different token to the recipient — e.g. pull USDC, swap to WSOL via Meteora DLMM, then settle in WSOL (or native SOL — see [native-output.md](https://docs.tributary.so/protocol-reference/composable-policy/native-output/index.md)).
 
-The only forward target currently allowlisted is **Meteora DLMM** (`LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo`).
+The currently allowlisted forward targets are **Meteora DLMM**, **Raydium CPMM**, **Raydium CLMM**, and **Orca Whirlpool** (see [allowlists-and-sentinels.md](https://docs.tributary.so/protocol-reference/composable-policy/allowlists-and-sentinels/index.md) and ADR-0032 for the Raydium CPMM addition).
 
 ## ForwardConfig (on-policy)
 
@@ -8313,11 +12235,24 @@ In the Rust program `expected` is `[u8; 8]`. In the TypeScript SDK (resolved fro
 | `instruction_constraint.program_id` in `ALLOWED_FORWARD_PROGRAMS`                 | `InvalidForwardProgram`           |
 | forward enabled ⟹ `1 <= instruction_constraint.num_data_checks <= 4`              | `InsufficientByteRangeChecks`     |
 | forward enabled ⟹ `instruction_constraint.num_pinned_accounts <= 2`               | `InsufficientPinnedAccounts`      |
-| no duplicate indices among active `pinned_accounts`                               | `DuplicatePinnedAccountIndex`     |
+| **forward enabled ⟹ `has_effective_pins()` (≥ 1 non-default pin)**                | `DegenerateForwardPins`           |
+| no duplicate indices among active `pinned_accounts`                               | `DuplicatePinIndex`               |
 | for each active check: `offset + length <= 1024`                                  | `ByteRangeCheckFailed`            |
 | for each active check: `length <= 8`                                              | `ByteRangeCheckFailed`            |
 | at least one check with `offset == 0 && length > 0`                               | `DiscriminatorCheckRequired`      |
 | `forward_flags & FORWARD_FLAG_NATIVE_OUTPUT` ⟹ `output_mint == NATIVE_MINT`       | `NativeOutputRequiresWsol`        |
+
+The **degenerate-pin guard** rejects a forward-enabled constraint with zero effective pins. Without it, a gateway could swap in an arbitrary remaining-account at the forward slot — the pin set is what binds the forward CPI to a specific account layout (see CF-001, [security-model.md](https://docs.tributary.so/protocol-reference/composable-policy/security-model/index.md)).
+
+### `output_mint` — three settlement shapes
+
+The combination of `output_mint` and whether forward is enabled selects one of three settlement shapes (ADR-0026, see also [overview.md](https://docs.tributary.so/protocol-reference/composable-policy/overview/index.md) Phase 5):
+
+| `output_mint`            | Forward  | Shape                    | Behaviour                                                                                           |
+| ------------------------ | -------- | ------------------------ | --------------------------------------------------------------------------------------------------- |
+| `== input_mint`          | disabled | **deliver-no-transform** | Intermediate input swept directly to recipient. No swap.                                            |
+| concrete mint `!= input` | enabled  | **deliver-transform**    | Forward swaps input → output; output swept; `>0` guard KEPT.                                        |
+| `Pubkey::default()`      | enabled  | **act mode**             | Forward consumes input for non-fungible settlement. No output ATA, no deliver sweep, no `>0` guard. |
 
 ### Execute-time re-validation
 
@@ -8438,7 +12373,11 @@ recipient_token_account (recipient's system account, native SOL)
    ↑ PLUS the closed ATA's rent lamports (side-effect bonus)
 ```
 
-Source: `process_output_and_sweep` in `execute_composable.rs`.
+Source: `sweep_output_to_recipient` in `execute_composable.rs`.
+
+Distinct from act mode
+
+This native-output path requires `output_mint == NATIVE_MINT` and `FORWARD_FLAG_NATIVE_OUTPUT` set, with a real WSOL intermediate ATA and a deliver sweep. It is **different from act mode** (`output_mint == Pubkey::default()` + forward enabled, ADR-0026), where the forward consumes the input for non-fungible settlement and there is no output ATA, no deliver sweep, and no `>0` guard. See [overview.md](https://docs.tributary.so/protocol-reference/composable-policy/overview/index.md) Phase 5.
 
 Fees are input-side (Phase 1b)
 
@@ -8901,6 +12840,47 @@ Enforcing `post_validation = ProgramCall` on-chain is rejected (ADR-0031):
 
 See [ADR-0031](https://docs.tributary.so/adr/0031-settlement-output-post-validation-posture.md) for the full decision and rejected alternatives.
 
+## 8. Cold-relayer safety net (ADR-0016 amended)
+
+`execute_composable` is permissionless — any signer that the gateway allows may call it. To prevent a bare drain vector when the caller is neither the gateway signer, the user, nor the recipient (the "cold relayer" / pure-scheduler case), the handler enforces an OR-gate at the top of Phase 0:
+
+```rust
+// execute_composable.rs — Phase 0 gate
+let is_trusted = fee_payer == gateway.signer
+    || fee_payer == user_payment.owner
+    || fee_payer == recipient;
+
+if !is_trusted {
+    require!(
+        composable_policy.post_validation.is_program_call()
+            || composable_policy.forward_config
+                .instruction_constraint.has_route_pin(),
+        TributaryError::PermissionlessExecutionRequiresSafetyNet
+    );
+}
+```
+
+A non-trusted caller may only execute policies that carry **either** a post-validation hook (an owner-controlled settlement floor) **or** at least one `pinned_account` on the forward constraint (a route pin that binds the swap destination). This blocks the obvious "scheduler drains arbitrary output to its own ATA" attack: a bare PayAsYouGo policy with no validation and no pins is only executable by the trusted three.
+
+## 9. CF-001 — indexed `PinnedAccount` (cross-account drain fix)
+
+The original forward design carried `pinned_accounts: [Pubkey; 4]` — a positional array. The execute handler checked that the slice at positions `[forward_start .. forward_start + n]` matched the stored pubkeys, but the *binding between pin and slot* was implicit. A gateway that controlled account ordering could re-order the forward-account slice so a different account landed on a given pin's slot — a cross-account substitution vector.
+
+The fix (CF-001) makes each pin **indexed**:
+
+```rust
+pub struct PinnedAccount {
+    pub index: u8,    // position in remaining_accounts, relative to forward_start
+    pub pubkey: Pubkey,
+}
+```
+
+`InstructionConstraint::pins_match` now verifies that `remaining_accounts[forward_start + pin.index].key() == pin.pubkey` for **every** active pin. The pin and its slot are bound at create time and re-validated at execute time. Combined with the signer sanitization in section 2, this means a forward CPI can only ever land on accounts the owner named when the policy was created.
+
+## 10. Anchor `accountsStrict` validation
+
+`ExecuteComposable` uses Anchor's `#[derive(Accounts)]` builder with explicit constraints on every account: owner checks, `has_one` for the `composable_policy.user_payment` ↔ `user_payment` link, seed-derivation checks on every PDA, `mint` matches on every ATA, and `Program<...>` types for `token_program` / `associated_token_program` / `system_program`. The handler does not rely on positional account matching alone — every account is independently validated before the first instruction runs.
+
 # Validation Hook
 
 The **validation hook** is an opt-in read-only assertion CPI that runs **between** the pull (Phase 1) and the forward (Phase 3) phases of `execute_composable`. It lets a policy encode an on-chain predicate — "the recipient's hot wallet USDC balance is below 50 USDC" — that **must hold** before the rest of the execution proceeds. If the assertion fails, the entire transaction aborts and the pull is rolled back.
@@ -8942,10 +12922,10 @@ Source: `programs/tributary/src/state/composable_policy.rs`.
 
 The assertion payload for each active slot lives in its own PDA:
 
-| PDA                 | Seeds                                               | Max size                     |
-| ------------------- | --------------------------------------------------- | ---------------------------- |
-| `PreValidationPda`  | `["composable_validation_pre", composable_policy]`  | 8 (disc) + 76 (header) + 512 |
-| `PostValidationPda` | `["composable_validation_post", composable_policy]` | 8 (disc) + 76 (header) + 512 |
+| PDA                 | Seeds                                               | Max size                           |
+| ------------------- | --------------------------------------------------- | ---------------------------------- |
+| `PreValidationPda`  | `["composable_validation_pre", composable_policy]`  | 8 (disc) + 68 (header) + 512 = 588 |
+| `PostValidationPda` | `["composable_validation_post", composable_policy]` | 8 (disc) + 68 (header) + 512 = 588 |
 
 ```rust
 pub const MAX_VALIDATION_DATA_SIZE: usize = 512;
@@ -9123,23 +13103,25 @@ Tributary exposes two families of pull-payment policies that share the same `Pol
 
 ## Decision matrix
 
-| Axis                       | PaymentPolicy                                                                         | ComposablePolicy                                                                                                                            |
-| -------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Custody model**          | Non-custodial. User approves delegate; gateway pulls directly.                        | Non-custodial. Same delegate approval; pull routes through an intermediate ATA.                                                             |
-| **Execution**              | Single CPI: `transfer` from user → recipient + fees.                                  | 5-phase: `PULL` (gross) → `SKIM` (input-side fees) → `PRE-VALIDATE` (opt) → `FORWARD` (opt) → `POST-VALIDATE` (opt) → `SETTLE`.             |
-| **Supported hooks**        | None.                                                                                 | Validation (Lighthouse) + Forward (Meteora DLMM), each independently disableable.                                                           |
-| **Intermediate accounts**  | None. Funds move directly user_token → recipient_token.                               | Two ATAs owned by the ComposablePolicy PDA; created lazily, closed at end of every execute.                                                 |
-| **PDA seeds**              | `["payment_policy", user_payment, policy_id]`                                         | `["composable_policy", user_payment, policy_id]`                                                                                            |
-| **ID counter**             | `user_payment.created_policies_count`                                                 | `user_payment.created_composable_count`                                                                                                     |
-| **CU cost**                | Lower — one Token CPI, no allocation.                                                 | Higher — ATA create + optional CPI(s) + fee math + two ATA closes.                                                                          |
-| **Rent churn per execute** | None.                                                                                 | Yes — intermediates are created and closed each call; rent returns to fee_payer but costs CU.                                               |
-| **Fee math**               | `shared::fees::calculate_fees`                                                        | Same — `shared::fees::calculate_fees`. Fee path is **input-side** (skimmed from the gross pull in Phase 1b, not from the output; ADR-0026). |
-| **Schedule math**          | `shared::schedule::{validate_policy_execution, advance_policy}`                       | Same functions, same calendar-month arithmetic (M-04).                                                                                      |
-| **Permissionless execute** | Yes — any gateway signer, the user, or the recipient.                                 | Yes — same `fee_payer ∈ {gateway.signer, user_payment.owner, recipient}` constraint.                                                        |
-| **Use cases**              | Simple recurring billing, milestone escrows, pay-as-you-go with no conditional logic. | Programmable conditional payments: "topup if balance low", "pull USDC deliver WSOL", native-SOL delivery.                                   |
-| **Forward / swap**         | Not supported.                                                                        | Opt-in via `ForwardConfig.target_program` (Meteora DLMM).                                                                                   |
-| **Native SOL delivery**    | Not supported.                                                                        | Opt-in via `FORWARD_FLAG_NATIVE_OUTPUT` (WSOL → SOL unwrap).                                                                                |
-| **External CPI**           | None.                                                                                 | Lighthouse (read-only assertion) + Meteora DLMM (swap). Both hard-allowlisted.                                                              |
+| Axis                       | PaymentPolicy                                                                                                                               | ComposablePolicy                                                                                                                                                      |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Custody model**          | Non-custodial. User approves delegate; gateway pulls directly.                                                                              | Non-custodial. Same delegate approval; pull routes through an intermediate ATA.                                                                                       |
+| **Execution**              | Single CPI: `transfer` from user → recipient + fees.                                                                                        | 7-phase: `BYTE-RANGE CHECKS` → `PULL` (gross) → `SKIM` (input-side fees) → `PRE-VALIDATE` (opt) → `FORWARD` (opt) → `POST-VALIDATE` (opt) → `SETTLE`.                 |
+| **Supported hooks**        | None.                                                                                                                                       | Validation (Lighthouse) + Forward (Meteora DLMM, Raydium CPMM/CLMM, Orca Whirlpool), each independently disableable.                                                  |
+| **Intermediate accounts**  | None. Funds move directly user_token → recipient_token.                                                                                     | Two ATAs owned by the ComposablePolicy PDA; created lazily, closed at end of every execute.                                                                           |
+| **PDA seeds**              | `["payment_policy", user_payment, policy_id]`                                                                                               | `["composable_policy", user_payment, policy_id]`                                                                                                                      |
+| **ID counter**             | `user_payment.created_policies_count`                                                                                                       | `user_payment.created_composable_count`                                                                                                                               |
+| **CU cost**                | Lower — one Token CPI, no allocation.                                                                                                       | Higher — ATA create + optional CPI(s) + fee math + two ATA closes.                                                                                                    |
+| **Rent churn per execute** | None.                                                                                                                                       | Yes — intermediates are created and closed each call; rent returns to fee_payer but costs CU.                                                                         |
+| **Fee path**               | Direct (single transfer splits fees off the payment amount; honors `FEATURE_NET_AMOUNT`).                                                   | Same `calculate_fees`, but **input-side** — fees are skimmed from the gross pull in Phase 1b before the forward runs (ADR-0026; NET-on-pull hardcoded, flag ignored). |
+| **Settlement shapes**      | Single (direct `transfer` to recipient).                                                                                                    | Three: deliver-no-transform (same-mint) / deliver-transform (swap) / act mode (`output_mint=Pubkey::default()`, ADR-0026).                                            |
+| **Delegate model**         | v0 legacy global `PaymentsDelegate` PDA (`["payments"]`) OR v1 per-user `UserPayment` PDA (`["user_payment", owner, mint]`). Both accepted. | Same dual-delegate acceptance; v1 UserPayment PDA is the SDK default.                                                                                                 |
+| **Schedule math**          | `shared::schedule::{validate_policy_execution, advance_policy}`                                                                             | Same functions, same calendar-month arithmetic (M-04).                                                                                                                |
+| **Permissionless execute** | Yes — any gateway signer, the user, or the recipient.                                                                                       | Yes — same `fee_payer ∈ {gateway.signer, user_payment.owner, recipient}` constraint; cold relayers additionally require post_validation OR a route pin (ADR-0016).    |
+| **Use cases**              | Simple recurring billing, milestone escrows, pay-as-you-go with no conditional logic.                                                       | Programmable conditional payments: "topup if balance low", "pull USDC deliver WSOL", native-SOL delivery, Velocity subaccount deposits (act mode).                    |
+| **Forward / swap**         | Not supported.                                                                                                                              | Opt-in via `ForwardConfig.instruction_constraint.program_id` (Meteora DLMM, Raydium CPMM/CLMM, Orca Whirlpool).                                                       |
+| **Native SOL delivery**    | Not supported.                                                                                                                              | Opt-in via `FORWARD_FLAG_NATIVE_OUTPUT` (WSOL → SOL unwrap).                                                                                                          |
+| **External CPI**           | None.                                                                                                                                       | Lighthouse (read-only assertion) + 4 DEX programs (swap). Both hard-allowlisted.                                                                                      |
 
 ## When to use PaymentPolicy
 
@@ -9161,7 +13143,7 @@ Pick `ComposablePolicy` when at least one of these is true:
 
 ## Behavior with both hooks disabled
 
-A `ComposablePolicy` with `target_program = Pubkey::default()` and `validation_program = SystemProgram` is functionally close to a `PaymentPolicy` — same pull, same fee split, same schedule math — but:
+A `ComposablePolicy` with `instruction_constraint.program_id == Pubkey::default()` and `pre/post_validation == ValidationSpec::Disabled` is functionally close to a `PaymentPolicy` — same pull, same fee split, same schedule math — but:
 
 - It still pays the **intermediate-ATA hop** cost (create + close per execute).
 - It lives in the `["composable_policy", …]` PDA namespace.

@@ -2524,6 +2524,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#pda-seeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PDA seeds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fee-path-composable-input-side-adr-0026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fee path (composable — input-side, ADR-0026)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#settlement-shapes-adr-0026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settlement shapes (ADR-0026)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3285,6 +3318,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#pda-seeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PDA seeds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fee-path-composable-input-side-adr-0026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fee path (composable — input-side, ADR-0026)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#settlement-shapes-adr-0026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settlement shapes (ADR-0026)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3527,9 +3593,11 @@ and the key types.</p>
 </span></code></pre></div>
 <hr />
 <h2 id="execute_composable"><code>execute_composable</code><a class="headerlink" href="#execute_composable" title="Permanent link">&para;</a></h2>
-<p>Executes the 7-phase flow: Pull → Skim → Pre-validate → Forward →
-Post-validate → Settle. Permissionless if the gateway has the
-<code>FEATURE_PERMISSIONLESS</code> flag.</p>
+<p>Executes the 7-phase flow: <code>Byte-range checks</code> → <code>Pull</code> → <code>Skim</code> →
+<code>Pre-validate</code> → <code>Forward</code> → <code>Post-validate</code> → <code>Settle</code>. Permissionless
+if the gateway has the <code>FEATURE_PERMISSIONLESS</code> flag; cold relayers
+(non-trusted callers) additionally require post_validation OR a route
+pin (ADR-0016).</p>
 <h3 id="accounts_1">Accounts<a class="headerlink" href="#accounts_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3551,7 +3619,7 @@ Post-validate → Settle. Permissionless if the gateway has the
 <td><code>payments_delegate</code></td>
 <td><code>UncheckedAccount</code></td>
 <td>PDA</td>
-<td>Legacy global delegate <code>["payments"]</code></td>
+<td>Legacy global delegate <code>["payments"]</code> (v0) OR v1 UserPayment PDA</td>
 </tr>
 <tr>
 <td><code>composable_policy</code></td>
@@ -3620,13 +3688,13 @@ Post-validate → Settle. Permissionless if the gateway has the
 <td>SPL Mint or SystemProgram (act mode)</td>
 </tr>
 <tr>
-<td><code>intermediate_input_ata</code></td>
+<td><code>intermediate_input_token_account</code></td>
 <td><code>InterfaceAccount&lt;TokenAccount&gt;</code></td>
 <td>❌</td>
 <td>Owned by ComposablePolicy PDA</td>
 </tr>
 <tr>
-<td><code>intermediate_output_ata</code></td>
+<td><code>intermediate_output_token_account</code></td>
 <td><code>InterfaceAccount&lt;TokenAccount&gt;</code></td>
 <td>❌</td>
 <td>Owned by ComposablePolicy PDA (deliver-transform only)</td>
@@ -3635,16 +3703,16 @@ Post-validate → Settle. Permissionless if the gateway has the
 <td><code>recipient_token_account</code></td>
 <td><code>InterfaceAccount&lt;TokenAccount&gt;</code></td>
 <td>❌</td>
-<td>Output-mint ATA of recipient</td>
+<td>Output-mint ATA of recipient (system wallet in act/native mode)</td>
 </tr>
 <tr>
-<td><code>gateway_fee_recipient_ata</code></td>
+<td><code>gateway_fee_account</code></td>
 <td><code>InterfaceAccount&lt;TokenAccount&gt;</code></td>
 <td>❌</td>
 <td>Input-mint ATA of gateway.fee_recipient</td>
 </tr>
 <tr>
-<td><code>protocol_fee_recipient_ata</code></td>
+<td><code>protocol_fee_account</code></td>
 <td><code>InterfaceAccount&lt;TokenAccount&gt;</code></td>
 <td>❌</td>
 <td>Input-mint ATA of config.fee_recipient</td>
@@ -3656,10 +3724,22 @@ Post-validate → Settle. Permissionless if the gateway has the
 <td>Input-mint ATA of caller (scheduler cut, if applicable)</td>
 </tr>
 <tr>
+<td><code>forward_program</code></td>
+<td><code>UncheckedAccount</code></td>
+<td>❌</td>
+<td>The forward target program (CPI resolution); required even when forward disabled</td>
+</tr>
+<tr>
 <td><code>token_program</code></td>
 <td><code>Program&lt;Token&gt;</code></td>
 <td>❌</td>
 <td></td>
+</tr>
+<tr>
+<td><code>associated_token_program</code></td>
+<td><code>Program&lt;AssociatedToken&gt;</code></td>
+<td>❌</td>
+<td>Required for lazy ATA creation</td>
 </tr>
 <tr>
 <td><code>system_program</code></td>
@@ -4009,8 +4089,8 @@ Post-validate → Settle. Permissionless if the gateway has the
 <tbody>
 <tr>
 <td><code>offset</code></td>
-<td><code>u16</code></td>
-<td>Byte offset in instruction data</td>
+<td><code>u8</code></td>
+<td>Byte offset in instruction data (0–255)</td>
 </tr>
 <tr>
 <td><code>length</code></td>
@@ -4070,6 +4150,96 @@ Post-validate → Settle. Permissionless if the gateway has the
 <td><code>Inline</code></td>
 <td><code>{ reserved: u8 }</code></td>
 <td>Not implemented; errors at create</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pda-seeds">PDA seeds<a class="headerlink" href="#pda-seeds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>PDA</th>
+<th>Seeds</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ComposablePolicy</code></td>
+<td><code>["composable_policy", user_payment, policy_id_le]</code></td>
+<td><code>policy_id_le</code> = <code>u32</code> LE bytes from <code>created_composable_count</code></td>
+</tr>
+<tr>
+<td><code>PreValidationPda</code></td>
+<td><code>["composable_validation_pre", composable_policy]</code></td>
+<td>Stores ≤512 bytes of Lighthouse assertion data + pinned accounts</td>
+</tr>
+<tr>
+<td><code>PostValidationPda</code></td>
+<td><code>["composable_validation_post", composable_policy]</code></td>
+<td>Stores ≤512 bytes of Lighthouse assertion data + pinned accounts</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fee-path-composable-input-side-adr-0026">Fee path (composable — input-side, ADR-0026)<a class="headerlink" href="#fee-path-composable-input-side-adr-0026" title="Permanent link">&para;</a></h2>
+<p>Composable fees are <strong>input-side</strong>: the gross pull = <code>face + fee</code>, and
+the fee is skimmed from <code>intermediate_input_token_account</code> in Phase 1b
+<strong>before</strong> the forward runs. After skim, the intermediate holds exactly
+<code>face</code>. This is hardcoded for composable — the <code>FEATURE_NET_AMOUNT</code>
+gateway flag is ignored (it only governs PaymentPolicy fee basis).</p>
+<table>
+<thead>
+<tr>
+<th>Cut</th>
+<th>Routing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Protocol</td>
+<td><code>config.protocol_share_bps × total_fee</code> → <code>protocol_fee_account</code> (input-mint ATA)</td>
+</tr>
+<tr>
+<td>Scheduler</td>
+<td><code>gateway.scheduler_share_bps × total_fee</code> → <code>scheduler_ata</code> (or merges into gateway if self-exec)</td>
+</tr>
+<tr>
+<td>Referral pool</td>
+<td><code>gateway.referral_allocation_bps × total_fee</code> (tiered, <code>FEATURE_REFERRAL</code>)</td>
+</tr>
+<tr>
+<td>Gateway residual</td>
+<td>remainder → <code>gateway_fee_account</code> (input-mint ATA)</td>
+</tr>
+</tbody>
+</table>
+<p>Constraint: <code>protocol_share + scheduler_share + referral_allocation ≤ 10000</code>.</p>
+<h2 id="settlement-shapes-adr-0026">Settlement shapes (ADR-0026)<a class="headerlink" href="#settlement-shapes-adr-0026" title="Permanent link">&para;</a></h2>
+<p>The combination of <code>output_mint</code> and forward-enabled selects one of
+three settlement behaviours in Phase 5 (fees already skimmed in 1b;
+only principal moves here):</p>
+<table>
+<thead>
+<tr>
+<th>Shape</th>
+<th>Trigger</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>deliver-no-transform</strong></td>
+<td><code>output_mint == input_mint</code>, forward disabled</td>
+<td>Sweep <code>intermediate_input</code> (face) → recipient_token_account.</td>
+</tr>
+<tr>
+<td><strong>deliver-transform</strong></td>
+<td><code>output_mint != input_mint</code>, forward enabled</td>
+<td>Forward swaps input → output; sweep <code>intermediate_output</code> → recipient (<code>&gt;0</code> guard KEPT); input residue → user.</td>
+</tr>
+<tr>
+<td><strong>act mode</strong></td>
+<td><code>output_mint == Pubkey::default()</code>, forward enabled</td>
+<td>Forward consumes input for non-fungible settlement. No output ATA, no deliver sweep, no <code>&gt;0</code> guard. Input residue → user.</td>
 </tr>
 </tbody>
 </table>

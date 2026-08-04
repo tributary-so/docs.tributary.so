@@ -2925,12 +2925,12 @@ fee-distribution logic — but differ sharply in their execution model.</p>
 <tr>
 <td><strong>Execution</strong></td>
 <td>Single CPI: <code>transfer</code> from user → recipient + fees.</td>
-<td>5-phase: <code>PULL</code> (gross) → <code>SKIM</code> (input-side fees) → <code>PRE-VALIDATE</code> (opt) → <code>FORWARD</code> (opt) → <code>POST-VALIDATE</code> (opt) → <code>SETTLE</code>.</td>
+<td>7-phase: <code>BYTE-RANGE CHECKS</code> → <code>PULL</code> (gross) → <code>SKIM</code> (input-side fees) → <code>PRE-VALIDATE</code> (opt) → <code>FORWARD</code> (opt) → <code>POST-VALIDATE</code> (opt) → <code>SETTLE</code>.</td>
 </tr>
 <tr>
 <td><strong>Supported hooks</strong></td>
 <td>None.</td>
-<td>Validation (Lighthouse) + Forward (Meteora DLMM), each independently disableable.</td>
+<td>Validation (Lighthouse) + Forward (Meteora DLMM, Raydium CPMM/CLMM, Orca Whirlpool), each independently disableable.</td>
 </tr>
 <tr>
 <td><strong>Intermediate accounts</strong></td>
@@ -2958,9 +2958,19 @@ fee-distribution logic — but differ sharply in their execution model.</p>
 <td>Yes — intermediates are created and closed each call; rent returns to fee_payer but costs CU.</td>
 </tr>
 <tr>
-<td><strong>Fee math</strong></td>
-<td><code>shared::fees::calculate_fees</code></td>
-<td>Same — <code>shared::fees::calculate_fees</code>. Fee path is <strong>input-side</strong> (skimmed from the gross pull in Phase 1b, not from the output; ADR-0026).</td>
+<td><strong>Fee path</strong></td>
+<td>Direct (single transfer splits fees off the payment amount; honors <code>FEATURE_NET_AMOUNT</code>).</td>
+<td>Same <code>calculate_fees</code>, but <strong>input-side</strong> — fees are skimmed from the gross pull in Phase 1b before the forward runs (ADR-0026; NET-on-pull hardcoded, flag ignored).</td>
+</tr>
+<tr>
+<td><strong>Settlement shapes</strong></td>
+<td>Single (direct <code>transfer</code> to recipient).</td>
+<td>Three: deliver-no-transform (same-mint) / deliver-transform (swap) / act mode (<code>output_mint=Pubkey::default()</code>, ADR-0026).</td>
+</tr>
+<tr>
+<td><strong>Delegate model</strong></td>
+<td>v0 legacy global <code>PaymentsDelegate</code> PDA (<code>["payments"]</code>) OR v1 per-user <code>UserPayment</code> PDA (<code>["user_payment", owner, mint]</code>). Both accepted.</td>
+<td>Same dual-delegate acceptance; v1 UserPayment PDA is the SDK default.</td>
 </tr>
 <tr>
 <td><strong>Schedule math</strong></td>
@@ -2970,17 +2980,17 @@ fee-distribution logic — but differ sharply in their execution model.</p>
 <tr>
 <td><strong>Permissionless execute</strong></td>
 <td>Yes — any gateway signer, the user, or the recipient.</td>
-<td>Yes — same <code>fee_payer ∈ {gateway.signer, user_payment.owner, recipient}</code> constraint.</td>
+<td>Yes — same <code>fee_payer ∈ {gateway.signer, user_payment.owner, recipient}</code> constraint; cold relayers additionally require post_validation OR a route pin (ADR-0016).</td>
 </tr>
 <tr>
 <td><strong>Use cases</strong></td>
 <td>Simple recurring billing, milestone escrows, pay-as-you-go with no conditional logic.</td>
-<td>Programmable conditional payments: "topup if balance low", "pull USDC deliver WSOL", native-SOL delivery.</td>
+<td>Programmable conditional payments: "topup if balance low", "pull USDC deliver WSOL", native-SOL delivery, Velocity subaccount deposits (act mode).</td>
 </tr>
 <tr>
 <td><strong>Forward / swap</strong></td>
 <td>Not supported.</td>
-<td>Opt-in via <code>ForwardConfig.target_program</code> (Meteora DLMM).</td>
+<td>Opt-in via <code>ForwardConfig.instruction_constraint.program_id</code> (Meteora DLMM, Raydium CPMM/CLMM, Orca Whirlpool).</td>
 </tr>
 <tr>
 <td><strong>Native SOL delivery</strong></td>
@@ -2990,7 +3000,7 @@ fee-distribution logic — but differ sharply in their execution model.</p>
 <tr>
 <td><strong>External CPI</strong></td>
 <td>None.</td>
-<td>Lighthouse (read-only assertion) + Meteora DLMM (swap). Both hard-allowlisted.</td>
+<td>Lighthouse (read-only assertion) + 4 DEX programs (swap). Both hard-allowlisted.</td>
 </tr>
 </tbody>
 </table>
@@ -3021,9 +3031,9 @@ fee-distribution logic — but differ sharply in their execution model.</p>
   (same-mint topup) path.</li>
 </ul>
 <h2 id="behavior-with-both-hooks-disabled">Behavior with both hooks disabled<a class="headerlink" href="#behavior-with-both-hooks-disabled" title="Permanent link">&para;</a></h2>
-<p>A <code>ComposablePolicy</code> with <code>target_program = Pubkey::default()</code> and
-<code>validation_program = SystemProgram</code> is functionally close to a
-<code>PaymentPolicy</code> — same pull, same fee split, same schedule math — but:</p>
+<p>A <code>ComposablePolicy</code> with <code>instruction_constraint.program_id == Pubkey::default()</code>
+and <code>pre/post_validation == ValidationSpec::Disabled</code> is functionally close
+to a <code>PaymentPolicy</code> — same pull, same fee split, same schedule math — but:</p>
 <ul>
 <li>It still pays the <strong>intermediate-ATA hop</strong> cost (create + close per
   execute).</li>

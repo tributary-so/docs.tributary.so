@@ -1254,6 +1254,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#settlement-shapes-output_mint-controls-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settlement shapes — output_mint controls delivery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-sentinel-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2785,6 +2796,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#settlement-shapes-output_mint-controls-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settlement shapes — output_mint controls delivery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-sentinel-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2843,8 +2865,9 @@
 <ol>
 <li><strong>Validation</strong> — a read-only on-chain assertion (via Lighthouse) that can
    veto the transaction if a condition isn't met.</li>
-<li><strong>Forward</strong> — a token-transform step (via Meteora DLMM) that swaps the
-   pulled input token into a different output token before delivery.</li>
+<li><strong>Forward</strong> — a token-transform step (via Meteora DLMM, Raydium CPMM/CLMM,
+   or Orca Whirlpool) that swaps the pulled input token into a different
+   output token before delivery.</li>
 </ol>
 <p>Both hooks are <strong>opt-in via sentinel values</strong>. A composable policy with both
 disabled behaves like a <code>PaymentPolicy</code> but lives in its own PDA namespace and
@@ -2874,13 +2897,46 @@ routes through an intermediate ATA hop. Both families reuse the same
   <code>is_signer</code> from <code>remaining_accounts</code>. The fee payer (a Signer) cannot be
   re-passed to grant Lighthouse / DLMM unintended signer authority.</li>
 <li><strong>Allowlists</strong> (<code>programs/tributary/src/constants.rs</code>):</li>
-<li><code>ALLOWED_FORWARD_PROGRAMS</code> → Meteora DLMM
-    (<code>LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo</code>)</li>
+<li><code>ALLOWED_FORWARD_PROGRAMS</code> → Meteora DLMM, Raydium CPMM, Raydium CLMM,
+    Orca Whirlpool (4 entries)</li>
 <li><code>ALLOWED_VALIDATION_PROGRAMS</code> → Lighthouse
     (<code>L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95</code>)</li>
 <li><strong>Emergency pause</strong> (<code>ProgramConfig.emergency_pause</code>) blocks
   <code>execute_composable</code> just like <code>execute_payment</code>.</li>
 </ul>
+<h2 id="settlement-shapes-output_mint-controls-delivery">Settlement shapes — <code>output_mint</code> controls delivery<a class="headerlink" href="#settlement-shapes-output_mint-controls-delivery" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Shape</th>
+<th><code>output_mint</code></th>
+<th>Forward</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>deliver-no-transform</strong></td>
+<td><code>== input_mint</code></td>
+<td>disabled</td>
+<td>Same-mint topup. Sweep <code>intermediate_input</code> → recipient.</td>
+</tr>
+<tr>
+<td><strong>deliver-transform</strong></td>
+<td>concrete mint <code>!= input</code></td>
+<td>enabled</td>
+<td>Swap input → output, sweep output → recipient (<code>&gt;0</code> guard kept).</td>
+</tr>
+<tr>
+<td><strong>act mode</strong></td>
+<td><code>Pubkey::default()</code></td>
+<td>enabled</td>
+<td>Forward consumes input for non-fungible settlement (no output ATA).</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../forward-cpi-guide/">forward-cpi-guide.md</a> and ADR-0026 for
+details.</p>
 <h2 id="the-sentinel-convention">The sentinel convention<a class="headerlink" href="#the-sentinel-convention" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2896,7 +2952,7 @@ routes through an intermediate ATA hop. Both families reuse the same
 </tr>
 <tr>
 <td>No forward</td>
-<td><code>forward_config.target_program = PublicKey.default()</code></td>
+<td><code>forward_config.instruction_constraint.program_id == PublicKey.default</code> (static getter, no parens)</td>
 </tr>
 </tbody>
 </table>
@@ -2949,7 +3005,8 @@ equal <code>output_mint</code> (no conversion step — it's a same-mint pull →
 <h2 id="where-to-next">Where to next<a class="headerlink" href="#where-to-next" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../sdk/">SDK surface</a> — <code>getCreateComposablePolicyInstruction</code>,
-  <code>executeComposable</code>, <code>ForwardConfig</code>, <code>ValidationSpec</code>.</li>
+  <code>executeComposable</code>, <code>changeComposableStatus</code>, <code>ForwardConfig</code>,
+  <code>ValidationSpec</code>.</li>
 <li><a href="../lighthouse-facade/">Lighthouse facade</a> — build assertions with
   <code>lighthouse.tokenAccount(ata).amount(threshold, "&lt;").build()</code>.</li>
 <li>Examples: <a href="../examples/auto-topup-guard/">Auto-topup guard</a> ·
